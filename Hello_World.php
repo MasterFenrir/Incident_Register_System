@@ -7,5 +7,6 @@
  */
 
 echo("Hello World");
+echo "woot";
 
 ?>
