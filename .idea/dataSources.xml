@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3223486703">
+    <data-source source="LOCAL" name="helpdesk" uuid="4beb2fd5-a4be-4e36-a2fc-0c0e3373e64a">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://coasternews.nl:3306/helpdesk</jdbc-url>
+      <user-name>helpdesk</user-name>
+      <user-password>dff9dfc1dfdfdf9fdf99dff5dfdfdf99</user-password>
+      <driver-properties>
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+      </driver-properties>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+
