@@ -16,9 +16,7 @@ if(($get = mysqli_fetch_assoc($login)) > 0) {
 
     switch($_POST['id']) {
         case "hardware_list" : echo queryToJSON("SELECT * FROM hardware"); break;
-
         case "software_list" : echo queryToJSON("SELECT * FROM software"); break;
-
         case "login" : echo 1; break;
     }
 }
