@@ -28,7 +28,9 @@ else {
 
 
 
-
+/*
+ * Performs given query and returns the response in JSON format.
+ */
 function queryToJSON($query)
 {
     global $con;
