@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: David
- * Date: 11-6-14
- * Time: 11:39
- */
-
 /*
  * Class that makes a sortable table from a given SQL query's response.
  */
@@ -100,4 +93,4 @@ class HelpdeskTable
                 echo "</tr>";
             }
         }
-} 
+}

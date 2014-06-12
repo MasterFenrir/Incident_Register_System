@@ -35,20 +35,20 @@ function displayLogin()
             global $con;
 
             $sql = "SELECT * FROM users
-                    WHERE username = '$user'
-                    AND password = '$pass'";
+                    WHERE username = '$user'";
 
             $query = mysqli_query($con, $sql) or die ("Error: ".mysqli_error($query)."");
 
             if (($get = mysqli_fetch_assoc($query)) > 0)
             {
-                $rechten = $get['rechten'];
+                if(password_verify($pass, $get[password])){
+                    $rechten = $get['rechten'];
 
-                $_SESSION['user'] = $user;
-                $_SESSION['rechten'] = $rechten;
+                    $_SESSION['user'] = $user;
+                    $_SESSION['rechten'] = $rechten;
 
-                $empt = "succes";
-                header('Location:/index.php');
+                    header('Location:/index.php');
+                }
             }
 
             else
