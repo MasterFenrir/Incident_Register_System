@@ -44,14 +44,18 @@ class HelpdeskTable
         }
 
         /*
-         * Main function
+         * Echo's the table using the result from the query.
          */
         public function makeTable()
         {
+            //Fetches a row from the results
             $row = mysqli_fetch_assoc($this->result);
+            //Checks how many columns the result has
+            $count = count($row);
 
             echo "<table>";
-            echo "<tr><th colspan=".count($row)." class='tableTitle'>".$this->name."</th></tr>";
+            //Makes the title row of the table
+            echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
 
             $this->makeColumns();
             $this->makeRows();
@@ -59,11 +63,18 @@ class HelpdeskTable
             echo "</table>";
         }
 
+        /*
+         * Makes the titles for the columns
+         */
         private function makeColumns()
         {
+            //Fetches a row from the results
             $row = mysqli_fetch_assoc($this->result);
 
             echo "<tr>";
+
+            //Gets the key/value pairs from the rows and echo's them as url's with GET info
+            //used to sort the columns.
             foreach($row as $key=>$value) {
                 if($_GET['sort'] == 'asc' && $_GET['order'] == $key) {
                     echo "<th><a href='index.php?order=$key&sort=desc'>".ucfirst($key)."</th>";
@@ -74,11 +85,16 @@ class HelpdeskTable
             echo "</tr>";
         }
 
+        /*
+         * Makes the rows of the table.
+         */
         private function makeRows()
         {
-            while($row = mysqli_fetch_assoc($this->result)) {
+            //Iterates over every row in the results
+            while($row = mysqli_fetch_row($this->result)) {
                 echo "<tr>";
-                foreach($row as $key=>$value) {
+                //echo's a table value for each value in the row
+                foreach($row as $value) {
                     echo "<td>".ucfirst($value)."</td>";
                 }
                 echo "</tr>";

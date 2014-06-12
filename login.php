@@ -28,17 +28,15 @@ function displayLogin()
         {
             $empt = "Je moet iets invullen";
         }
-
-
         // Als je alles hebt ingevuld word in de DB gekeken of de username en ww overeen komen
         // Zo ja word je ingelogd en naar de gebruikers site gestuurd, no niet krijg je een melding dat inloggegevens niet kloppen
         if(!empty($user) && !empty($pass))
         {
             global $con;
 
-            $sql = "SELECT * FROM inloggegevens
-                    WHERE Gebruikersnaam = '$user'
-                    AND wachtwoord = '$pass'";
+            $sql = "SELECT * FROM users
+                    WHERE username = '$user'
+                    AND password = '$pass'";
 
             $query = mysqli_query($con, $sql) or die ("Error: ".mysqli_error($query)."");
 
@@ -46,10 +44,10 @@ function displayLogin()
             {
                 $perm = $get['rechten'];
 
-                session_start();
                 $_SESSION['user'] = $user;
                 $_SESSION['perm'] = $perm;
 
+                $empt = "succes";
                 header('Location:/index.php');
             }
 

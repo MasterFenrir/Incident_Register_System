@@ -13,6 +13,7 @@ body {
     text-align: left;
     background-color: #FFFFFF;
 }
+
 #header {
     width: inherit;
     min-height: 75px;
@@ -62,6 +63,7 @@ body {
     color: #2F4F4F;
     background-color: #8AC4EC;
 }
+
 #content {
     width: auto;
     min-height: 100%;

@@ -5,7 +5,9 @@
 <?php
     include "functions.php";
     include "HelpdeskTable.php";
-    include "login.php"
+    include "login.php";
+
+    checkLogin();
 ?>
 
 <head>
@@ -28,8 +30,10 @@
 
 <!-- Dit toont de logout knop en geeft het een div id wanneer iemand ingelogd is -->
 <div id="topmenu">
-    <input type="button" value="Button"/>
     <?php
+        if(isset($_SESSION['user'])) {
+            logoutKnop();
+        }
     ?>
 </div>
 
