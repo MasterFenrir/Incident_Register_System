@@ -10,11 +10,16 @@
 // to do change name and remove some code
 
 function displayContentConfig($postData) {
-
+    switch($postData) {
+        case "displayHardware" : new HelpdeskTable("Hardware", "SELECT * FROM hardware"); break;
+        case "displaySoftware" : new HelpdeskTable("Software", "SELECT * FROM software"); break;
+        default : echo "Hello ".$_SESSION['user'];
+    }
 }
 
 function displayMenuConfig() {
-
+    new Button("Hardware", "displayHardware");
+    new Button("Software", "displaySoftware");
 }
 
 
@@ -125,10 +130,10 @@ function displayMenuConfig() {
         {
             if(!empty($id[$x]))
             {
-                //$artnr = $id[$x];
+                $artnr = $id[$x];
                 //$hoeveel = $id2[$x];
 
-                echo $artnr;
+
                 //echo $hoeveel;
 
                 $sql = "SELECT Naam FROM artikel
@@ -139,7 +144,6 @@ function displayMenuConfig() {
 
                 echo 	"<tr>";
                 echo 		"<td>$naam</td>";
-                echo 		"<td>$hoeveel</td>";
                 echo 	"</tr>";
             }
         }

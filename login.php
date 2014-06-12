@@ -42,10 +42,10 @@ function displayLogin()
 
             if (($get = mysqli_fetch_assoc($query)) > 0)
             {
-                $perm = $get['rechten'];
+                $rechten = $get['rechten'];
 
                 $_SESSION['user'] = $user;
-                $_SESSION['perm'] = $perm;
+                $_SESSION['rechten'] = $rechten;
 
                 $empt = "succes";
                 header('Location:/index.php');

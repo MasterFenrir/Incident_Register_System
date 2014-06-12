@@ -3,8 +3,13 @@
 
 
 <?php
+    include "configuratiemanagement.php";
+    include "probleembeheer.php";
+    include "incidentbeheer.php";
+
     include "functions.php";
     include "HelpdeskTable.php";
+    include "Button.php";
     include "login.php";
 
     checkLogin();
@@ -46,7 +51,7 @@
     <div id="menu">
         <?php
             if(isset($_SESSION['user'])) {
-                switch($_SESSION['user']) {
+                switch($_SESSION['rechten']) {
                     case 'incident' : displayMenuIncident(); break;
                     case 'probleem' : displayMenuProbleem(); break;
                     case 'config' : displayMenuConfig(); break;
@@ -70,18 +75,13 @@
         if(!isset($_SESSION['user'])) {
             displayLogin();
         } else {
-            switch($_SESSION['user']) {
-                case 'incident' : displayContentIncident($_POST['nav']); break;
-                case 'probleem' : displayContentProbleem($_POST['nav']); break;
-                case 'config' : displayContentConfig($_POST['nav']); break;
-                default : new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+            switch($_SESSION['rechten']) {
+                case 'incident' : displayContentIncident($_POST['display']); break;
+                case 'probleem' : displayContentProbleem($_POST['display']); break;
+                case 'config' : displayContentConfig($_POST['display']); break;
             }
         }
     ?>
-
-    crypt(passwordjsdjsdoifjsdflkjsdflkjsdljsdflkjsdfj)
-
-    if $dbpw == crypt(pw, $dbpw)
 </div>
 
 <!-- Dit toont de footer -->
