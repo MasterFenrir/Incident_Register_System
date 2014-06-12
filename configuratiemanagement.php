@@ -13,7 +13,7 @@ function displayContentConfig($postData) {
     switch($postData) {
         case "displayHardware" : new HelpdeskTable("Hardware", "SELECT * FROM hardware"); break;
         case "displaySoftware" : new HelpdeskTable("Software", "SELECT * FROM software"); break;
-        default : echo "Hello ".$_SESSION['user'];
+        default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }
 

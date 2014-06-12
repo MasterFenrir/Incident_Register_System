@@ -3,7 +3,7 @@
 
 
 <?php
-    include "functions.php";
+    include "general.php";
     include "HelpdeskTable.php";
     include "login.php";
 
