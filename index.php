@@ -11,10 +11,7 @@
 ?>
 
 <head>
-
     <link type="text/css" rel="stylesheet" href="stijlblad.css">
-    <script  type="javascript" src="/http://code.jquery.com/jquery-1.11.0.min.js"></script>
-
 </head>
 
 <body>
@@ -47,9 +44,14 @@
 
 <div id="left_sidebar">
     <div id="menu">
-        <input type="button" value="Button"/>
         <?php
-
+            if(isset($_SESSION['user'])) {
+                switch($_SESSION['user']) {
+                    case 'incident' : displayMenuIncident(); break;
+                    case 'probleem' : displayMenuProbleem(); break;
+                    case 'config' : displayMenuConfig(); break;
+                }
+            }
         ?>
     </div>
 </div>
@@ -68,9 +70,18 @@
         if(!isset($_SESSION['user'])) {
             displayLogin();
         } else {
-            $test = new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+            switch($_SESSION['user']) {
+                case 'incident' : displayContentIncident($_POST['nav']); break;
+                case 'probleem' : displayContentProbleem($_POST['nav']); break;
+                case 'config' : displayContentConfig($_POST['nav']); break;
+                default : new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+            }
         }
     ?>
+
+    crypt(passwordjsdjsdoifjsdflkjsdflkjsdljsdflkjsdfj)
+
+    if $dbpw == crypt(pw, $dbpw)
 </div>
 
 <!-- Dit toont de footer -->

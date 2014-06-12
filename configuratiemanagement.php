@@ -9,7 +9,13 @@
 //dummycode for configuratiemagement
 // to do change name and remove some code
 
+function displayContentConfig($postData) {
 
+}
+
+function displayMenuConfig() {
+
+}
 
 
     function displayAfdInkoopArtikel()

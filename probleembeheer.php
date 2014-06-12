@@ -4,4 +4,12 @@
  * User: gebruiker
  * Date: 12-6-14
  * Time: 11:49
- */ 
+ */
+
+function displayContentProbleem($postData) {
+
+}
+
+function displayMenuProbleem() {
+
+}
