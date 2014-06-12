@@ -25,7 +25,7 @@
 <!-- Dit toont de banner aan de bovenkant van de pagina -->
 <div id="header">
     <?php
-        echo "Header";
+        echo "Helpdesk";
     ?>
 </div>
 

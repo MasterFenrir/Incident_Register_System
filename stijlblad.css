@@ -18,8 +18,11 @@ body {
     width: inherit;
     min-height: 75px;
     margin: 1px 0px 1px 0px;
-    font-size: 11px;
+    font-size: 20px;
+    text-align: center;
     background-color: #2D6E89;
+    font-family: Impact, Charcoal, sans-serif;
+    color: #FF0000;
 }
 
 #topmenu {
