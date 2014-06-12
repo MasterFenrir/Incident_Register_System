@@ -1,8 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="nl">
+
+
+<?php
+    include "functions.php";
+    include "HelpdeskTable.php";
+?>
+
 <head>
 
     <link type="text/css" rel="stylesheet" href="stijlblad.css">
+    <script  type="javascript" src="/http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
 </head>
 
@@ -19,8 +27,8 @@
 
 <!-- Dit toont de logout knop en geeft het een div id wanneer iemand ingelogd is -->
 <div id="topmenu">
+    <input type="button" value="Button"/>
     <?php
-        echo "Top menu";
     ?>
 </div>
 
@@ -34,8 +42,9 @@
 
 <div id="left_sidebar">
     <div id="menu">
+        <input type="button" value="Button"/>
         <?php
-            echo "Menu";
+
         ?>
     </div>
 </div>
@@ -51,20 +60,9 @@
 
 <div id="content">
     <?php
-
+        $myTable = new HelpdeskTable("Hardware", "SELECT * FROM hardware");
     ?>
 </div>
-
-
-
-<!-- Dit toont de rechter sidebar -->
-<div id="right_sidebar">
-    <?php
-        echo "Right menu";
-    ?>
-</div>
-
-
 
 <!-- Dit toont de footer -->
 <div id="footer">
