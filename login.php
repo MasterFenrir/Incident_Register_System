@@ -1,17 +1,23 @@
-
 <?php
+/**
+ * PHP script for logging in. Uses encryption.
+ */
 ERROR_REPORTING(E_ALL);
 
+/**
+ * This function will display the loginscreen, but also checks if the login credentials have been entered.
+ * If they have been entered correctly, it will send you to the page corresponding to the rights that user has.
+ */
 function displayLogin()
 {
-
+    //This will check if you login correctly
     if(isset($_POST['check']))
     {
         $user = $_POST['username'];
         $pass = $_POST['password'];
 
 
-        // Goed ingevuld controle + fout melding variabelen
+        // This checks whether the username and password have been entered
         if(empty($pass) && !empty($user))
         {
             $ww = "Verplicht";
@@ -25,9 +31,9 @@ function displayLogin()
             $empt = "Je moet iets invullen";
         }
 
-
-        // Als je alles hebt ingevuld word in de DB gekeken of de username en ww overeen komen
-        // Zo ja word je ingelogd en naar de gebruikers site gestuurd, no niet krijg je een melding dat inloggegevens niet kloppen
+        // If both fields are not empty, it will check if the entered information corresponds to a known user.
+        // If this is the case, the user will be send to a page with functions they can use. Otherwise,
+        // the user will be told that the login credentials are incorrect.
         if(!empty($user) && !empty($pass))
         {
             global $con;
@@ -46,10 +52,6 @@ function displayLogin()
                 $_SESSION['user'] = $user;
                 $_SESSION['perm'] = $perm;
 
-                //**Test**
-                //echo "Gebruiker: $user<br/>";
-                //echo "Permissie: $perm<br/><br/>";
-
                 header('Location:/index.php');
             }
 
@@ -60,13 +62,7 @@ function displayLogin()
         }
     }
 
-
-
-
-
-    /*
-     *Hieronder volgt de inlog formulier
-     */
+    // If nothing has been entered yet, the following is displayed. This is the HTML form for entering the user credentials
 
     echo "<form method=\"post\" action=".htmlspecialchars($_SERVER['PHP_SELF'])." >";
     echo        "<table id=\"login\">";
