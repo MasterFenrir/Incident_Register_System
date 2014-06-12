@@ -1,7 +1,5 @@
+
 <?php
-/**
- * PHP script for logging in. Uses encryption.
- */
 ERROR_REPORTING(E_ALL);
 
 /**
@@ -31,9 +29,9 @@ function displayLogin()
             $empt = "Je moet iets invullen";
         }
 
-        // If both fields are not empty, it will check if the entered information corresponds to a known user.
-        // If this is the case, the user will be send to a page with functions they can use. Otherwise,
-        // the user will be told that the login credentials are incorrect.
+
+        // Als je alles hebt ingevuld word in de DB gekeken of de username en ww overeen komen
+        // Zo ja word je ingelogd en naar de gebruikers site gestuurd, no niet krijg je een melding dat inloggegevens niet kloppen
         if(!empty($user) && !empty($pass))
         {
             global $con;
@@ -42,7 +40,7 @@ function displayLogin()
                     WHERE Gebruikersnaam = '$user'
                     AND wachtwoord = '$pass'";
 
-            $query = mysqli_query($con, "$sql") or die ("Error: ".mysqli_error($query)."");
+            $query = mysqli_query($con, $sql) or die ("Error: ".mysqli_error($query)."");
 
             if (($get = mysqli_fetch_assoc($query)) > 0)
             {
@@ -62,7 +60,13 @@ function displayLogin()
         }
     }
 
-    // If nothing has been entered yet, the following is displayed. This is the HTML form for entering the user credentials
+
+
+
+
+    /*
+     *Hieronder volgt de inlog formulier
+     */
 
     echo "<form method=\"post\" action=".htmlspecialchars($_SERVER['PHP_SELF'])." >";
     echo        "<table id=\"login\">";

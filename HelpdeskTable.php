@@ -11,26 +11,41 @@
  */
 class HelpdeskTable
 {
+    //Result from the given query
     private $result;
 
+    //Name given for the table
     private $name;
+    //Query in string format
     private $query;
 
+        /*
+         * Constructor for the class
+         *
+         * @param $name: Name of the table, displayed in top row
+         * @param $query: SQL query to make table from
+         */
         public function __construct($name, $query)
         {
             $this->query = $query;
             $this->name = $name;
 
+            //If order and sort GET information are set it appends the SQL query to include them
             if(isset($_GET['order']) && isset($_GET['sort'])) {
                 $this->query = $query . " ORDER BY ".$_GET['order']. " " . $_GET['sort'];
             }
 
+            //Executes the query and stores result in $result
             global $con;
             $this->result = mysqli_query($con, $this->query);
 
+            //Displays table to screen
             $this->makeTable();
         }
 
+        /*
+         * Main function
+         */
         public function makeTable()
         {
             $row = mysqli_fetch_assoc($this->result);

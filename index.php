@@ -5,6 +5,7 @@
 <?php
     include "functions.php";
     include "HelpdeskTable.php";
+    include "login.php"
 ?>
 
 <head>
@@ -60,7 +61,11 @@
 
 <div id="content">
     <?php
-        $myTable = new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+        if(!isset($_SESSION['user'])) {
+            displayLogin();
+        } else {
+            $test = new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+        }
     ?>
 </div>
 
