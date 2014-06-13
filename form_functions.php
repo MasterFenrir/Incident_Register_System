@@ -38,7 +38,7 @@ function dropDown($valueArray)
             <td>
                 <select>";
                     foreach($valueArray as $value) {
-                        echo "<option value='$value'>".ucfirst($value)."</option>";
+                        echo "<option value=".$value.">".$value."</option>";
                     }
     echo        "</select>
             </td>
@@ -51,7 +51,7 @@ function RadioButtons($valueArray, $name)
             <td></td>
             <td>";
                     foreach($valueArray as $value) {
-                        echo "<input type='radio' name='$name' value='$value'>$value</input>";
+                        echo "<input type='radio' name=".$name." value=".$value.">".$value."</input>";
                     }
     echo        "</select>
             </td>
@@ -64,7 +64,7 @@ function CheckBoxes($valueArray, $name)
             <td></td>
             <td>";
                 foreach($valueArray as $value) {
-                    echo "<input type='checkbox' name='$name' value='$value'>$value</input>";
+                    echo "<input type='checkbox' name=".$name." value=".$value.">".$value."</input>";
                 }
     echo        "</select>
             </td>
@@ -73,5 +73,5 @@ function CheckBoxes($valueArray, $name)
 
 function textField($name)
 {
-    echo "<tr><td>".$name."</td><td><input type='text' value='$name'></td></tr>";
+    echo "<tr><td>".$name."</td><td><input type='text' value=".$name."></td></tr>";
 }
