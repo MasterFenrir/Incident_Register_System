@@ -7,7 +7,7 @@
     include "probleembeheer.php";
     include "incidentbeheer.php";
 
-    include "functions.php";
+    include "general.php";
     include "HelpdeskTable.php";
     include "Button.php";
     include "login.php";
@@ -24,9 +24,7 @@
 
 <!-- Dit toont de banner aan de bovenkant van de pagina -->
 <div id="header">
-    <?php
-        echo "Helpdesk";
-    ?>
+    <span class="foto"><img src="helpdesk.png" /></span>
 </div>
 
 

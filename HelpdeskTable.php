@@ -41,8 +41,10 @@ class HelpdeskTable
          */
         public function makeTable()
         {
-            //Fetches a row from the results
+            //Fetches a row from the results and resest pointer to first row
             $row = mysqli_fetch_assoc($this->result);
+            mysqli_data_seek($this->result, 0);
+
             //Checks how many columns the result has
             $count = count($row);
 
@@ -61,8 +63,9 @@ class HelpdeskTable
          */
         private function makeColumns()
         {
-            //Fetches a row from the results
+            //Fetches a row from the results and resest pointer to first row
             $row = mysqli_fetch_assoc($this->result);
+            mysqli_data_seek($this->result, 0);
 
             echo "<tr>";
 
@@ -92,5 +95,7 @@ class HelpdeskTable
                 }
                 echo "</tr>";
             }
+            //Resest pointer to first row
+            mysqli_data_seek($this->result, 0);
         }
 }
