@@ -27,7 +27,7 @@ function dateField(){
 function passwordField(){
     echo "<tr>
             <td>Wachtwoord: </td>
-            <td><input type='password' name='day'></td>
+            <td><input type='password' name='password'></td>
           </tr>";
 }
 

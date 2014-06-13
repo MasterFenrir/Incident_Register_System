@@ -78,17 +78,7 @@ function displayLogin()
     }
     echo            "</td>";
     echo        "</tr>";
-    echo        "<tr>";
-    echo            "<td>Password:</td>";
-    echo            "<td>";
-    echo               "<input type=\"password\" name=\"password\">";
-    if(isset($pass))
-    {
-        echo "<span class=\"warning\">".$ww."</span>";
-    }
-    echo            "</td>";
-    echo        "</tr>";
-    echo        "<tr>";
+    passwordField();
     echo            "<td></td>";
     echo            "<td>";
     echo                "<input type=\"Submit\" Value=\"Login\" >";

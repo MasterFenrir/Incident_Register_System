@@ -6,7 +6,7 @@
     include "configuratiemanagement.php";
     include "probleembeheer.php";
     include "incidentbeheer.php";
-
+    include "form_functions.php";
     include "general.php";
     include "HelpdeskTable.php";
     include "Button.php";
