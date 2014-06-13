@@ -11,8 +11,8 @@
 
 function displayContentConfig($postData) {
     switch($postData) {
-        case "displayHardware" : new HelpdeskTable("Hardware", "SELECT * FROM hardware"); break;
-        case "displaySoftware" : new HelpdeskTable("Software", "SELECT * FROM software"); break;
+        case "displayHardware" : displayHardware(); break;
+        case "displaySoftware" : displaySoftware(); break;
         default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }
@@ -23,54 +23,20 @@ function displayMenuConfig() {
 }
 
 
-    function displayAfdInkoopArtikel()
+    function displayHardware()
     {
-        global $con;
+        new HelpdeskTable("Hardware", "SELECT * FROM hardware");
 
-        $sql = "SELECT Artikelnr, Naam, Hoeveelheid, Levancier, Besteld
-				From artikel
-                ORDER BY Naam";
-        $query = mysqli_query($con, "$sql");
-
-        echo "<table id=\"keuken\">";
-        echo "<tr>";
-        echo    "<th>Artiklnr</th>";
-        echo    "<th>Naam</th>";
-        echo    "<th>Hoeveelheid</th>";
-        echo	"<th>Besteld</th>";
-        echo    "<th>Leverancier</th>";
-
-        while (list($artikelnr, $naam, $hoeveelheid, $leverancier, $besteld) = mysqli_fetch_row($query))
-        {
-            echo "<tr>";
-            echo    "<td>".$artikelnr."</td>";
-            echo    "<td>".$naam."</td>";
-            echo    "<td>".$hoeveelheid."</td>";
-            echo    "<td>".$besteld."</td>";
-            echo    "<td>".$leverancier."</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
     }
 
-    function navigationInkoop()
+    function displaySoftware()
     {
-        echo    "<form action=\"/index.php\" method=\"post\">";
-        echo    "<input type=\"hidden\" name=\"display\" value=\"Home\">";
-        echo    "<input class=\"nav\" type=\"submit\" value=\"Home\">";
-        echo    "</form>";
-
-        echo    "<form action=\"/index.php\" method=\"post\">";
-        echo    "<input type=\"hidden\" name=\"display\" value=\"inkoopartikelen\">";
-        echo    "<input class=\"nav\" type=\"submit\" value=\"Artikelen\">";
-        echo    "</form>";
-
-        echo	"<form action=\"/index.php\" method=\"post\">";
-        echo    "<input type=\"hidden\" name=\"display\" value=\"inkoopbestellen\">";
-        echo    "<input class=\"nav\" type=\"submit\" value=\"Bestellen\">";
-        echo    "</form>";
+        new HelpdeskTable("Software", "SELECT * FROM software");
     }
 
+
+
+    //function CI_Toevoegen()
     function InkoopInkooporderToevoegen()
     {
         global $con;
@@ -105,67 +71,8 @@ function displayMenuConfig() {
         echo" </form>";
     }
 
-	//Bugged, geeft hoeveelheid niet mee bij 1 artikel
-	function InkoopInkooporderBevestig()
-    {
-        global $_POST;
-        global $con;
 
-        $id = $_POST['Artikelnr'];
-        $id2 = $_POST['Hoeveelheid'];
-
-        $sql2 = "SELECT COUNT(Artikelnr) AS aantal FROM artikel";
-        $query2 = mysqli_query($con, "$sql2");
-
-        list($aantal) = mysqli_fetch_array($query2);
-
-        echo "<form method=\"post\" action=\"index.php\">";
-        echo "<table>";
-        echo 	"<tr>";
-        echo 		"<th>Artikel</th>";
-        echo 		"<th>Aantal</th>";
-        echo 	"</tr>";
-
-        for($x=0; $x<$aantal; $x++)
-        {
-            if(!empty($id[$x]))
-            {
-                $artnr = $id[$x];
-                //$hoeveel = $id2[$x];
-
-
-                //echo $hoeveel;
-
-                $sql = "SELECT Naam FROM artikel
-			WHERE Artikelnr = $artnr";
-                $query = mysqli_query($con, "$sql");
-
-                list($naam) = mysqli_fetch_array($query);
-
-                echo 	"<tr>";
-                echo 		"<td>$naam</td>";
-                echo 	"</tr>";
-            }
-        }
-
-        echo    "<th colspan=\"2\" class=\"klaar\">";
-        echo    "<form action=\"/index.php\" method=\"post\">";
-        echo    "<input type=\"hidden\" name=\"Artikelnr[]\" value=\"$id\">";
-        echo    "<input type=\"hidden\" name=\"Hoeveelheid[]\" value=\"$id2\">";
-        echo    "<input type=\"hidden\" name=\"bewerk\" value=\"inkoopbewerk\">";
-        echo    "<input class=\"logout\" type=\"submit\" value=\"Bevestigen\">";
-        echo    "</form>";
-
-        echo    "<form action=\"/index.php\" method=\"post\">";
-        echo    "<input type=\"hidden\" name=\"bewerk\" value=\"inkoopbewerk\">";
-        echo    "<input type=\"hidden\" name=\"change\" value=\"x\">";
-        echo    "<input class=\"logout\" type=\"submit\" value=\"Anuleren\">";
-        echo    "</form>";
-        echo    "</th>";
-        echo "</table>";
-        echo "</form>";
-    }
-
+    //function CI_wijzigen
 	function InkoopInkooporderBewerk()
     {
         global $_POST;
