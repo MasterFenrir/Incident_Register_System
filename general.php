@@ -49,7 +49,7 @@ function removeMaliciousInput($input){
  * Function to validate the entered date
  */
 function validateDate($day, $month, $year){
-    if(($day < 1) || $month < 1 || $month > 12 || $year < 1900 || $year > 2100){
+    if(($day < 1) || $day > 31 || $month < 1 || $month > 12 || $year < 2000 || $year > 2100){
         return false;
     }
     //Check february
@@ -62,14 +62,11 @@ function validateDate($day, $month, $year){
             return false;
         }
     }
-    // Check the months with 31 days
-    if(($month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12)){
-        if($day > 31){
+    // Check the months with 30 days
+    if($month == 4 || $month == 6 || $month == 9 || $month == 11){
+        if($day > 30){
             return false;
         }
-        // The remaining months all have 30 days
-    } else if($day > 30){
-        return false;
     }
     // Since we've gotten here, it must be true.
     return true;
