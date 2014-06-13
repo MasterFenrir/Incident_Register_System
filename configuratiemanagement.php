@@ -41,23 +41,28 @@ function displayMenuConfig() {
     {
         global $con;
 
-        $sql = "SELECT * FROM artikel
-		GROUP BY Artikelnr";
+        $sql = "SELECT * FROM hardware
+		GROUP BY id_hardware";
 
         $row = mysqli_query($con, "$sql");
 
         echo "  <form method=\"post\" action=\"index.php\">";
         echo " 	<table>";
         echo "	<tr>";
-        echo "	       <th>Artikelen</th>";
-        echo "	      	<th>Hoeveelheid</th>";
+        echo "	       <th>id_hardware</th>";
+        echo "	      	<th>soort</th>";
+        echo "          <th>locatie</th>";
+        echo "	       <th>os</th>";
+        echo "	      	<th>merk</th>";
+        echo "          <th>leverancier</th>";
+        echo "          <th>aanschafjaar</th>";
         echo "	 </tr>";
 
         while($row2 = mysqli_fetch_array($row))
         {
             echo "<tr>";
-            echo 	"<td><input type='checkbox' name='Artikelnr[]' value='".$row2['Artikelnr']."'>".ucfirst($row2['Naam'])."</td>";
-            echo 	"<td><input type=\"text\" name=\"Hoeveelheid[]\" /></td>";
+            echo " <td><input type='checkbox' name='Artikelnr[]' value='".$row2['Artikelnr']."'>".ucfirst($row2['Naam'])."</td>";
+            echo "	<td><input type=\"text\" name=\"Hoeveelheid[]\" /></td>";
             echo "</tr>";
         }
 
