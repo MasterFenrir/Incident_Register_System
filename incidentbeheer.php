@@ -7,9 +7,12 @@
  */
 
 function displayContentIncident($postData) {
-
+    switch($postData) {
+        case "displayIncidenten" : new HelpdeskTable("Incidenten", "SELECT * FROM incidenten"); break;
+        default : echo "Hello ".ucfirst($_SESSION['user']);
+    }
 }
 
 function displayMenuIncident() {
-
+    new Button("Incidenten", "displayIncidenten");
 }
