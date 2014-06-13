@@ -30,3 +30,48 @@ function passwordField(){
             <td><input type='password' name='day'></td>
           </tr>";
 }
+
+function dropDown($valueArray)
+{
+    echo "<tr>
+            <td></td>
+            <td>
+                <select>";
+                    foreach($valueArray as $value) {
+                        echo "<option value='$value'>".ucfirst($value)."</option>";
+                    }
+    echo        "</select>
+            </td>
+         </tr>";
+}
+
+function RadioButtons($valueArray, $name)
+{
+    echo "<tr>
+            <td></td>
+            <td>";
+                    foreach($valueArray as $value) {
+                        echo "<input type='radio' name='$name' value='$value'>$value</input>";
+                    }
+    echo        "</select>
+            </td>
+         </tr>";
+}
+
+function CheckBoxes($valueArray, $name)
+{
+    echo "<tr>
+            <td></td>
+            <td>";
+                foreach($valueArray as $value) {
+                    echo "<input type='checkbox' name='$name' value='$value'>$value</input>";
+                }
+    echo        "</select>
+            </td>
+         </tr>";
+}
+
+function textField($name)
+{
+    echo "<tr><td>".$name."</td><td><input type='text' value='$name'></td></tr>";
+}

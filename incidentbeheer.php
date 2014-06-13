@@ -6,13 +6,15 @@
  * Time: 11:51
  */
 
-function displayContentIncident($postData) {
+function displayContentIncident($postData)
+{
     switch($postData) {
         case "displayIncidenten" : new HelpdeskTable("Incidenten", "SELECT * FROM incidenten"); break;
         default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }
 
-function displayMenuIncident() {
+function displayMenuIncident()
+{
     new Button("Incidenten", "displayIncidenten");
 }

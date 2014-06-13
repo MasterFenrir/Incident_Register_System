@@ -13,6 +13,7 @@ function displayContentConfig($postData) {
     switch($postData) {
         case "displayHardware" : displayHardware(); break;
         case "displaySoftware" : displaySoftware(); break;
+        case "displayAddHardware" : displayAddHardware(); break;
         default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }
@@ -20,13 +21,13 @@ function displayContentConfig($postData) {
 function displayMenuConfig() {
     new Button("Hardware", "displayHardware");
     new Button("Software", "displaySoftware");
+    new Button("Add hardware", "displayAddHardware");
 }
 
 
     function displayHardware()
     {
         new HelpdeskTable("Hardware", "SELECT * FROM hardware");
-
     }
 
     function displaySoftware()
@@ -34,9 +35,13 @@ function displayMenuConfig() {
         new HelpdeskTable("Software", "SELECT * FROM software");
     }
 
+    function displayAddHardware()
+    {
+
+    }
 
 
-    //function CI_Toevoegen()
+
     function InkoopInkooporderToevoegen()
     {
         global $con;
@@ -76,8 +81,67 @@ function displayMenuConfig() {
         echo" </form>";
     }
 
+	//Bugged, geeft hoeveelheid niet mee bij 1 artikel
+	function InkoopInkooporderBevestig()
+    {
+        global $_POST;
+        global $con;
 
-    //function CI_wijzigen
+        $id = $_POST['Artikelnr'];
+        $id2 = $_POST['Hoeveelheid'];
+
+        $sql2 = "SELECT COUNT(Artikelnr) AS aantal FROM artikel";
+        $query2 = mysqli_query($con, "$sql2");
+
+        list($aantal) = mysqli_fetch_array($query2);
+
+        echo "<form method=\"post\" action=\"index.php\">";
+        echo "<table>";
+        echo 	"<tr>";
+        echo 		"<th>Artikel</th>";
+        echo 		"<th>Aantal</th>";
+        echo 	"</tr>";
+
+        for($x=0; $x<$aantal; $x++)
+        {
+            if(!empty($id[$x]))
+            {
+                $artnr = $id[$x];
+                //$hoeveel = $id2[$x];
+
+
+                //echo $hoeveel;
+
+                $sql = "SELECT Naam FROM artikel
+			WHERE Artikelnr = $artnr";
+                $query = mysqli_query($con, "$sql");
+
+                list($naam) = mysqli_fetch_array($query);
+
+                echo 	"<tr>";
+                echo 		"<td>$naam</td>";
+                echo 	"</tr>";
+            }
+        }
+
+        echo    "<th colspan=\"2\" class=\"klaar\">";
+        echo    "<form action=\"/index.php\" method=\"post\">";
+        echo    "<input type=\"hidden\" name=\"Artikelnr[]\" value=\"$id\">";
+        echo    "<input type=\"hidden\" name=\"Hoeveelheid[]\" value=\"$id2\">";
+        echo    "<input type=\"hidden\" name=\"bewerk\" value=\"inkoopbewerk\">";
+        echo    "<input class=\"logout\" type=\"submit\" value=\"Bevestigen\">";
+        echo    "</form>";
+
+        echo    "<form action=\"/index.php\" method=\"post\">";
+        echo    "<input type=\"hidden\" name=\"bewerk\" value=\"inkoopbewerk\">";
+        echo    "<input type=\"hidden\" name=\"change\" value=\"x\">";
+        echo    "<input class=\"logout\" type=\"submit\" value=\"Anuleren\">";
+        echo    "</form>";
+        echo    "</th>";
+        echo "</table>";
+        echo "</form>";
+    }
+
 	function InkoopInkooporderBewerk()
     {
         global $_POST;
