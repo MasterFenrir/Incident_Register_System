@@ -64,13 +64,13 @@ function CheckBoxes($name, $array, $width)
     echo "<tr>
             <td>".$name."</td>
             <td>";
-                echo "<table>";
-                echo "<tr>";
+                echo "<table class='inner'>";
+                echo "<tr class='inner'>";
                 foreach($array as $value) {
                     if($x == 0) {
-                        echo "</tr><tr>";
+                        echo "</tr><tr class ='inner'>";
                     }
-                    echo "<td><input type='checkbox' name=".$name." value=".$value.">".ucfirst($value)."</input></td>";
+                    echo "<td class='inner'><input type='checkbox' name=".$name." value=".$value.">".ucfirst($value)."</input></td>";
                     $x = ($x+1)%$width;
                 }
                 echo "</tr>";
@@ -96,7 +96,6 @@ function formFooter($id)
     echo    "<tr>";
     echo        "<td></td>";
     echo        "<input type='hidden' name='id' value=".$id.">";
-    echo        "<input type='hidden' name='form' value='form'>";
     echo        "<td><input class='nav' type='submit' value='Submit'></td>";
     echo    "</tr>";
     echo    "</table>";

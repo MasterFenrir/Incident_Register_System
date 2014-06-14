@@ -11,6 +11,7 @@ class HelpdeskTable
     private $name;
     //Query in string format
     private $query;
+    private $nav;
 
         /*
          * Constructor for the class
@@ -18,14 +19,15 @@ class HelpdeskTable
          * @param $name: Name of the table, displayed in top row
          * @param $query: SQL query to make table from
          */
-        public function __construct($name, $query)
+        public function __construct($name, $query, $nav)
         {
             $this->query = $query;
             $this->name = $name;
+            $this->nav = $nav;
 
             //If order and sort GET information are set it appends the SQL query to include them
-            if(isset($_GET['order']) && isset($_GET['sort'])) {
-                $this->query = $query . " ORDER BY ".$_GET['order']. " " . $_GET['sort'];
+            if(isset($_POST['order']) && isset($_POST['sort'])) {
+                $this->query = $query . " ORDER BY ".$_POST['order']. " " . $_POST['sort'];
             }
 
             //Executes the query and stores result in $result
@@ -48,7 +50,7 @@ class HelpdeskTable
             //Checks how many columns the result has
             $count = count($row);
 
-            echo "<table>";
+            echo "<table class='gen'>";
             //Makes the title row of the table
             echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
 
@@ -72,11 +74,23 @@ class HelpdeskTable
             //Gets the key/value pairs from the rows and echo's them as url's with GET info
             //used to sort the columns.
             foreach($row as $key=>$value) {
-                if($_GET['sort'] == 'asc' && $_GET['order'] == $key) {
-                    echo "<th><a href='index.php?order=$key&sort=desc'>".ucfirst($key)."</th>";
+                echo "<th>";
+                if($_POST['sort'] == 'asc' && $_POST['order'] == $key) {
+                    echo    "<form action='/index.php' method='post'>";
+                    echo    "<input type='hidden' name='sort' value='desc'>";
+                    echo    "<input type='hidden' name='order' value=".$key.">";
+                    echo    "<input type='hidden' name='display' value=".$this->nav.">";
+                    echo    "<input class='order' type='submit' value=".ucfirst($key).">";
+                    echo    "</form>";
                 } else {
-                    echo "<th><a href='index.php?order=$key&sort=asc'>".ucfirst($key)."</th>";
+                    echo    "<form action='/index.php' method='post'>";
+                    echo    "<input type='hidden' name='sort' value='asc'>";
+                    echo    "<input type='hidden' name='order' value=".$key.">";
+                    echo    "<input type='hidden' name='display' value=".$this->nav.">";
+                    echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
+                    echo    "</form>";
                 }
+                echo "</th>";
             }
             echo "</tr>";
         }

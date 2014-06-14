@@ -14,7 +14,7 @@ function logoutKnop(){
 
     echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
     echo "<input type=\"hidden\" name=\"logout\" value=\"1\">";
-    echo "<input class=\"logout\" type=\"submit\" value=\"Logout\">";
+    echo "<input class=\"nav\" type=\"submit\" value=\"Logout\">";
     echo "</form>";
 }
 

@@ -11,28 +11,34 @@
 
 function displayContentConfig($postData) {
     switch($postData) {
-        case "displayHardware" : displayHardware(); break;
-        case "displaySoftware" : displaySoftware(); break;
+        case "displayHardware" : displayHardware($postData); break;
+        case "displaySoftware" : displaySoftware($postData); break;
         case "displayAddHardware" : displayAddHardware(); break;
         default : displayLandingConfig();
     }
 }
 
 function displayMenuConfig() {
-    new Button("Hardware", "displayHardware");
-    new Button("Software", "displaySoftware");
-    new Button("Add_Hardware", "displayAddHardware");
+    new Button("Hardware", "display", "displayHardware");
+    new Button("Software", "display", "displaySoftware");
+    new Button("Add_Hardware", "display", "displayAddHardware");
 }
 
+function processEventConfig($eventID)
+{
+    switch($eventID){
 
-    function displayHardware()
+    }
+}
+
+    function displayHardware($postData)
     {
-        new HelpdeskTable("Hardware", "SELECT * FROM hardware");
+        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData);
     }
 
-    function displaySoftware()
+    function displaySoftware($postData)
     {
-        new HelpdeskTable("Software", "SELECT * FROM software");
+        new HelpdeskTable("Software", "SELECT * FROM software", $postData);
     }
 
     function displayAddHardware()

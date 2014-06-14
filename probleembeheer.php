@@ -9,12 +9,19 @@
 function displayContentProbleem($postData)
 {
     switch($postData) {
-        case "displayProblemen" : new HelpdeskTable("Problemen", "SELECT * FROM problemen"); break;
+        case "displayProblemen" : new HelpdeskTable("Problemen", "SELECT * FROM problemen", "displayProblemen"); break;
         default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }
 
 function displayMenuProbleem()
 {
-    new Button("Problemen", "displayProblemen");
+    new Button("Problemen", "display", "displayProblemen");
+}
+
+function processEventProbleem($eventID)
+{
+    switch($eventID){
+
+    }
 }

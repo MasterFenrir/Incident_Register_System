@@ -130,18 +130,19 @@ table, tr, td, th {
     color: darkslategray;
 }
 
-table tr:nth-child(2n+3) {
-    background-color: lightsteelblue;
+table.gen tr:nth-child(2n+3) {
+   background-color: lightsteelblue;
 }
 
 table th {
     padding: 5px 3px 5px 3px;
 }
 
-table td {
+.gen td {
     padding: 3px 3px 3px 3px;
-    /*max-width: 160px;*/
+    max-width: 150px;
     text-wrap: normal;
+    word-break: break-all;
     text-align: left;
 }
 
@@ -149,7 +150,22 @@ table a:link, a:visited {
     color: inherit;
 }
 
-#container input[type=submit] {
+.inner {
+    border:none;
+}
+
+#container .nav {
     width: 155px;
+}
+
+#container .order, .order:hover {
+    border: none;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: inherit;
+    margin: 0%;
+    padding: 0%;
+    width: auto;
+    color: darkslategray;
 }
 

@@ -15,6 +15,18 @@
     checkLogin();
 ?>
 
+<?php
+    if(isset($_SESSION['user'])){
+        if(isset($_POST['id'])){
+            switch($_SESSION['user']){
+                case 'incident' : processEventIncident($_POST['id']); break;
+                case 'probleem' : processEventProbleem($_POST['id']); break;
+                case 'config' : processEventConfig($_POST['id']); break;
+            }
+        }
+    }
+?>
+
 <head>
     <link type="text/css" rel="stylesheet" href="stijlblad.css">
 </head>
