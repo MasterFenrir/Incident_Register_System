@@ -12,7 +12,7 @@ class Button
     {
         echo    "<form action=\"/index.php\" method=\"post\">";
         echo    "<input type=\"hidden\" name=\"display\" value=".$postValue.">";
-        echo    "<input class=\"nav\" type=\"submit\" value=".ucfirst($name).">";
+        echo    "<input class=\"nav\" type=\"submit\" value=".$name.">";
         echo    "</form>";
     }
 } 

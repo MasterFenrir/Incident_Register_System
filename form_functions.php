@@ -31,41 +31,50 @@ function passwordField(){
           </tr>";
 }
 
-function dropDown($valueArray)
+function dropDown($name, $array)
 {
     echo "<tr>
-            <td></td>
+            <td>".$name."</td>
             <td>
                 <select>";
-                    foreach($valueArray as $value) {
-                        echo "<option value=".$value.">".$value."</option>";
+                    foreach($array as $value) {
+                        echo "<option value=".$value.">".ucfirst($value)."</option>";
                     }
     echo        "</select>
             </td>
          </tr>";
 }
 
-function RadioButtons($valueArray, $name)
+function RadioButtons($name, $array)
 {
     echo "<tr>
-            <td></td>
+            <td>".$name."</td>
             <td>";
-                    foreach($valueArray as $value) {
-                        echo "<input type='radio' name=".$name." value=".$value.">".$value."</input>";
+                    foreach($array as $value) {
+                        echo "<input type='radio' name=".$name." value=".$value.">".ucfirst($value)."</input>";
                     }
     echo        "</select>
             </td>
          </tr>";
 }
 
-function CheckBoxes($valueArray, $name)
+function CheckBoxes($name, $array, $width)
 {
+    $x = 0;
     echo "<tr>
-            <td></td>
+            <td>".$name."</td>
             <td>";
-                foreach($valueArray as $value) {
-                    echo "<input type='checkbox' name=".$name." value=".$value.">".$value."</input>";
+                echo "<table>";
+                echo "<tr>";
+                foreach($array as $value) {
+                    if($x == 0) {
+                        echo "</tr><tr>";
+                    }
+                    echo "<td><input type='checkbox' name=".$name." value=".$value.">".ucfirst($value)."</input></td>";
+                    $x = ($x+1)%$width;
                 }
+                echo "</tr>";
+                echo "</table>";
     echo        "</select>
             </td>
          </tr>";
@@ -73,5 +82,23 @@ function CheckBoxes($valueArray, $name)
 
 function textField($name)
 {
-    echo "<tr><td>".$name."</td><td><input type='text' value=".$name."></td></tr>";
+    echo "<tr><td>".$name."</td><td><input type='text' name=".$name."></td></tr>";
+}
+
+function formHeader()
+{
+    echo    "<form action='\index.php' method='post'>";
+    echo    "<table>";
+}
+
+function formFooter($id)
+{
+    echo    "<tr>";
+    echo        "<td></td>";
+    echo        "<input type='hidden' name='id' value=".$id.">";
+    echo        "<input type='hidden' name='form' value='form'>";
+    echo        "<td><input class='nav' type='submit' value='Submit'></td>";
+    echo    "</tr>";
+    echo    "</table>";
+    echo    "</form>";
 }

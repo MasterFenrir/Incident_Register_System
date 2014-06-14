@@ -88,7 +88,6 @@ body {
 }
 
 #container input {
-    width: 155px;
     margin: 3px 5px 3px 5px;
     font-family: Verdana, Arial, sans-serif;
     background-color: #F9F9F9;
@@ -141,11 +140,16 @@ table th {
 
 table td {
     padding: 3px 3px 3px 3px;
-    max-width: 160px;
+    /*max-width: 160px;*/
     text-wrap: normal;
+    text-align: left;
 }
 
 table a:link, a:visited {
     color: inherit;
+}
+
+#container input[type=submit] {
+    width: 155px;
 }
 

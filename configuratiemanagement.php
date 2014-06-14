@@ -14,14 +14,14 @@ function displayContentConfig($postData) {
         case "displayHardware" : displayHardware(); break;
         case "displaySoftware" : displaySoftware(); break;
         case "displayAddHardware" : displayAddHardware(); break;
-        default : echo "Hello ".ucfirst($_SESSION['user']);
+        default : displayLandingConfig();
     }
 }
 
 function displayMenuConfig() {
     new Button("Hardware", "displayHardware");
     new Button("Software", "displaySoftware");
-    new Button("Add hardware", "displayAddHardware");
+    new Button("Add_Hardware", "displayAddHardware");
 }
 
 
@@ -37,7 +37,21 @@ function displayMenuConfig() {
 
     function displayAddHardware()
     {
+        formHeader();
+        textField("Hardware_ID");
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"));
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"));
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"));
+        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3);
+        textField("Leverancier");
+        textField("Aanschaf_jaar");
+        textField("Status");
+        formFooter("addHardware");
+    }
 
+    function displayLandingConfig()
+    {
+        echo "Hello ".ucfirst($_SESSION['user']);
     }
 
 

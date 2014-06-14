@@ -71,3 +71,12 @@ function validateDate($day, $month, $year){
     // Since we've gotten here, it must be true.
     return true;
 }
+
+function queryToArray($query)
+{
+    global $con;
+    $sql = mysqli_query($con, $query);
+    while($row = mysqli_fetch_array($sql)) {$array[] = $row[0];}
+
+    return $array;
+}
