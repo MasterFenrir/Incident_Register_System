@@ -107,6 +107,15 @@ function textField($name){
 }
 
 /**
+ * Function to add a hidden value to a form
+ * @param $name The name of the value
+ * @param $value The actual value
+ */
+function hiddenValue($name, $value){
+    echo    "<input type=\"hidden\" name=".$name." value=".$value.">";
+}
+
+/**
  * Function to create a quick start for a form
  */
 function formHeader(){
