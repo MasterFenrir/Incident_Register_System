@@ -115,7 +115,7 @@ class HelpdeskTable
         private function makeRows()
         {
             //Iterates over every row in the results
-            while($row = mysqli_fetch_row($this->result)) {
+            while($row = mysqli_fetch_assoc($this->result)) {
                 echo "<tr>";
                 //echo's a table value for each value in the row
                 foreach($row as $value) {
@@ -150,7 +150,7 @@ class HelpdeskTable
                 if($this->edit == null) {echo "<td>";}
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='id' value='$this->delete'>";
-                echo    "<input type='hidden' name='key' value=".$row[$this->primeKey].">";
+                echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Delete'>";
                 echo    "</form>";
                 echo    "</td>";

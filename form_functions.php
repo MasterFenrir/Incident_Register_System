@@ -114,6 +114,10 @@ function formHeader(){
     echo    "<table>";
 }
 
+function addNavigation($nav){
+    echo "<input type='hidden' name='display' value='".$nav."'>";
+}
+
 /**
  * Function to create
  * @param $id
