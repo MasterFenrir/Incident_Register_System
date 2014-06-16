@@ -41,25 +41,21 @@ function displayLogin()
 
             if (($get = mysqli_fetch_assoc($query)) > 0)
             {
-                if($pass == $get[password]){
-                    $rechten = $get['rechten'];
+                /*if($pass == $get[password]){*/
 
+                if(password_check($pass, $get['password'])){
                     $_SESSION['user'] = $user;
-                    $_SESSION['rechten'] = $rechten;
+                    $_SESSION['rechten'] = $get['rechten'];
 
                     header('Location:/index.php');
+                } else {
+                    $error = "Verkeerde inlog gegevens. Wachtwoord";
                 }
-
-                /*
-                    $existing_hash = $get[password];
-                    $hash = password_encrypt($pass, $existing_hash);
-                    if($hash === $existing_hash){
-                 */
             }
 
             else
             {
-                $error = "Verkeerde inlog gegevens";
+                $error = "Verkeerde inlog gegevens. Naam";
             }
         }
     }
