@@ -128,11 +128,11 @@
     function password_check($password, $existing_hash) {
         // existing hash contains format and salt at start
         $hash = crypt($password, $existing_hash);
+        echo $existing_hash."<br/>".$hash;
         if ($hash === $existing_hash) {
             return true;
         } else {
             return false;
         }
     }
-
 ?>
