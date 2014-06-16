@@ -63,9 +63,9 @@ function processEventConfig($eventID)
         formFooter("addHardware");
     }
 
-    function displayLandingConfig()
+    function addHardware()
     {
-        echo "Hello ".ucfirst($_SESSION['user']);
+
     }
 
     function deleteHardware()
@@ -74,6 +74,11 @@ function processEventConfig($eventID)
 
         $primeKey = $_POST['key'];
         mysqli_query($con, "DELETE FROM hardware WHERE id_hardware = $primeKey");
+    }
+
+    function displayLandingConfig()
+    {
+        echo "Hello ".ucfirst($_SESSION['user']);
     }
 
     function deleteSoftware()
@@ -93,8 +98,6 @@ function processEventConfig($eventID)
     {
         $primeKey = $_POST['key'];
     }
-
-
 
     function InkoopInkooporderToevoegen()
     {
