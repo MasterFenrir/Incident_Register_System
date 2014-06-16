@@ -127,11 +127,11 @@ function formHeader(){
  * Function to create
  * @param $id
  */
-function formFooter($id){
+function formFooter($id, $name="Submit"){
     echo    "<tr>";
     echo        "<td></td>";
     echo        "<input type='hidden' name='id' value='".$id."'>";
-    echo        "<td><input class='nav' type='submit' value='Submit'></td>";
+    echo        "<td><input class='nav' type='submit' value='{$name}'></td>";
     echo    "</tr>";
     echo    "</table>";
     echo    "</form>";
