@@ -74,15 +74,41 @@ function processEventConfig($eventID)
     function displayAddHardware()
     {
         formHeader();
-        textField("Hardware_ID");
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"));
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"));
-        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"));
-        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3);
-        textField("Leverancier");
-        textField("Aanschaf_jaar");
-        textField("Status");
+        textField("Hardware_ID", null);
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), null);
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), null);
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), null);
+        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, null);
+        textField("Leverancier", null);
+        textField("Aanschaf_jaar", null);
+        textField("Status", null);
+        hiddenValue("display", "displayHardware");
         formFooter("addHardware");
+    }
+
+    function displayEditHardware()
+    {
+        global $con;
+
+        formHeader();
+        $value = mysqli_query($con, "SELECT id_hardware FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        textField("Hardware_ID", mysqli_fetch_row($value));
+        $value = mysqli_query($con, "SELECT soort FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), mysqli_fetch_row($value));
+        $value = mysqli_query($con, "SELECT locatie FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), mysqli_fetch_row($value));
+        $value = mysqli_query($con, "SELECT os FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), mysqli_fetch_row($value));
+        //$value = mysqli_query($con, "SELECT id_software FROM hardware_software WHERE id_hardware='".$_POST['key']."'") or die('error');
+        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, queryToArray("SELECT id_software FROM hardware_software WHERE id_hardware='".$_POST['key']."'"));
+        $value = mysqli_query($con, "SELECT leverancier FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        textField("Leverancier", mysqli_fetch_row($value));
+        $value = mysqli_query($con, "SELECT aanschaf_jaar FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        textField("Aanschaf_jaar", mysqli_fetch_row($value));
+        $value = mysqli_query($con, "SELECT status FROM hardware WHERE id_hardware='".$_POST['key']."'");
+        textField("Status", mysqli_fetch_row($value));
+        hiddenValue("display", "displayHardware");
+        formFooter("editHardware");
     }
 
 
@@ -96,10 +122,10 @@ function processEventConfig($eventID)
             $message = "";
         }
         formHeader();
-        textField("Gebruikersnaam");
+        textField("Gebruikersnaam", null);
         passwordField("password1");
         passwordField("password2");
-        dropDown("Rechten", queryToArray("SELECT * FROM rechten"));
+        dropDown("Rechten", queryToArray("SELECT * FROM rechten"), null);
         hiddenValue("display", "displayAddUser");
         formFooter("addUser");
     }
@@ -162,8 +188,6 @@ function addHardware()
                                     VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die('sw error');
             }
         }
-
-        displayHardware("displayHardware");
     }
 
     function deleteHardware()
@@ -171,6 +195,8 @@ function addHardware()
         global $con;
 
         $primeKey = $_POST['key'];
+
+        mysqli_query($con, "DELETE FROM hardware_software WHERE id_hardware='".$primeKey."'") or die('swdel error');
         mysqli_query($con, "DELETE FROM hardware WHERE id_hardware='".$primeKey."'") or die('hwdel error');
     }
 
@@ -194,11 +220,6 @@ function addHardware()
         $primeKey = $_POST['key'];
         echo $primeKey;
         mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
-    }
-
-    function displayEditHardware()
-    {
-        $primeKey = $_POST['key'];
     }
 
     function displayEditSoftware()

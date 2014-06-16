@@ -119,7 +119,7 @@ class HelpdeskTable
                 echo "<tr>";
                 //echo's a table value for each value in the row
                 foreach($row as $value) {
-                    echo "<td>".ucfirst($value)."</td>";
+                    echo "<td>".$value."</td>";
                 }
                 $this->makeOptions($row);
                 echo "</tr>";
@@ -150,6 +150,7 @@ class HelpdeskTable
                 if($this->edit == null) {echo "<td>";}
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='id' value='$this->delete'>";
+                echo    "<input type='hidden' name='display' value='".$this->nav."'>";
                 echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Delete'>";
                 echo    "</form>";

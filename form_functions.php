@@ -7,21 +7,21 @@
 /**
  * This functions generates three fields to fill in a date (day, month, year)
  */
-function dateField(){
+function dateField($d, $m, $y){
     $day = date('d');
     $month = date('m');
     $year = date('Y');
     echo "<tr>
             <td>Dag: </td>
-            <td><input type='number' name='day' size='2' value='".$day."'></td>
+            <td><input type='number' name='day' size='2' value='".$day."'>".$d[0]."</input></td>
          </tr>
          <tr>
             <td>Maand: </td>
-                <td><input type='number' name='month' size='2' value='".$month."'></td>
+                <td><input type='number' name='month' size='2' value='".$month."'>".$m[0]."</input></td>
         </tr>
         <tr>
             <td>Jaar: </td>
-            <td><input type='number' name='month' size='4' value='".$year."'></td>
+            <td><input type='number' name='month' size='4' value='".$year."'>".$y[0]."</input></td>
         </tr>";
 }
 
@@ -38,16 +38,18 @@ function passwordField($name){
 
 /**
  * Function to create a dropdown out of an array
- * @param $name The name of the dropdown
- * @param $array The array with options
+ *
+ * @param $name  name of the dropdown
+ * @param $array the array with options
+ * @param $sel selected value
  */
-function dropDown($name, $array){
+function dropDown($name, $array, $sel){
     echo "<tr>
             <td>".$name."</td>
             <td>
                 <select name='".$name."'>";
                     foreach($array as $value) {
-                        echo "<option value=".$value.">".ucfirst($value)."</option>";
+                        echo "<option value='".$value."' "; if($value==$sel[0]){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
                     }
     echo        "</select>
             </td>
@@ -59,12 +61,12 @@ function dropDown($name, $array){
  * @param $name The name of the collection of radio buttons
  * @param $array The array with options
  */
-function RadioButtons($name, $array){
+function RadioButtons($name, $array, $sel){
     echo "<tr>
             <td>".$name."</td>
             <td>";
                     foreach($array as $value) {
-                        echo "<input type='radio' name=".$name." value=".$value.">".ucfirst($value)."</input>";
+                        echo "<input type='radio' name='".$name."' value='".$value."' "; if($value==$sel[0]){echo "selected='selected'";} echo ">".ucfirst($value)."</input>";
                     }
     echo        "</select>
             </td>
@@ -76,8 +78,9 @@ function RadioButtons($name, $array){
  * @param $name Name of the collection of checkboxes
  * @param $array Array with options
  * @param $width How many checkboxes there should be in one row
+ * @param $sel Optional array of values to check
  */
-function CheckBoxes($name, $array, $width){
+function CheckBoxes($name, $array, $width, $sel){
     $x = 0;
     echo "<tr>
             <td>".$name."</td>
@@ -88,7 +91,7 @@ function CheckBoxes($name, $array, $width){
                     if($x == 0) {
                         echo "</tr><tr class ='inner'>";
                     }
-                    echo "<td class='inner'><input type='checkbox' name='".$name."' value=".$value.">".ucfirst($value)."</input></td>";
+                    echo "<td class='inner'><input type='checkbox' name='".$name."' value=".$value."; "; if(in_array($value, $sel)){echo "selected='selected'";} echo ">".ucfirst($value)."</input></td>";
                     $x = ($x+1)%$width;
                 }
                 echo "</tr>";
@@ -100,10 +103,12 @@ function CheckBoxes($name, $array, $width){
 
 /**
  * Function to create a simple textfield
+ *
  * @param $name The name for the textfield
+ * @param $value Default value
  */
-function textField($name){
-    echo "<tr><td>".$name."</td><td><input type='text' name=".$name."></td></tr>";
+function textField($name, $sel){
+    echo "<tr><td>".$name."</td><td><input type='text' name=".$name.">".$sel[0]."</text></td></tr>";
 }
 
 /**
@@ -118,13 +123,9 @@ function hiddenValue($name, $value){
 /**
  * Function to create a quick start for a form
  */
-function formHeader(){
+function formHeader() {
     echo    "<form action='\index.php' method='post'>";
     echo    "<table>";
-}
-
-function addNavigation($nav){
-    echo "<input type='hidden' name='display' value='".$nav."'>";
 }
 
 /**
