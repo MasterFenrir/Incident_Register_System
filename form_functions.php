@@ -1,11 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: David
  * Date: 13-6-14
  * Time: 11:38
  */
 
+/**
+ * This functions generates three fields to fill in a date (day, month, year)
+ */
 function dateField(){
     $day = date('d');
     $month = date('m');
@@ -24,6 +25,10 @@ function dateField(){
         </tr>";
 }
 
+/**
+ * This field creates a field to fill in a password.
+ * @param $name The name the password field should have
+ */
 function passwordField($name){
     echo "<tr>
             <td>Wachtwoord: </td>
@@ -31,8 +36,12 @@ function passwordField($name){
           </tr>";
 }
 
-function dropDown($name, $array)
-{
+/**
+ * Function to create a dropdown out of an array
+ * @param $name The name of the dropdown
+ * @param $array The array with options
+ */
+function dropDown($name, $array){
     echo "<tr>
             <td>".$name."</td>
             <td>
@@ -45,8 +54,12 @@ function dropDown($name, $array)
          </tr>";
 }
 
-function RadioButtons($name, $array)
-{
+/**
+ * Functions to create radio buttons.
+ * @param $name The name of the collection of radio buttons
+ * @param $array The array with options
+ */
+function RadioButtons($name, $array){
     echo "<tr>
             <td>".$name."</td>
             <td>";
@@ -58,8 +71,13 @@ function RadioButtons($name, $array)
          </tr>";
 }
 
-function CheckBoxes($name, $array, $width)
-{
+/**
+ * Function to create checkboxes
+ * @param $name Name of the collection of checkboxes
+ * @param $array Array with options
+ * @param $width How many checkboxes there should be in one row
+ */
+function CheckBoxes($name, $array, $width){
     $x = 0;
     echo "<tr>
             <td>".$name."</td>
@@ -80,19 +98,27 @@ function CheckBoxes($name, $array, $width)
          </tr>";
 }
 
-function textField($name)
-{
+/**
+ * Function to create a simple textfield
+ * @param $name The name for the textfield
+ */
+function textField($name){
     echo "<tr><td>".$name."</td><td><input type='text' name=".$name."></td></tr>";
 }
 
-function formHeader()
-{
+/**
+ * Function to create a quick start for a form
+ */
+function formHeader(){
     echo    "<form action='\index.php' method='post'>";
     echo    "<table>";
 }
 
-function formFooter($id)
-{
+/**
+ * Function to create
+ * @param $id
+ */
+function formFooter($id){
     echo    "<tr>";
     echo        "<td></td>";
     echo        "<input type='hidden' name='id' value='".$id."'>";
