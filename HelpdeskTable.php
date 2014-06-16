@@ -146,7 +146,7 @@ class HelpdeskTable
                 if($this->delete == null) {echo "</td>";}
             }
 
-            if($this->primeKey != null && $this->delete != null) {
+            if($this->primeKey != null && $this->delete != null && ($row[$this->primeKey] != $_SESSION['user'])) {
                 if($this->edit == null) {echo "<td>";}
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='id' value='$this->delete'>";

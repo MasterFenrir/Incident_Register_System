@@ -22,10 +22,8 @@ function displayContentConfig($postData) {
         //case "displayAddSoftware" : displayAddSoftware(); break;
 
         case "displayUsers" : displayUsers($postData); break;
-       // case "displayEditUser" : displayEditUser(); break;
+        case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
-        case "confirmDeleteUser" : confirmDeleteUser; break;
-
         default : displayLandingConfig();
     }
 }
@@ -47,6 +45,7 @@ function processEventConfig($eventID)
         case "addHardware" : addHardware(); break;
         case "addUser"  : addUser(); break;
         case "deleteUser" : deleteUser(); break;
+        case "editUser" : editUser(); break;
     }
 }
 
@@ -68,6 +67,9 @@ function processEventConfig($eventID)
      */
     function displayUsers($postData)
     {
+        global $message;
+        echo $message;
+        $messagen = "";
         new HelpdeskTable("Gebruikers", "SELECT username, rechten FROM users", $postData,
             "displayEditUser", "deleteUser", "username");
     }
@@ -167,6 +169,77 @@ function processEventConfig($eventID)
         }
     }
 
+/**
+ * This function shows a form to edit an existing user
+ */
+    function displayEditUser(){
+        global $con;
+        global $message;
+        if($message != ""){
+            echo($message);
+            $message = "";
+        }
+        $primeKey = $_POST['key'];
+        $query = "SELECT * FROM users WHERE username = '{$primeKey}'";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_assoc($result);
+        echo("Je kunt nu deze gebruiker wijzigen. Om het wachtwoord te veranderen, voer een nieuw wachtwoord in. Anders zal het wachtwoord niet veranderen.");
+        formHeader();
+        echo $result['username'];
+        textField("Gebruikersnaam", $result['username']);
+        passwordField("password1");
+        passwordField("password2");
+        dropDown("Rechten", queryToArray("SELECT * FROM rechten"), $result['rechten']);
+        hiddenValue("display", "displayUsers");
+        formFooter("editUser");
+    }
+
+    function editUser(){
+        global $con;
+        global $message;
+        $message = "";
+        $username = removeMaliciousInput($_POST['Gebruikersnaam']);
+        $password1 = removeMaliciousInput($_POST['password1']);
+        $password2 = removeMaliciousInput($_POST['password2']);
+        $rechten = $_POST['Rechten'];
+
+        $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = '{$username}'") or die("Stuff");
+        $result = mysqli_fetch_row($result);
+
+        if($result[0] > 1){
+            $message .= "ERROR: Deze gebruikersnaam bestaat al!";
+        }
+        if($password1 != $password2){
+            $message .= "ERORR: De wachtwoorden komen niet overeen!";
+        }
+        if($message === ""){
+            if($password1 != ""){
+                $hash = password_encrypt($password1);
+                mysqli_query($con, "UPDATE users
+                                    SET username='{$username}', password='{$hash}', rechten='{$rechten}'
+                                    WHERE username = '{$username}'") or die(mysqli_error($con));
+
+                if (mysqli_connect_errno())
+                {
+                    $message .= "Gebruiker wijzigen mislukt. Probeer het opnieuw.";
+                } else {
+                    $message .= "Gebruiker succesvol gewijzigd.";
+                }
+            } else {
+                mysqli_query($con, "UPDATE users
+                                        SET username='{$username}', rechten='{$rechten}'
+                                        WHERE username = '{$username}") or die(mysqli_error($con));
+
+                if (mysqli_connect_errno())
+                {
+                    $message .= "Gebruiker wijzigen mislukt. Probeer het opnieuw.";
+                } else {
+                    $message .= "Gebruiker succesvol gewijzigd.";
+                }
+            }
+        }
+    }
+
 function addHardware()
     {
         global $con;
@@ -225,19 +298,5 @@ function addHardware()
     function displayEditSoftware()
     {
         $primeKey = $_POST['key'];
-    }
-
-    function confirmDeleteUser(){
-        $primeKey = $_POST['key'];
-        if($primeKey === $_SESSION['user']){
-            echo("Je kunt jezelf niet verwijderen.");
-        } else {
-            echo("Weet je het zeker dat je de gebruiker {$primeKey} wil verwijderen?");
-            new Button("Nee, ga terug", "display", "displayUsers");
-            formHeader();
-            hiddenValue("display", "displayUsers");
-            hiddenValue("key", $primeKey);
-            formFooter("deleteUser", "Ja, verwijder deze gebruiker");
-        }
     }
 ?>
