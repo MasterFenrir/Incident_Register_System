@@ -81,6 +81,11 @@
         return $array;
     }
 
+    /**
+     * This function encrypts a password and returns the result
+     * @param $password
+     * @return string
+     */
     function password_encrypt($password) {
         $hash_format = "$2y$10$";   // Tells PHP to use Blowfish with a "cost" of 10
         $salt_length = 22; 					// Blowfish salts should be 22-characters or more
@@ -90,6 +95,11 @@
         return $hash;
     }
 
+    /**
+     * This function generates a random salt, in order to use this with passwords, making them safer
+     * @param $length
+     * @return string
+     */
     function generate_salt($length) {
         // Not 100% unique, not 100% random, but good enough for a salt
         // MD5 returns 32 characters
@@ -107,6 +117,12 @@
         return $salt;
     }
 
+    /**
+     * This function compares the entered password with the password from the database.
+     * @param $password
+     * @param $existing_hash
+     * @return bool
+     */
     function password_check($password, $existing_hash) {
         // existing hash contains format and salt at start
         $hash = crypt($password, $existing_hash);
