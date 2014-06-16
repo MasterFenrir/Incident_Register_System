@@ -106,10 +106,10 @@ function processEventConfig($eventID)
         $rechten = $_POST['rechten'];
         $error = "";
 
-        $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = {$username}");
-        //$result = mysqli_fetch_row($result);
+        $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = '{$username}'") or die("Stuff");
+        $result = mysqli_fetch_row($result);
 
-        if($result > 0){
+        if($result[0] > 0){
             $error .= "ERROR: Deze gebruikersnaam bestaat al!";
         }
         if($password1 != $password2){
@@ -117,8 +117,8 @@ function processEventConfig($eventID)
         }
         if($error === ""){
             $hash = password_encrypt($password1);
-            mysqli_query($con, "INSERT INTO users('username', 'password', 'rechten')
-                                VALUES('{$username}', '{$hash}', '{$rechten}')");
+            mysqli_query($con, "INSERT INTO users
+                                VALUES('{$username}', '{$hash}', '{$rechten}')") or die(mysqli_error($con));
 
             if (mysqli_connect_errno())
             {
