@@ -22,6 +22,7 @@ function displayContentConfig($postData) {
         case "displayUsers" : displayUsers($postData); break;
         case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
+        case "addUser"  :   addUser(); break;
 
         default : displayLandingConfig();
     }
@@ -102,13 +103,32 @@ function processEventConfig($eventID)
         $username = removeMaliciousInput($_POST['Gebruikersnaam']);
         $password1 = removeMaliciousInput($_POST['password1']);
         $password2 = removeMaliciousInput($_POST['password2']);
+        $rechten = $_POST['rechten'];
         $error = "";
 
         $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = {$username}");
         $result = mysqli_fetch_array($result);
 
         if($result[0] > 0){
-            $error .= ""
+            $error .= "ERROR: Deze gebruikersnaam bestaat al!";
+        }
+        if($password1 != $password2){
+            $error .= "ERORR: De wachtwoorden komen niet overeen!";
+        }
+        if($error === ""){
+            $hash = password_encrypt($password1);
+            mysqli_query($con, "INSERT INTO users('username', 'password', 'rechten')
+                                VALUES('{$username}', '{$hash}', '{$rechten}')");
+
+            if (mysqli_connect_errno())
+            {
+                echo("Gebruiker toevoegen mislukt. Probeer het opnieuw.");
+            } else {
+                echo("Gebruiker succesvol toegevoegd.");
+            }
+        } else {
+            echo($error);
+            displayAddUser();
         }
     }
 
