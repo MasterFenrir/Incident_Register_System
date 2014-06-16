@@ -97,7 +97,7 @@
 <!-- Dit toont de footer -->
 <div id="footer">
     <?php
-        echo "© Soepmonsters";
+        echo "Copyright Soepmonsters";
     ?>
 </div>
 
