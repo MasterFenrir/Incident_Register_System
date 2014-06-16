@@ -74,7 +74,7 @@ function displayLogin()
     }
     echo            "</td>";
     echo        "</tr>";
-    passwordField();
+    passwordField("password");
     echo            "<td></td>";
     echo            "<td>";
     echo                "<input type=\"Submit\" Value=\"Login\" >";

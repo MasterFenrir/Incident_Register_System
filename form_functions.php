@@ -24,10 +24,10 @@ function dateField(){
         </tr>";
 }
 
-function passwordField(){
+function passwordField($name){
     echo "<tr>
             <td>Wachtwoord: </td>
-            <td><input type='password' name='password'></td>
+            <td><input type='password' name='{$name}'></td>
           </tr>";
 }
 

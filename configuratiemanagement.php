@@ -17,6 +17,11 @@ function displayContentConfig($postData) {
 
         case "displaySoftware" : displaySoftware($postData); break;
         case "displayEditSoftware" : displayEditSoftware(); break;
+        case "displayAddSoftware" : displayAddSoftware(); break;
+
+        case "displayUsers" : displayUsers($postData); break;
+        case "displayEditUser" : displayEditUser(); break;
+        case "displayAddUser" : displayAddUser(); break;
 
         default : displayLandingConfig();
     }
@@ -25,7 +30,10 @@ function displayContentConfig($postData) {
 function displayMenuConfig() {
     new Button("Hardware", "display", "displayHardware");
     new Button("Software", "display", "displaySoftware");
-    new Button("Add_Hardware", "display", "displayAddHardware");
+    new Button("Gebruikers", "display", "displayUsers");
+    new Button("Hardware toevoegen", "display", "displayAddHardware");
+    new Button("Software toevoegen", "display", "displayAddSoftware");
+    new Button("Gebruiker toevoegen", "display", "displayAddUser");
 }
 
 function processEventConfig($eventID)
@@ -49,6 +57,16 @@ function processEventConfig($eventID)
                           "displayEditSoftware", "deleteSoftware", "id_software");
     }
 
+    /**
+     * This function creates a table that displays the existing users
+     * @param $postData
+     */
+    function displayUsers($postData)
+    {
+        new HelpdeskTable("Gebruikers", "SELECT username, rechten FROM users", $postData,
+            "displayEditUser", "deleteUser", "username");
+    }
+
     function displayAddHardware()
     {
         formHeader();
@@ -63,7 +81,38 @@ function processEventConfig($eventID)
         formFooter("addHardware");
     }
 
-    function addHardware()
+
+    /**
+     * This function will create a form to add a new user
+     */
+    function displayAddUser(){
+        formHeader();
+        textField("Gebruikersnaam");
+        passwordField("password1");
+        passwordField("password2");
+        dropDown("Rechten", queryToArray("SELECT * FROM rechten"));
+        formFooter("addUser");
+    }
+
+    /**
+     * This function adds a user and encrypts his password
+     */
+    function addUser(){
+        global $con;
+        $username = removeMaliciousInput($_POST['Gebruikersnaam']);
+        $password1 = removeMaliciousInput($_POST['password1']);
+        $password2 = removeMaliciousInput($_POST['password2']);
+        $error = "";
+
+        $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = {$username}");
+        $result = mysqli_fetch_array($result);
+
+        if($result[0] > 0){
+            $error .= ""
+        }
+    }
+
+function addHardware()
     {
 
     }

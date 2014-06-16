@@ -41,7 +41,9 @@
      * This function removes possible malicious input
      */
     function removeMaliciousInput($input){
+        global $con;
         $input = strip_tags($input);
+        $input = mysqli_real_escape_string($con, $input);
         return $input;
     }
 
