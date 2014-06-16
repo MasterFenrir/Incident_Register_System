@@ -173,6 +173,14 @@ function addHardware()
         mysqli_query($con, "DELETE FROM hardware WHERE id_hardware='".$primeKey."'") or die('hwdel error');
     }
 
+    function deleteUser(){
+        global $con;
+        $primeKey = $_POST['key'];
+        if($primeKey === $_SESSION['user']){
+
+        }
+    }
+
     function displayLandingConfig()
     {
         echo "Hello ".ucfirst($_SESSION['user']);
