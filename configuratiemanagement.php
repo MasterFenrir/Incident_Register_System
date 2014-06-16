@@ -143,16 +143,16 @@ function addHardware()
         $valid = yearCheck($_POST['Aanschaf_jaar']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO hardware (hardware_id, soort, locatie, os, leverancier, aanschaf_jaar, status)
+            mysqli_query($con, "INSERT INTO hardware (id_hardware, soort, locatie, os, leverancier, aanschaf_jaar, status)
                                 VALUES('".$_POST['Hardware_ID']."', '".$_POST['Soort']."', '".$_POST['Locatie']."',
                                        '".$_POST['OS']."', '".$_POST['Leverancier']."', '".$_POST['Aanschaf_jaar']."',
-                                       '".$_POST['Status']."')") or die(mysqli_error($con));
+                                       '".$_POST['Status']."')") or die('hw error');
         }
 
         if(!empty($_POST['boxes'])) {
             foreach($_POST['boxes'] as $box) {
                 mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
-                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die(mysqli_error($con));
+                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die(mysqli_error('sw error'));
             }
         }
     }
