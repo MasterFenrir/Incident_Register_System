@@ -152,9 +152,11 @@ function addHardware()
         if(!empty($_POST['boxes'])) {
             foreach($_POST['boxes'] as $box) {
                 mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
-                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die(mysqli_error('sw error'));
+                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die('sw error');
             }
         }
+
+        displayHardware("displayHardware");
     }
 
     function deleteHardware()
@@ -162,7 +164,7 @@ function addHardware()
         global $con;
 
         $primeKey = $_POST['key'];
-        mysqli_query($con, "DELETE FROM hardware WHERE id_hardware = $primeKey");
+        mysqli_query($con, "DELETE FROM hardware WHERE id_hardware='".$primeKey."'") or die('hwdel error');
     }
 
     function displayLandingConfig()
@@ -175,7 +177,7 @@ function addHardware()
         global $con;
 
         $primeKey = $_POST['key'];
-        mysqli_query($con, "DELETE FROM software WHERE id_hardware = $primeKey");
+        mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
     }
 
     function displayEditHardware()
