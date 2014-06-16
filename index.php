@@ -3,6 +3,9 @@
 
 <head><title>Helpdesk</title></head>
 <?php
+/**
+ * Include all the necessary files
+ */
     include "configuratiemanagement.php";
     include "probleembeheer.php";
     include "incidentbeheer.php";
@@ -17,6 +20,9 @@
 ?>
 
 <?php
+/*
+ * Check ifsomeone is logged in, and if they have taken any action
+ */
     if(isset($_SESSION['user'])){
         if(isset($_POST['id'])){
             switch($_SESSION['rechten']){
@@ -28,6 +34,7 @@
     }
 ?>
 
+<!-- This includes the stylesheet -->
 <head>
     <link type="text/css" rel="stylesheet" href="stijlblad.css">
 </head>
@@ -35,13 +42,13 @@
 <body>
 <div id="container">
 
-<!-- Dit toont de banner aan de bovenkant van de pagina -->
+<!-- This shows the header -->
 <div id="header">
     <span class="foto"><img src="helpdesk.png" /></span>
 </div>
 
 
-<!-- Dit toont de logout knop en geeft het een div id wanneer iemand ingelogd is -->
+<!-- This shows the logout button if a user is logged in. -->
 <div id="topmenu">
     <?php
         if(isset($_SESSION['user'])) {
@@ -51,16 +58,12 @@
 </div>
 
 
-<!--
-     De onderstaande code toont de navigatie gedeelte van de website en geeft het een positie op het scherm
-     Alleen de functies die voor de verschillende actoren de navigatie
-     menu tonen moeten hierin gezet worden.
-     De waarde van $_SESSION['user'] word bepaald als je inlogd en is de Username.
--->
+<!-- The following code shows the navigation of the website, based on the rights of the current user. -->
 
 <div id="left_sidebar">
     <div id="menu">
         <?php
+            //Check if the user is logged in.
             if(isset($_SESSION['user'])) {
                 switch($_SESSION['rechten']) {
                     case 'incident' : displayMenuIncident(); break;
@@ -72,17 +75,11 @@
     </div>
 </div>
 
-<!--
-     De onderstaande code toont de content gedeelte van de website en geeft het een positie op het scherm
-     Alle functies die betrekking hebben op iets wat je ziet wat niet tot het navigatie
-     menu hoort moet hierin gezet worden.
-     Ook worden $_POST waarden vanuit functies overgezet naar $_SESSION variabelen, en ook $_POST variabelen
-     'verlengt' zodat ze meer dan 1 click verstuurt kunnen worden.
-     De navigatie knoppen sturen de waarde van $_POST['display'] hier naartoe.
--->
+<!-- The following code takes care of showing the content. This is based on the users' rights. -->
 
 <div id="content">
     <?php
+    //Check if the user is logged in.
         if(!isset($_SESSION['user'])) {
             displayLogin();
         } else {
@@ -95,7 +92,7 @@
     ?>
 </div>
 
-<!-- Dit toont de footer -->
+<!-- This shows the footer -->
 <div id="footer">
     <?php
         echo "Copyright Tapir Inc.";
