@@ -91,7 +91,7 @@ function CheckBoxes($name, $array, $width, $sel){
                     if($x == 0) {
                         echo "</tr><tr class ='inner'>";
                     }
-                    echo "<td class='inner'><input type='checkbox' name='".$name."' value=".$value."; "; if(in_array($value, $sel)){echo "selected='selected'";} echo ">".ucfirst($value)."</input></td>";
+                    echo "<td class='inner'><input type='checkbox' name='".$name."' value='".$value."'"; if(in_array($value, $sel)){echo " checked";} echo ">".ucfirst($value)."</input></td>";
                     $x = ($x+1)%$width;
                 }
                 echo "</tr>";
@@ -108,7 +108,7 @@ function CheckBoxes($name, $array, $width, $sel){
  * @param $value Default value
  */
 function textField($name, $sel){
-    echo "<tr><td>".$name."</td><td><input type='text' name=".$name.">".$sel[0]."</text></td></tr>";
+    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel[0]."'></text></td></tr>";
 }
 
 /**
