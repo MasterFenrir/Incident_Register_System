@@ -41,7 +41,7 @@ function displayLogin()
 
             if (($get = mysqli_fetch_assoc($query)) > 0)
             {
-                if(password_verify($pass, $get[password])){
+                if($pass == $get[password]){
                     $rechten = $get['rechten'];
 
                     $_SESSION['user'] = $user;
@@ -57,10 +57,6 @@ function displayLogin()
             }
         }
     }
-
-
-
-
 
     /*
      *Hieronder volgt de inlog formulier
