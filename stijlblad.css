@@ -169,3 +169,6 @@ table a:link, a:visited {
     color: darkslategray;
 }
 
+.option {
+    width: 100px;
+}

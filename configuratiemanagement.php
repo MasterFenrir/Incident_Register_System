@@ -12,8 +12,12 @@
 function displayContentConfig($postData) {
     switch($postData) {
         case "displayHardware" : displayHardware($postData); break;
-        case "displaySoftware" : displaySoftware($postData); break;
+        case "displayEditHardware" : displayEditHardware(); break;
         case "displayAddHardware" : displayAddHardware(); break;
+
+        case "displaySoftware" : displaySoftware($postData); break;
+        case "displayEditSoftware" : displayEditSoftware(); break;
+
         default : displayLandingConfig();
     }
 }
@@ -26,19 +30,23 @@ function displayMenuConfig() {
 
 function processEventConfig($eventID)
 {
-    switch($eventID){
-
+    switch($eventID) {
+        case "deleteHardware" : deleteHardware();
+        case "deleteSoftware" : deleteSoftware();
+        case "addHardware" : addHardware();
     }
 }
 
     function displayHardware($postData)
     {
-        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData);
+        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
+                          "displayEditHardware", "deleteHardware", "id_hardware");
     }
 
     function displaySoftware($postData)
     {
-        new HelpdeskTable("Software", "SELECT * FROM software", $postData);
+        new HelpdeskTable("Software", "SELECT * FROM software", $postData,
+                          "displayEditSoftware", "deleteSoftware", "id_software");
     }
 
     function displayAddHardware()
@@ -58,6 +66,32 @@ function processEventConfig($eventID)
     function displayLandingConfig()
     {
         echo "Hello ".ucfirst($_SESSION['user']);
+    }
+
+    function deleteHardware()
+    {
+        global $con;
+
+        $primeKey = $_POST['key'];
+        mysqli_query($con, "DELETE FROM hardware WHERE id_hardware = $primeKey");
+    }
+
+    function deleteSoftware()
+    {
+        global $con;
+
+        $primeKey = $_POST['key'];
+        mysqli_query($con, "DELETE FROM software WHERE id_hardware = $primeKey");
+    }
+
+    function displayEditHardware()
+    {
+        $primeKey = $_POST['key'];
+    }
+
+    function displayEditSoftware()
+    {
+        $primeKey = $_POST['key'];
     }
 
 
