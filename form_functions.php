@@ -70,7 +70,7 @@ function CheckBoxes($name, $array, $width)
                     if($x == 0) {
                         echo "</tr><tr class ='inner'>";
                     }
-                    echo "<td class='inner'><input type='checkbox' name=".$name." value=".$value.">".ucfirst($value)."</input></td>";
+                    echo "<td class='inner'><input type='checkbox' name='boxes' value=".$value.">".ucfirst($value)."</input></td>";
                     $x = ($x+1)%$width;
                 }
                 echo "</tr>";

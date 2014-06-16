@@ -134,7 +134,27 @@ function processEventConfig($eventID)
 
 function addHardware()
     {
+        global $con;
 
+        $valid = emptyCheck($_POST['Hardware_ID']);
+        $valid = emptyCheck($_POST['Soort']);
+        $valid = emptyCheck($_POST['Locatie']);
+        $valid = emptyCheck($_POST['Leverancier']);
+        $valid = yearCheck($_POST['Aaanschaf_jaar']);
+
+        if($valid) {
+            mysqli_query($con, "INSERT INTO hardware (hardware_id, soort, locatie, os, leverancier, aanschaf_jaar, status)
+                                VALUES('".$_POST['Hardware_ID']."', '".$_POST['Soort']."', '".$_POST['Locatie']."',
+                                       '".$_POST['OS']."', '".$_POST['Leverancier']."', '".$_POST['Aanschaf_jaar']."',
+                                       '".$_POST['Status']."')");
+        }
+
+        if(!empty($_POST['boxes'])) {
+            foreach($_POST['boxes'] as $box) {
+                mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
+                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')");
+            }
+        }
     }
 
     function deleteHardware()
