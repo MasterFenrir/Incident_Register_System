@@ -93,6 +93,7 @@ body {
     background-color: #F9F9F9;
     border: 1px solid #2F4F4F;
     color: #607080;
+    border-radius: 15px;
 }
 
 #container input:hover {
@@ -115,6 +116,7 @@ body {
     clear: both;
     text-align: center;
     background-color:  #B0E0E6;
+    text-shadow: 2px 2px 2px #A52A2A;
 }
 
 .tableTitle {
@@ -167,5 +169,8 @@ table a:link, a:visited {
     padding: 0%;
     width: auto;
     color: darkslategray;
+}
+.option {
+    width: 100px;
 }
 
