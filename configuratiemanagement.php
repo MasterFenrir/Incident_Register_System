@@ -38,7 +38,6 @@ function displayMenuConfig() {
 
 function processEventConfig($eventID)
 {
-    echo $eventID;
     switch($eventID) {
         case "deleteHardware" : deleteHardware(); break;
         case "deleteSoftware" : deleteSoftware(); break;
@@ -141,19 +140,19 @@ function addHardware()
         $valid = emptyCheck($_POST['Soort']);
         $valid = emptyCheck($_POST['Locatie']);
         $valid = emptyCheck($_POST['Leverancier']);
-        $valid = yearCheck($_POST['Aaanschaf_jaar']);
+        $valid = yearCheck($_POST['Aanschaf_jaar']);
 
         if($valid) {
             mysqli_query($con, "INSERT INTO hardware (hardware_id, soort, locatie, os, leverancier, aanschaf_jaar, status)
                                 VALUES('".$_POST['Hardware_ID']."', '".$_POST['Soort']."', '".$_POST['Locatie']."',
                                        '".$_POST['OS']."', '".$_POST['Leverancier']."', '".$_POST['Aanschaf_jaar']."',
-                                       '".$_POST['Status']."')");
+                                       '".$_POST['Status']."')") or die(mysqli_error($con));
         }
 
         if(!empty($_POST['boxes'])) {
             foreach($_POST['boxes'] as $box) {
                 mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
-                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')");
+                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die(mysqli_error($con));
             }
         }
     }

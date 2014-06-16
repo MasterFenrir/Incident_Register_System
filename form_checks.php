@@ -7,7 +7,7 @@
  */
 
 function emptyCheck($value) {
-    if(!isset($value) || trim($value) == "") {
+    if(empty($value) || trim($value) == "") {
         return false;
     }
     return true;
@@ -21,7 +21,7 @@ function numberCheck($value) {
 }
 
 function yearCheck($value) {
-    if(is_numeric($value) && $value >= 1900 && $value <= 2100) {
+    if($value >= 1900 && $value <= 2100) {
         return true;
     }
     return false;
