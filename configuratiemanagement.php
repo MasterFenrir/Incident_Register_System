@@ -24,6 +24,7 @@ function displayContentConfig($postData) {
         case "displayUsers" : displayUsers($postData); break;
        // case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
+        case "confirmDeleteUser" : confirmDeleteUser; break;
 
         default : displayLandingConfig();
     }
@@ -45,6 +46,7 @@ function processEventConfig($eventID)
         case "deleteSoftware" : deleteSoftware(); break;
         case "addHardware" : addHardware(); break;
         case "addUser"  : addUser(); break;
+        case "deleteUser" : deleteUser(); break;
     }
 }
 
@@ -66,7 +68,6 @@ function processEventConfig($eventID)
      */
     function displayUsers($postData)
     {
-        echo '<input type="button" value="View Details" onclick="JavaScript:newPopup(\'Details.php?id=test)" />';
         new HelpdeskTable("Gebruikers", "SELECT username, rechten FROM users", $postData,
             "displayEditUser", "deleteUser", "username");
     }
