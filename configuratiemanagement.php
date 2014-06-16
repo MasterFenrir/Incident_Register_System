@@ -203,9 +203,7 @@ function addHardware()
     function deleteUser(){
         global $con;
         $primeKey = $_POST['key'];
-        if($primeKey === $_SESSION['user']){
-        //
-        }
+        mysqli_query($con, "DELETE FROM users WHERE username='".$primeKey."'") or die('hwdel error');
     }
 
     function displayLandingConfig()
@@ -236,7 +234,7 @@ function addHardware()
             new Button("Nee, ga terug", "display", "displayUsers");
             formHeader();
             hiddenValue("display", "displayUsers");
-            hiddenValue("toDelete", $primeKey);
+            hiddenValue("key", $primeKey);
             formFooter("deleteUser", "Ja, verwijder deze gebruiker");
         }
     }
