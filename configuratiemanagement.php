@@ -6,6 +6,8 @@
  * Time: 11:52
  */
 
+$message= "";
+
 //dummycode for configuratiemagement
 // to do change name and remove some code
 
@@ -87,11 +89,17 @@ function processEventConfig($eventID)
      * This function will create a form to add a new user
      */
     function displayAddUser(){
+        global $message;
+        if($message != ""){
+            echo($message);
+            $message = "";
+        }
         formHeader();
         textField("Gebruikersnaam");
         passwordField("password1");
         passwordField("password2");
         dropDown("Rechten", queryToArray("SELECT * FROM rechten"));
+        hiddenValue("display", "displayAddUser");
         formFooter("addUser");
     }
 
@@ -100,35 +108,33 @@ function processEventConfig($eventID)
      */
     function addUser(){
         global $con;
+        global $message;
+        $message = "";
         $username = removeMaliciousInput($_POST['Gebruikersnaam']);
         $password1 = removeMaliciousInput($_POST['password1']);
         $password2 = removeMaliciousInput($_POST['password2']);
-        $rechten = $_POST['rechten'];
-        $error = "";
+        $rechten = $_POST['Rechten'];
 
         $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = '{$username}'") or die("Stuff");
         $result = mysqli_fetch_row($result);
 
         if($result[0] > 0){
-            $error .= "ERROR: Deze gebruikersnaam bestaat al!";
+            $message .= "ERROR: Deze gebruikersnaam bestaat al!";
         }
         if($password1 != $password2){
-            $error .= "ERORR: De wachtwoorden komen niet overeen!";
+            $message .= "ERORR: De wachtwoorden komen niet overeen!";
         }
-        if($error === ""){
+        if($message === ""){
             $hash = password_encrypt($password1);
             mysqli_query($con, "INSERT INTO users
                                 VALUES('{$username}', '{$hash}', '{$rechten}')") or die(mysqli_error($con));
 
             if (mysqli_connect_errno())
             {
-                echo("Gebruiker toevoegen mislukt. Probeer het opnieuw.");
+                $message .= "Gebruiker toevoegen mislukt. Probeer het opnieuw.";
             } else {
-                echo("Gebruiker succesvol toegevoegd.");
+                $message .= "Gebruiker succesvol toegevoegd.";
             }
-        } else {
-            echo($error);
-            displayAddUser();
         }
     }
 
