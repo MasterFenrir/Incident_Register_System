@@ -95,7 +95,7 @@ function formFooter($id)
 {
     echo    "<tr>";
     echo        "<td></td>";
-    echo        "<input type='hidden' name='id' value=".$id.">";
+    echo        "<input type='hidden' name='id' value='".$id."'>";
     echo        "<td><input class='nav' type='submit' value='Submit'></td>";
     echo    "</tr>";
     echo    "</table>";

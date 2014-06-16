@@ -17,10 +17,10 @@ function displayContentConfig($postData) {
 
         case "displaySoftware" : displaySoftware($postData); break;
         case "displayEditSoftware" : displayEditSoftware(); break;
-        case "displayAddSoftware" : displayAddSoftware(); break;
+        //case "displayAddSoftware" : displayAddSoftware(); break;
 
         case "displayUsers" : displayUsers($postData); break;
-        case "displayEditUser" : displayEditUser(); break;
+       // case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
 
         default : displayLandingConfig();
@@ -38,6 +38,7 @@ function displayMenuConfig() {
 
 function processEventConfig($eventID)
 {
+    echo $eventID;
     switch($eventID) {
         case "deleteHardware" : deleteHardware(); break;
         case "deleteSoftware" : deleteSoftware(); break;

@@ -11,6 +11,7 @@
     include "HelpdeskTable.php";
     include "Button.php";
     include "login.php";
+    include "form_checks.php";
 
     checkLogin();
 ?>
@@ -18,7 +19,7 @@
 <?php
     if(isset($_SESSION['user'])){
         if(isset($_POST['id'])){
-            switch($_SESSION['user']){
+            switch($_SESSION['rechten']){
                 case 'incident' : processEventIncident($_POST['id']); break;
                 case 'probleem' : processEventProbleem($_POST['id']); break;
                 case 'config' : processEventConfig($_POST['id']); break;
