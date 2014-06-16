@@ -31,9 +31,9 @@ function displayMenuConfig() {
 function processEventConfig($eventID)
 {
     switch($eventID) {
-        case "deleteHardware" : deleteHardware();
-        case "deleteSoftware" : deleteSoftware();
-        case "addHardware" : addHardware();
+        case "deleteHardware" : deleteHardware(); break;
+        case "deleteSoftware" : deleteSoftware(); break;
+        case "addHardware" : addHardware(); break;
     }
 }
 
