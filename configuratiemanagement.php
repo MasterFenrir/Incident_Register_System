@@ -22,7 +22,6 @@ function displayContentConfig($postData) {
         case "displayUsers" : displayUsers($postData); break;
         case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
-        case "addUser"  :   addUser(); break;
 
         default : displayLandingConfig();
     }
@@ -43,6 +42,7 @@ function processEventConfig($eventID)
         case "deleteHardware" : deleteHardware(); break;
         case "deleteSoftware" : deleteSoftware(); break;
         case "addHardware" : addHardware(); break;
+        case "addUser"  : addUser(); break;
     }
 }
 
