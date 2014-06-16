@@ -102,9 +102,8 @@ function processEventConfig($eventID)
         dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), mysqli_fetch_row($value));
         $value = mysqli_query($con, "SELECT software.naam FROM software, hardware WHERE hardware.os = software.id_software AND hardware.id_hardware='".$_POST['key']."'");
         dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), mysqli_fetch_row($value));
-        //$value = mysqli_query($con, "SELECT id_software FROM hardware_software WHERE id_hardware='".$_POST['key']."'") or die('error');
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
-                    queryToArray("SELECT id_software FROM hardware_software WHERE id_hardware='".$_POST['key']."'"));
+                    queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
         $value = mysqli_query($con, "SELECT leverancier FROM hardware WHERE id_hardware='".$_POST['key']."'");
         textField("Leverancier", mysqli_fetch_row($value));
         $value = mysqli_query($con, "SELECT aanschaf_jaar FROM hardware WHERE id_hardware='".$_POST['key']."'");
