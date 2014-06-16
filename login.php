@@ -49,6 +49,12 @@ function displayLogin()
 
                     header('Location:/index.php');
                 }
+
+                /*
+                    $existing_hash = $get[password];
+                    $hash = password_encrypt($pass, $existing_hash);
+                    if($hash === $existing_hash){
+                 */
             }
 
             else

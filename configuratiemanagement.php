@@ -107,9 +107,9 @@ function processEventConfig($eventID)
         $error = "";
 
         $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = {$username}");
-        $result = mysqli_fetch_array($result);
+        //$result = mysqli_fetch_row($result);
 
-        if($result[0] > 0){
+        if($result > 0){
             $error .= "ERROR: Deze gebruikersnaam bestaat al!";
         }
         if($password1 != $password2){
