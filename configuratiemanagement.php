@@ -308,6 +308,35 @@ function addHardware()
         }
     }
 
+function addSoftware()
+    {
+        global $con;
+
+        $valid = emptyCheck($_POST['ID_Software']); $id = removeMaliciousInput($_POST['ID_Software']);
+        $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
+        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
+        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        $valid = emptyCheck($_POST['Aantal_Licentie']); $a_lic = removeMaliciousInput($_POST['Aantal_Licentie']);
+        $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
+        $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
+        $status = removeMaliciousInput($_POST['Status']);
+        $valid = numberCheck($_POST['Aantal_Licentie']);
+        $valid = numberCheck($_POST['Aantal_Gebruikers']);
+
+        if($valid) {
+            mysqli_query($con, "INSERT INTO software (id_software, naam, producent, leverancier, aantal_licentie, aantal_gebruikers, status)
+                                VALUES('".$id."', '".$naam."', '".$soort."',
+                                       '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."'
+                                       '".$status."')") or die('sw error');
+        }
+
+
+    }
+
+
+
+
     function deleteHardware()
     {
         global $con;
