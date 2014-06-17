@@ -43,6 +43,7 @@ function processEventConfig($eventID)
         case "deleteHardware" : deleteHardware(); break;
         case "deleteSoftware" : deleteSoftware(); break;
         case "addHardware" : addHardware(); break;
+        case "addSoftware": addSoftware(); break;
         case "editHardware" : editHardware(); break;
         case "addUser"  : addUser(); break;
         case "deleteUser" : deleteUser(); break;
@@ -72,7 +73,41 @@ function processEventConfig($eventID)
         formFooter("addSoftware");
     }
 
+   /** function displayEditSoftware()
+    {
+        formHeader();
+        textField("ID_Software", null);
+        textField("Naam", null);
+        textField("Soort", null);
+        textField("Producent", null);
+        textField("Leverancier", null);
+        textField("Aantal_Licentie", null);
+        textField("Soort_Licentie", null);
+        textField("Aantal_Gebruikers", null);
+        textField("Status", null);
+        hiddenValue("display", "displaySoftware");
+        formFooter("addSoftware");
 
+         global $con;
+
+        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
+        $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
+
+        formHeader();
+        displayField("Hardware_ID", $values['id_hardware']);
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $values['soort']);
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $values['locatie']);
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $os['naam']);
+        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
+                    queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
+        textField("Leverancier", $values['leverancier']);
+        textField("Aanschaf_jaar", $values['aanschaf_jaar']);
+        textField("Status", $values['status']);
+        hiddenValue("display", "displayHardware");
+        formFooter("editHardware");
+
+    }
+*/
     /**
      * This function creates a table that displays the existing users
      * @param $postData
@@ -325,7 +360,7 @@ function addSoftware()
         $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO software (id_software, naam, producent, leverancier, aantal_licentie, aantal_gebruikers, status)
+            mysqli_query($con, "INSERT INTO software (id_software, naam, producent, leverancier, aantal_licenties, aantal_gebruikers, status)
                                 VALUES('".$id."', '".$naam."', '".$soort."',
                                        '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."'
                                        '".$status."')") or die('sw error');
@@ -366,8 +401,5 @@ function addSoftware()
         mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
     }
 
-    function displayEditSoftware()
-    {
-        $primeKey = $_POST['key'];
-    }
+
 ?>
