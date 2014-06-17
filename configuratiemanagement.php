@@ -103,7 +103,7 @@ function processEventConfig($eventID)
     {
          global $con;
 
-        $valid = emptyCheck($_POST['Software_ID']);
+        $valid = emptyCheck($_POST['ID_Software']);
         $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
         $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
         $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
@@ -117,7 +117,7 @@ function processEventConfig($eventID)
 
         if($valid) {
             mysqli_query($con, "UPDATE software SET naam='".$naam."', soort='".$soort."', producent='".$pro."', leverancier='".$lev."', aantal_licenties='".$a_lic."', soort_licenties='".$s_lic."', aantal_gebruikers='".$a_geb."' status='".$status."'
-                                WHERE id_software='".$_POST['Software_ID']."'");
+                                WHERE id_software='".$_POST['ID_Software']."'");
         }
     }
     /**
