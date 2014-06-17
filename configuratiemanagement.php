@@ -94,12 +94,12 @@ function processEventConfig($eventID)
         textField("Aantal_Gebruikers", $values['aantal_gebruikers']);
         textField("Status", $values['status']);
         hiddenValue("display", "displaySoftware");
-        formFooter("EditSoftware");
+        formFooter("editSoftware");
 
 
     }
 
-    function EditSoftware()
+    function editSoftware()
     {
          global $con;
 
