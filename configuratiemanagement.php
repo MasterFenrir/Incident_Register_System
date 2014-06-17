@@ -82,7 +82,7 @@ function processEventConfig($eventID)
         $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
 
         formHeader();
-        textField("ID_Software", null);
+        textField("ID_Software", );
         textField("Naam", null);
         textField("Soort", null);
         textField("Producent", null);
@@ -401,7 +401,7 @@ function addSoftware()
         global $con;
 
         $primeKey = $_POST['key'];
-        mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
+        mysqli_query($con, "DELETE FROM software WHERE id_software ='".$primeKey."'");
     }
 
 
