@@ -66,7 +66,9 @@ class HelpdeskTable
 
             echo "<table class='gen'>";
             //Makes the title row of the table
-            echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
+            if(count($row) > 0) {
+                echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
+            }
 
             $this->makeColumns();
             $this->makeRows();
@@ -83,30 +85,32 @@ class HelpdeskTable
             $row = mysqli_fetch_assoc($this->result);
             mysqli_data_seek($this->result, 0);
 
-            echo "<tr>";
+            if(count($row) > 0) {
+                echo "<tr>";
 
-            //Gets the key/value pairs from the rows and echo's them as url's with GET info
-            //used to sort the columns.
-            foreach($row as $key=>$value) {
-                echo "<th>";
-                if($_POST['sort'] == 'asc' && $_POST['order'] == $key) {
-                    echo    "<form action='/index.php' method='post'>";
-                    echo    "<input type='hidden' name='sort' value='desc'>";
-                    echo    "<input type='hidden' name='order' value=".$key.">";
-                    echo    "<input type='hidden' name='display' value=".$this->nav.">";
-                    echo    "<input class='order' type='submit' value=".ucfirst($key).">";
-                    echo    "</form>";
-                } else {
-                    echo    "<form action='/index.php' method='post'>";
-                    echo    "<input type='hidden' name='sort' value='asc'>";
-                    echo    "<input type='hidden' name='order' value=".$key.">";
-                    echo    "<input type='hidden' name='display' value=".$this->nav.">";
-                    echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
-                    echo    "</form>";
+                //Gets the key/value pairs from the rows and echo's them as url's with GET info
+                //used to sort the columns.
+                foreach($row as $key=>$value) {
+                    echo "<th>";
+                    if($_POST['sort'] == 'asc' && $_POST['order'] == $key) {
+                        echo    "<form action='/index.php' method='post'>";
+                        echo    "<input type='hidden' name='sort' value='desc'>";
+                        echo    "<input type='hidden' name='order' value=".$key.">";
+                        echo    "<input type='hidden' name='display' value=".$this->nav.">";
+                        echo    "<input class='order' type='submit' value=".ucfirst($key).">";
+                        echo    "</form>";
+                    } else {
+                        echo    "<form action='/index.php' method='post'>";
+                        echo    "<input type='hidden' name='sort' value='asc'>";
+                        echo    "<input type='hidden' name='order' value=".$key.">";
+                        echo    "<input type='hidden' name='display' value=".$this->nav.">";
+                        echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
+                        echo    "</form>";
+                    }
+                    echo "</th>";
                 }
-                echo "</th>";
+                echo "</tr>";
             }
-            echo "</tr>";
         }
 
         /*
