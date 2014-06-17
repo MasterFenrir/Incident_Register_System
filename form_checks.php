@@ -14,10 +14,10 @@ function emptyCheck($value) {
 }
 
 function numberCheck($value) {
-    if(!is_numeric($value)) {
-        return false;
+    if($value==nvt||$value=onbekent||is_numeric($value)){
+        return true;
     }
-    return true;
+    return false;
 }
 
 function yearCheck($value) {
