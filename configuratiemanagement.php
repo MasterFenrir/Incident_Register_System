@@ -365,7 +365,7 @@ function addSoftware()
         if($valid) {
             mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties, aantal_gebruikers, soort_licentie, status)
                                 VALUES('".$id."', '".$naam."', '".$soort."',
-                                       '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."'
+                                       '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."',
                                        '".$status."')") or die('sw error');
         }
 
