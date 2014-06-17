@@ -363,7 +363,6 @@ function addSoftware()
         global $con;
 
         $primeKey = $_POST['key'];
-        echo $primeKey;
         mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
     }
 
