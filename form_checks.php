@@ -14,7 +14,7 @@ function emptyCheck($value) {
 }
 
 function numberCheck($value) {
-    if($value=='nvt'||$value='onbekent'||is_numeric($value)){
+    if($value=='nvt'||$value=='onbekent'||is_numeric($value)){
         return true;
     }
     return false;
