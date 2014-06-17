@@ -21,7 +21,7 @@ function dateField($d, $m, $y){
         </tr>
         <tr>
             <td>Jaar: </td>
-            <td><input type='number' name='month' size='4' value='".$year."'>".$y."</input></td>
+            <td><input type='number' name='year' size='4' value='".$year."'>".$y."</input></td>
         </tr>";
 }
 
@@ -48,6 +48,7 @@ function dropDown($name, $array, $sel){
             <td>".$name."</td>
             <td>
                 <select name='".$name."'>";
+                    echo "<option value=''></option>";
                     foreach($array as $value) {
                         echo "<option value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
                     }
