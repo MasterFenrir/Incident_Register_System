@@ -116,7 +116,7 @@ function processEventConfig($eventID)
 
         if($valid) {
             mysqli_query($con, "UPDATE software SET naam='".$naam."', soort='".$soort."', producent='".$pro."', leverancier='".$lev."', aantal_licenties='".$a_lic."', soort_licenties='".$s_lic."', aantal_gebruikers='".$a_geb."' status='".$status."'
-                                WHERE id_software='".$_POST['ID_Software']."'");
+                                WHERE id_software='".$_POST['Software_ID']."'");
         }
     }
     /**
