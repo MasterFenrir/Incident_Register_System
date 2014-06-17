@@ -46,6 +46,7 @@ function processEventConfig($eventID)
         case "addHardware" : addHardware(); break;
         case "addSoftware": addSoftware(); break;
         case "editHardware" : editHardware(); break;
+        case "editSoftware" : editSoftware(); break;
         case "addUser"  : addUser(); break;
         case "deleteUser" : deleteUser(); break;
         case "editUser" : editUser(); break;
@@ -66,7 +67,7 @@ function processEventConfig($eventID)
         textField("Soort", null);
         textField("Producent", null);
         textField("Leverancier", null);
-        textField("Aantal_Licentie", null);
+        textField("Aantal_Licenties", null);
         textField("Soort_Licentie", null);
         textField("Aantal_Gebruikers", null);
         textField("Status", null);
@@ -74,41 +75,51 @@ function processEventConfig($eventID)
         formFooter("addSoftware");
     }
 
-   /** function displayEditSoftware()
+    function displayEditSoftware()
     {
-        formHeader();
-        textField("ID_Software", null);
-        textField("Naam", null);
-        textField("Soort", null);
-        textField("Producent", null);
-        textField("Leverancier", null);
-        textField("Aantal_Licentie", null);
-        textField("Soort_Licentie", null);
-        textField("Aantal_Gebruikers", null);
-        textField("Status", null);
-        hiddenValue("display", "displaySoftware");
-        formFooter("addSoftware");
 
+    global $con;
+
+        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$_POST['key']."'"));
+
+
+        formHeader();
+        displayField("ID_Software", $values['id_software'] );
+        textField("Naam", $values['naam']);
+        textField("Soort", $values['soort']);
+        textField("Producent", $values['producent']);
+        textField("Leverancier", $values['leverancier']);
+        textField("Aantal_Licenties", $values['aantal_licenties']);
+        textField("Soort_Licentie", $values['soort_licentie']);
+        textField("Aantal_Gebruikers", $values['aantal_gebruikers']);
+        textField("Status", $values['status']);
+        hiddenValue("display", "displaySoftware");
+        formFooter("editSoftware");
+
+
+    }
+
+    function EditSoftware()
+    {
          global $con;
 
-        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
-        $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
+        $valid = emptyCheck($_POST['Software_ID']);
+        $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
+        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
+        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
+        $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
+        $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
+        $status = removeMaliciousInput($_POST['Status']);
+        $valid = numberCheck($_POST['Aantal_Licenties']);
+        $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
-        formHeader();
-        displayField("Hardware_ID", $values['id_hardware']);
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $values['soort']);
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $values['locatie']);
-        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $os['naam']);
-        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
-                    queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
-        textField("Leverancier", $values['leverancier']);
-        textField("Aanschaf_jaar", $values['aanschaf_jaar']);
-        textField("Status", $values['status']);
-        hiddenValue("display", "displayHardware");
-        formFooter("editHardware");
-
+        if($valid) {
+            mysqli_query($con, "UPDATE software SET naam='".$naam."', soort='".$soort."', producent='".$pro."', leverancier='".$lev."', aantal_licenties='".$a_lic."', soort_licenties='".$s_lic."', aantal_gebruikers='".$a_geb."' status='".$status."'
+                                WHERE id_software='".$_POST['ID_Software']."'");
+        }
     }
-*/
     /**
      * This function creates a table that displays the existing users
      * @param $postData
@@ -353,18 +364,18 @@ function addSoftware()
         $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
         $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
         $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        $valid = emptyCheck($_POST['Aantal_Licentie']); $a_lic = removeMaliciousInput($_POST['Aantal_Licentie']);
+        $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
         $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
         $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
         $status = removeMaliciousInput($_POST['Status']);
-        $valid = numberCheck($_POST['Aantal_Licentie']);
+        $valid = numberCheck($_POST['Aantal_Licenties']);
         $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO software (id_software, naam, producent, leverancier, aantal_licenties, aantal_gebruikers, status)
+            mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties, soort_licentie, aantal_gebruikers, status)
                                 VALUES('".$id."', '".$naam."', '".$soort."',
-                                       '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."'
-                                       '".$status."')") or die('sw error');
+                                       '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."',
+                                       '".$status."')") or die(mysqli_error($con));
         }
 
 
@@ -399,7 +410,7 @@ function addSoftware()
         global $con;
 
         $primeKey = $_POST['key'];
-        mysqli_query($con, "DELETE FROM software WHERE id_software = $primeKey");
+        mysqli_query($con, "DELETE FROM software WHERE id_software ='".$primeKey."'");
     }
 
 
