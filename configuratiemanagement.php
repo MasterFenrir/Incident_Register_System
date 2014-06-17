@@ -75,6 +75,12 @@ function processEventConfig($eventID)
 
    /** function displayEditSoftware()
     {
+
+    global $con;
+
+        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
+        $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
+
         formHeader();
         textField("ID_Software", null);
         textField("Naam", null);
@@ -88,10 +94,7 @@ function processEventConfig($eventID)
         hiddenValue("display", "displaySoftware");
         formFooter("addSoftware");
 
-         global $con;
 
-        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
-        $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
 
         formHeader();
         displayField("Hardware_ID", $values['id_hardware']);
@@ -360,7 +363,7 @@ function addSoftware()
         $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO software (id_software, naam, producent, leverancier, aantal_licenties, aantal_gebruikers, status)
+            mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties, aantal_gebruikers, soort_licentie, status)
                                 VALUES('".$id."', '".$naam."', '".$soort."',
                                        '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."'
                                        '".$status."')") or die('sw error');
