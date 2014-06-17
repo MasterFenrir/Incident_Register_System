@@ -371,7 +371,7 @@ function addSoftware()
         $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties,  soort_licentie, aantal_gebruikers status)
+            mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties, soort_licentie, aantal_gebruikers, status)
                                 VALUES('".$id."', '".$naam."', '".$soort."',
                                        '".$pro."', '".$lev."', '".$a_lic."', '".$s_lic."', '".$a_geb."',
                                        '".$status."')") or die('sw error');
