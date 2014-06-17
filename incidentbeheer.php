@@ -55,9 +55,11 @@ function displayIncidenten($postData){
  * This functions displays the form to add an incident
  */
 function displayAddIncident(){
+    date_default_timezone_set("Europe/Amsterdam");
+
     formHeader();
     dateField(null,null,null);
-    textField("Aanvangtijd", null);
+    textField("Aanvangtijd",date('H:i'));
     textField("Eindtijd", null);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), null);
     textField("Omschrijving", null);
