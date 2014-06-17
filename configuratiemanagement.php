@@ -44,7 +44,6 @@ function processEventConfig($eventID)
         case "deleteSoftware" : deleteSoftware(); break;
         case "addSoftware" : addSoftware(); break;
         case "addHardware" : addHardware(); break;
-        case "addSoftware": addSoftware(); break;
         case "editHardware" : editHardware(); break;
         case "editSoftware" : editSoftware(); break;
         case "addUser"  : addUser(); break;
