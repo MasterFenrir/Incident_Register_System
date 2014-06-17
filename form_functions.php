@@ -13,15 +13,15 @@ function dateField($d, $m, $y){
     $year = date('Y');
     echo "<tr>
             <td>Dag: </td>
-            <td><input type='number' name='day' size='2' value='".$day."'>".$d[0]."</input></td>
+            <td><input type='number' name='day' size='2' value='".$day."'>".$d."</input></td>
          </tr>
          <tr>
             <td>Maand: </td>
-                <td><input type='number' name='month' size='2' value='".$month."'>".$m[0]."</input></td>
+                <td><input type='number' name='month' size='2' value='".$month."'>".$m."</input></td>
         </tr>
         <tr>
             <td>Jaar: </td>
-            <td><input type='number' name='month' size='4' value='".$year."'>".$y[0]."</input></td>
+            <td><input type='number' name='month' size='4' value='".$year."'>".$y."</input></td>
         </tr>";
 }
 
@@ -49,7 +49,7 @@ function dropDown($name, $array, $sel){
             <td>
                 <select name='".$name."'>";
                     foreach($array as $value) {
-                        echo "<option value='".$value."' "; if($value==$sel[0]){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
+                        echo "<option value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
                     }
     echo        "</select>
             </td>
@@ -66,7 +66,7 @@ function RadioButtons($name, $array, $sel){
             <td>".$name."</td>
             <td>";
                     foreach($array as $value) {
-                        echo "<input type='radio' name='".$name."' value='".$value."' "; if($value==$sel[0]){echo "selected='selected'";} echo ">".ucfirst($value)."</input>";
+                        echo "<input type='radio' name='".$name."' value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</input>";
                     }
     echo        "</select>
             </td>
@@ -91,7 +91,9 @@ function CheckBoxes($name, $array, $width, $sel){
                     if($x == 0) {
                         echo "</tr><tr class ='inner'>";
                     }
-                    echo "<td class='inner'><input type='checkbox' name='".$name."' value='".$value."'"; if(in_array($value, $sel)){echo " checked";} echo ">".ucfirst($value)."</input></td>";
+                    echo "<td class='inner'><input type='checkbox' name='".$name."[]' value='".$value."'";
+                    if($sel != null && in_array($value, $sel)){echo " checked";}
+                    echo ">".ucfirst($value)."</input></td>";
                     $x = ($x+1)%$width;
                 }
                 echo "</tr>";
@@ -108,7 +110,11 @@ function CheckBoxes($name, $array, $width, $sel){
  * @param $value Default value
  */
 function textField($name, $sel){
-    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel[0]."'></text></td></tr>";
+    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel."'></text></td></tr>";
+}
+
+function displayField($name, $sel){
+    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel."' readonly></text></td></tr>";
 }
 
 /**

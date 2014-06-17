@@ -43,17 +43,12 @@ function processEventConfig($eventID)
         case "deleteHardware" : deleteHardware(); break;
         case "deleteSoftware" : deleteSoftware(); break;
         case "addHardware" : addHardware(); break;
+        case "editHardware" : editHardware(); break;
         case "addUser"  : addUser(); break;
         case "deleteUser" : deleteUser(); break;
         case "editUser" : editUser(); break;
     }
 }
-
-    function displayHardware($postData)
-    {
-        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
-                          "displayEditHardware", "deleteHardware", "id_hardware");
-    }
 
     function displaySoftware($postData)
     {
@@ -91,6 +86,12 @@ function processEventConfig($eventID)
             "displayEditUser", "deleteUser", "username");
     }
 
+    function displayHardware($postData)
+    {
+        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
+            "displayEditHardware", "deleteHardware", "id_hardware");
+    }
+
     function displayAddHardware()
     {
         formHeader();
@@ -110,27 +111,50 @@ function processEventConfig($eventID)
     {
         global $con;
 
+        $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
+        $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
+
         formHeader();
-        $value = mysqli_query($con, "SELECT id_hardware FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        textField("Hardware_ID", mysqli_fetch_row($value));
-        $value = mysqli_query($con, "SELECT soort FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), mysqli_fetch_row($value));
-        $value = mysqli_query($con, "SELECT locatie FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), mysqli_fetch_row($value));
-        $value = mysqli_query($con, "SELECT software.naam FROM software, hardware WHERE hardware.os = software.id_software AND hardware.id_hardware='".$_POST['key']."'");
-        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), mysqli_fetch_row($value));
+        displayField("Hardware_ID", $values['id_hardware']);
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $values['soort']);
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $values['locatie']);
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $os['naam']);
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
                     queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
-        $value = mysqli_query($con, "SELECT leverancier FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        textField("Leverancier", mysqli_fetch_row($value));
-        $value = mysqli_query($con, "SELECT aanschaf_jaar FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        textField("Aanschaf_jaar", mysqli_fetch_row($value));
-        $value = mysqli_query($con, "SELECT status FROM hardware WHERE id_hardware='".$_POST['key']."'");
-        textField("Status", mysqli_fetch_row($value));
+        textField("Leverancier", $values['leverancier']);
+        textField("Aanschaf_jaar", $values['aanschaf_jaar']);
+        textField("Status", $values['status']);
         hiddenValue("display", "displayHardware");
         formFooter("editHardware");
     }
 
+    function editHardware()
+    {
+        global $con;
+
+        $valid = emptyCheck($_POST['Hardware_ID']);
+        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
+        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
+        $os = removeMaliciousInput($_POST['OS']);
+        $status = removeMaliciousInput($_POST['Status']);
+
+        if($valid) {
+            mysqli_query($con, "UPDATE hardware SET soort='".$soort."', locatie='".$loc."', os='".$os."', leverancier='".$lev."', aanschaf_jaar='".$jaar."', status='".$status."'
+                                WHERE id_hardware='".$_POST['Hardware_ID']."'");
+        }
+
+        if(!empty($_POST['Software'])) {
+            mysqli_query($con, "DELETE FROM hardware_software WHERE id_hardware='".$_POST['Hardware_ID']."'");
+
+            foreach($_POST['Software'] as $box) {
+                $key = mysqli_fetch_assoc(mysqli_query($con, "SELECT id_software FROM software WHERE naam='".$box."'"));
+                mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
+                                    VALUES ('".$_POST['Hardware_ID']."','".$key['id_software']."')") or die(mysqli_error($con));
+            }
+        }
+    }
 
     /**
      * This function will create a form to add a new user
@@ -260,23 +284,26 @@ function addHardware()
     {
         global $con;
 
-        $valid = emptyCheck($_POST['Hardware_ID']);
-        $valid = emptyCheck($_POST['Soort']);
-        $valid = emptyCheck($_POST['Locatie']);
-        $valid = emptyCheck($_POST['Leverancier']);
-        $valid = yearCheck($_POST['Aanschaf_jaar']);
+        $valid = emptyCheck($_POST['Hardware_ID']); $id = removeMaliciousInput($_POST['Hardware_ID']);
+        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
+        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
+        $os = removeMaliciousInput($_POST['OS']);
+        $status = removeMaliciousInput($_POST['Status']);
 
         if($valid) {
             mysqli_query($con, "INSERT INTO hardware (id_hardware, soort, locatie, os, leverancier, aanschaf_jaar, status)
-                                VALUES('".$_POST['Hardware_ID']."', '".$_POST['Soort']."', '".$_POST['Locatie']."',
-                                       '".$_POST['OS']."', '".$_POST['Leverancier']."', '".$_POST['Aanschaf_jaar']."',
-                                       '".$_POST['Status']."')") or die('hw error');
+                                VALUES('".$id."', '".$soort."', '".$loc."',
+                                       '".$os."', '".$lev."', '".$jaar."',
+                                       '".$status."')") or die('hw error');
         }
 
-        if(!empty($_POST['boxes'])) {
-            foreach($_POST['boxes'] as $box) {
+        if(!empty($_POST['Software'])) {
+            foreach($_POST['Software'] as $box) {
+                $key = mysqli_fetch_assoc(mysqli_query($con, "SELECT id_software FROM software WHERE naam='".$box."'"));
                 mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
-                                    VALUES ('".$_POST['Hardware_ID']."','".$box."')") or die('sw error');
+                                    VALUES ('".$_POST['Hardware_ID']."','".$key['id_software']."')") or die('sw error');
             }
         }
     }
