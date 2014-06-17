@@ -19,7 +19,7 @@ function displayContentConfig($postData) {
 
         case "displaySoftware" : displaySoftware($postData); break;
         case "displayEditSoftware" : displayEditSoftware(); break;
-        case "displayAddSoftware" : displayAddSoftware($postData); break;
+        case "displayAddSoftware" : displayAddSoftware(); break;
 
         case "displayUsers" : displayUsers($postData); break;
         case "displayEditUser" : displayEditUser(); break;
@@ -56,7 +56,7 @@ function processEventConfig($eventID)
                           "displayEditSoftware", "deleteSoftware", "id_software");
     }
 
-    function displayAddSoftware($postData)
+    function displayAddSoftware()
     {
         formHeader();
         textField("ID_Software", null);
