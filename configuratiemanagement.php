@@ -19,7 +19,7 @@ function displayContentConfig($postData) {
 
         case "displaySoftware" : displaySoftware($postData); break;
         case "displayEditSoftware" : displayEditSoftware(); break;
-        //case "displayAddSoftware" : displayAddSoftware(); break;
+        case "displayAddSoftware" : displayAddSoftware($postData); break;
 
         case "displayUsers" : displayUsers($postData); break;
         case "displayEditUser" : displayEditUser(); break;
@@ -60,6 +60,23 @@ function processEventConfig($eventID)
         new HelpdeskTable("Software", "SELECT * FROM software", $postData,
                           "displayEditSoftware", "deleteSoftware", "id_software");
     }
+
+    function displayAddSoftware($postData)
+    {
+        formHeader();
+        textField("ID_Software", null);
+        textField("Naam", null);
+        textField("Soort", null);
+        textField("Producent", null);
+        textField("Leverancier", null);
+        textField("Aantal_Licentie", null);
+        textField("Soort_Licentie", null);
+        textField("Aantal_Gebruikers", null);
+        textField("Status", null);
+        hiddenValue("display", "displaySoftware");
+        formFooter("addSoftware");
+    }
+
 
     /**
      * This function creates a table that displays the existing users
