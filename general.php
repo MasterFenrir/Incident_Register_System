@@ -9,12 +9,17 @@
     $con = mysqli_connect("localhost","helpdesk","Sku53_u3","helpdesk") or die('Unable to connect');
 
     function logoutKnop(){
-        global $perm;
-        echo $perm;
-
         echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
         echo "<input type=\"hidden\" name=\"logout\" value=\"1\">";
         echo "<input class=\"nav\" type=\"submit\" value=\"Logout\">";
+        echo "</form>";
+    }
+
+    function searchField(){
+        echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
+        echo "<input type='search' name='search'>";
+        echo "<input type='hidden' name='display' value='displaySearch'>";
+        echo "<input class='nav' type='submit' value='Search'>";
         echo "</form>";
     }
 

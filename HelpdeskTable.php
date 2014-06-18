@@ -30,7 +30,7 @@ class HelpdeskTable
          * @param $delete: Navigation id used to find the correct delete function
          * @param $primeKey: Primary key to use for edit and delete functions
          */
-        public function __construct($name, $query, $nav, $edit, $delete, $primeKey)
+        public function __construct($name, $query, $nav, $edit, $delete, $primeKey, $search)
         {
             $this->query = $query;
             $this->name = $name;
@@ -38,6 +38,9 @@ class HelpdeskTable
             $this->primeKey = $primeKey;
             $this->edit = $edit;
             $this->delete = $delete;
+            $this->search = $search;
+
+            $_SESSION['lastTable'] = $this->name;
 
             //If order and sort GET information are set it appends the SQL query to include them
             if(isset($_POST['order']) && isset($_POST['sort'])) {
@@ -46,7 +49,7 @@ class HelpdeskTable
 
             //Executes the query and stores result in $result
             global $con;
-            $this->result = mysqli_query($con, $this->query);
+            $this->result = mysqli_query($con, $this->query) or die($query);
 
             //Displays table to screen
             $this->makeTable();
@@ -96,6 +99,7 @@ class HelpdeskTable
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='desc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
+                        if($this->search != null) {echo "<input type='hidden' name='search' value='".$this->search."'>";}
                         echo    "<input type='hidden' name='display' value=".$this->nav.">";
                         echo    "<input class='order' type='submit' value=".ucfirst($key).">";
                         echo    "</form>";
@@ -103,6 +107,7 @@ class HelpdeskTable
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='asc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
+                        if($this->search != null) {echo "<input type='hidden' name='search' value='".$this->search."'>";}
                         echo    "<input type='hidden' name='display' value=".$this->nav.">";
                         echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
                         echo    "</form>";
