@@ -236,15 +236,15 @@ function makeSearchSoftware($searchString)
     function displayHardware($postData)
     {
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
-            "displayEditHardware", "deleteHardware", "id_hardware", null, null);
+            "displayEditHardware", "deleteHardware", "id_hardware", null, "displayHardwareAndSoftware");
     }
 
 /**
  * Function to display one hardware item and the installed software
  */
 function displayHardwareAndSoftware($postData){
-    $hardwareID = $_POST['hardwareID'];
-    $query = "SELECT * FROM hardware WHERE hardware_id = '{$hardwareID}'";
+    $hardwareID = $_POST['key'];
+    $query = "SELECT * FROM hardware WHERE id_hardware = '{$hardwareID}'";
     echo("De volgende tabel toont de details van de hardware:");
     new HelpdeskTable("Hardware item", $query, null, null, null, "id_hardware", null, null);
 
@@ -256,7 +256,7 @@ function displayHardwareAndSoftware($postData){
                      WHERE software.id_software = hardware_software.id_software
                      AND id_hardware='{$hardwareID}'";
     echo("De volgende tabel toont de software die op dit hardware item geïnstalleerd staan:");
-    new HelpdeskTable("Software items", $query, null, null, null, "ID", null, "displayHardwareAndSoftware");
+    new HelpdeskTable("Software items", $query, null, null, null, "ID", null, null);
 }
 
 function displayAddHardware()
