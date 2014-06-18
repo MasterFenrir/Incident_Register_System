@@ -9,7 +9,7 @@
 function displayContentProbleem($postData)
 {
     switch($postData) {
-        case "displayProblemen" : new HelpdeskTable("Problemen", "SELECT * FROM problemen", "displayProblemen", null, null, null, null); break;
+        case "displayProblemen" : new HelpdeskTable("Problemen", "SELECT * FROM problemen", "displayProblemen", null, null, null, null, null); break;
         default : echo "Hello ".ucfirst($_SESSION['user']);
     }
 }

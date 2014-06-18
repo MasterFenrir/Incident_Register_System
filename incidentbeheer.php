@@ -54,14 +54,14 @@ function displaySearchIncidenten($postData)
                                      OR incidenten.omschrijving LIKE '%".$search."%' OR workaround LIKE '%".$search."%' OR probleem LIKE '%".$search."%'
                                      OR contact LIKE '%".$search."%' OR prioriteit LIKE '%".$search."%' OR incidenten.status LIKE '%".$search."%' OR hardware.soort LIKE '%".$search."%'
                                      GROUP BY incidenten.nummer",
-                                     $postData, "displayEditIncident", "deleteIncident", "nummer", $search);
+                                     $postData, "displayEditIncident", "deleteIncident", "nummer", $search, null);
 }
 
 /**
  * This function manages the display of all the incidents known
  */
 function displayIncidenten($postData){
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 /*
@@ -108,7 +108,7 @@ function displayEditIncident() {
  */
 function displayMeldingen($postData)
 {
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit = NULL OR prioriteit = ''", $postData, "displayEditIncident", "deleteIncident", "nummer", null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit = NULL OR prioriteit = ''", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 function deleteIncident()

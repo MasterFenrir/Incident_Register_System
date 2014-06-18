@@ -55,8 +55,8 @@ function processEventConfig($eventID)
 
     function displaySoftware($postData)
     {
-        new HelpdeskTable("Software", "SELECT * FROM software", $postData,
-                          "displayEditSoftware", "deleteSoftware", "id_software", null);
+        new HelpdeskTable("Software", "SELECT * FROM software", null,
+                          "displayEditSoftware", "deleteSoftware", "id_software", null, null);
     }
 
     function displayAddSoftware()
@@ -130,13 +130,13 @@ function processEventConfig($eventID)
         echo $message;
         $messagen = "";
         new HelpdeskTable("Gebruikers", "SELECT username, rechten FROM users", $postData,
-            "displayEditUser", "deleteUser", "username", null);
+            "displayEditUser", "deleteUser", "username", null, null);
     }
 
     function displayHardware($postData)
     {
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
-            "displayEditHardware", "deleteHardware", "id_hardware", null);
+            "displayEditHardware", "deleteHardware", "id_hardware", null, null);
     }
 
     function displayAddHardware()
