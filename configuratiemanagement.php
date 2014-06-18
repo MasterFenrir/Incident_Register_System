@@ -25,6 +25,8 @@ function displayContentConfig($postData) {
         case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
         case "displaySearch" : displaySearchConfig($postData); break;
+
+        case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
         default : displayLandingConfig();
     }
 }
@@ -149,7 +151,11 @@ function makeSearchSoftware($searchString)
 
     function displaySoftware($postData)
     {
-        new HelpdeskTable("Software", "SELECT * FROM software", null,
+        new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
+                                              producent, leverancier, aantal_licenties AS Licenties,
+                                              soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
+                                              status
+                                              FROM software", $postData,
                           "displayEditSoftware", "deleteSoftware", "id_software", null, null);
     }
 
@@ -233,7 +239,27 @@ function makeSearchSoftware($searchString)
             "displayEditHardware", "deleteHardware", "id_hardware", null, null);
     }
 
-    function displayAddHardware()
+/**
+ * Function to display one hardware item and the installed software
+ */
+function displayHardwareAndSoftware($postData){
+    $hardwareID = $_POST['hardwareID'];
+    $query = "SELECT * FROM hardware WHERE hardware_id = '{$hardwareID}'";
+    echo("De volgende tabel toont de details van de hardware:");
+    new HelpdeskTable("Hardware item", $query, null, null, null, "id_hardware", null, null);
+
+    $query = "SELECT software.id_software AS ID, software.naam, software.soort,
+                     software.producent, software.leverancier, software.aantal_licenties AS Licenties,
+                     software.soort_licentie AS Licentiesoort, software.aantal_gebruikers AS Gebruikers,
+                     software.status
+                     FROM hardware_software, software
+                     WHERE software.id_software = hardware_software.id_software
+                     AND id_hardware='{$hardwareID}'";
+    echo("De volgende tabel toont de software die op dit hardware item geïnstalleerd staan:");
+    new HelpdeskTable("Software items", $query, null, null, null, "ID", null, "displayHardwareAndSoftware");
+}
+
+function displayAddHardware()
     {
         formHeader();
         textField("Hardware_ID", null);
