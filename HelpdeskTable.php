@@ -15,6 +15,7 @@ class HelpdeskTable
     private $primeKey;
     private $edit;
     private $delete;
+    private $details;
 
         /*
          * Constructor for the class
@@ -30,7 +31,7 @@ class HelpdeskTable
          * @param $delete: Navigation id used to find the correct delete function
          * @param $primeKey: Primary key to use for edit and delete functions
          */
-        public function __construct($name, $query, $nav, $edit, $delete, $primeKey, $search)
+        public function __construct($name, $query, $nav, $edit, $delete, $primeKey, $search, $details)
         {
             $this->query = $query;
             $this->name = $name;
@@ -39,6 +40,7 @@ class HelpdeskTable
             $this->edit = $edit;
             $this->delete = $delete;
             $this->search = $search;
+            $this->details = $details;
 
             $_SESSION['lastTable'] = $this->name;
 
@@ -95,7 +97,7 @@ class HelpdeskTable
                 //used to sort the columns.
                 foreach($row as $key=>$value) {
                     echo "<th>";
-                    if($_POST['sort'] == 'asc' && $_POST['order'] == $key && $_POST['nav'] != null) {
+                    if($_POST['sort'] == 'asc' && $_POST['order'] == $key && $this->nav != null) {
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='desc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
@@ -103,7 +105,7 @@ class HelpdeskTable
                         echo    "<input type='hidden' name='display' value=".$this->nav.">";
                         echo    "<input class='order' type='submit' value=".ucfirst($key).">";
                         echo    "</form>";
-                    } elseif($_POST['nav'] != null) {
+                    } elseif($this->nav != null) {
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='asc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
@@ -112,7 +114,7 @@ class HelpdeskTable
                         echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
                         echo    "</form>";
                     } else {
-                        echo $key;
+                        echo ucfirst($key);
                     }
                     echo "</th>";
                 }
@@ -165,7 +167,17 @@ class HelpdeskTable
                 echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Delete'>";
                 echo    "</form>";
-                echo    "</td>";
+                if($this->details == null) {echo "</td>";}
+            }
+
+            if($this->primeKey != null && $this->details != null) {
+                if($this->edit == null && $this->delete == null) {echo "<td>";}
+                echo    "<form action='/index.php' method='post'>";
+                echo    "<input type='hidden' name='display' value='$this->details'>";
+                echo    "<input type='hidden' name='key' value=".$row[$this->primeKey].">";
+                echo    "<input class='option' type='submit' value='Details'>";
+                echo    "</form>";
+                echo "</td>";
             }
         }
 }
