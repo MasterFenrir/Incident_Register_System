@@ -12,16 +12,25 @@ function dateField($d, $m, $y){
     $month = date('m');
     $year = date('Y');
     echo "<tr>
-            <td>Dag: </td>
-            <td><input type='number' name='day' size='2' value='".$day."'>".$d."</input></td>
+            <td>Dag </td>
+            <td><input type='number' name='day' size='2' value='";
+                if($d != null){echo $d;} else{echo $day;}
+                echo "'>".$d."</input>
+            </td>
          </tr>
          <tr>
-            <td>Maand: </td>
-                <td><input type='number' name='month' size='2' value='".$month."'>".$m."</input></td>
+            <td>Maand </td>
+            <td><input type='number' name='month' size='2' value='";
+                if($m != null){echo $m;} else{echo $month;}
+                echo"'>".$m."</input>
+            </td>
         </tr>
         <tr>
-            <td>Jaar: </td>
-            <td><input type='number' name='year' size='4' value='".$year."'>".$y."</input></td>
+            <td>Jaar </td>
+            <td><input type='number' name='year' size='4' value='";
+                if($y != null){echo $y;} else{echo $year;}
+                echo"'>".$y."</input>
+            </td>
         </tr>";
 }
 

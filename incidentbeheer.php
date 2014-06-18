@@ -17,6 +17,7 @@ function displayContentIncident($postData)
         case "displayAddIncident" : displayAddIncident(); break;
         case "displayEditIncident" : displayEditIncident(); break;
         case "displayMeldingen" : displayMeldingen($postData); break;
+        case "displaySearch" : displaySearchIncidenten($postData); break;
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
     }
 }
@@ -38,17 +39,29 @@ function displayMenuIncident()
 function processEventIncident($eventID)
 {
     switch($eventID) {
-        case "editIncident" : editIncident();
-        case "deleteIncident" : deleteIncident();
-        case "addIncident" : addIncident();
+        case "editIncident" : editIncident(); break;
+        case "deleteIncident" : deleteIncident(); break;
+        case "addIncident" : addIncident(); break;
     }
+}
+
+function displaySearchIncidenten($postData)
+{
+    $search = $_POST['search'];
+    new HelpdeskTable("Incidenten", "SELECT nummer, datum, aanvang, eindtijd, incidenten.id_hardware, incidenten.omschrijving, workaround, probleem, contact, prioriteit, incidenten.status
+                                     FROM incidenten, hardware WHERE incidenten.id_hardware = hardware.id_hardware AND nummer LIKE '%".$search."%'
+                                     OR datum LIKE '%".$search."%' OR aanvang LIKE '%".$search."%' OR eindtijd LIKE '%".$search."%' OR incidenten.id_hardware LIKE '%".$search."%'
+                                     OR incidenten.omschrijving LIKE '%".$search."%' OR workaround LIKE '%".$search."%' OR probleem LIKE '%".$search."%'
+                                     OR contact LIKE '%".$search."%' OR prioriteit LIKE '%".$search."%' OR incidenten.status LIKE '%".$search."%' OR hardware.soort LIKE '%".$search."%'
+                                     GROUP BY incidenten.nummer",
+                                     $postData, "displayEditIncident", "deleteIncident", "nummer", $search);
 }
 
 /**
  * This function manages the display of all the incidents known
  */
 function displayIncidenten($postData){
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer");
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null);
 }
 
 /*
@@ -65,7 +78,7 @@ function displayAddIncident(){
     textField("Omschrijving", null);
     textField("Workaround", null);
     textField("Contact", null);
-    textField("Prioriteit", null);
+    dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), null);
     textField("Status", null);
     hiddenValue("display", "displayIncidenten");
     formFooter("addIncident");
@@ -83,7 +96,7 @@ function displayEditIncident() {
     textField("Omschrijving", $values['omschrijving']);
     textField("Workaround", $values['workaround']);
     textField("Contact", $values['contact']);
-    textField("Prioriteit", $values['prioriteit']);
+    dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
     textField("Status", $values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
@@ -95,7 +108,7 @@ function displayEditIncident() {
  */
 function displayMeldingen($postData)
 {
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit = NULL OR prioriteit = ''", $postData, "displayEditIncident", "deleteIncident", "nummer");
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit = NULL OR prioriteit = ''", $postData, "displayEditIncident", "deleteIncident", "nummer", null);
 }
 
 function deleteIncident()
