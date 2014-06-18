@@ -95,7 +95,7 @@ class HelpdeskTable
                 //used to sort the columns.
                 foreach($row as $key=>$value) {
                     echo "<th>";
-                    if($_POST['sort'] == 'asc' && $_POST['order'] == $key) {
+                    if($_POST['sort'] == 'asc' && $_POST['order'] == $key && $_POST['nav'] != null) {
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='desc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
@@ -103,7 +103,7 @@ class HelpdeskTable
                         echo    "<input type='hidden' name='display' value=".$this->nav.">";
                         echo    "<input class='order' type='submit' value=".ucfirst($key).">";
                         echo    "</form>";
-                    } else {
+                    } elseif($_POST['nav'] != null) {
                         echo    "<form action='/index.php' method='post'>";
                         echo    "<input type='hidden' name='sort' value='asc'>";
                         echo    "<input type='hidden' name='order' value=".$key.">";
@@ -111,6 +111,8 @@ class HelpdeskTable
                         echo    "<input type='hidden' name='display' value=".$this->nav.">";
                         echo    "<input class='order' type='submit' value='".ucfirst($key)."'>";
                         echo    "</form>";
+                    } else {
+                        echo $key;
                     }
                     echo "</th>";
                 }
