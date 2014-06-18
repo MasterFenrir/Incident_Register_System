@@ -62,11 +62,11 @@ function processEventConfig($eventID)
             switch($_SESSION['lastTable']) {
                 case "Hardware" :
                             new HelpdeskTable("Hardware", makeSearchHardware($_POST['search']),
-                                    $postData, "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search']);
+                                    $postData, "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search'], null);
                             break;
                 case "Software" :
                             new HelpdeskTable("Hardware", makeSearchSoftware($_POST['search']),
-                                    $postData, "displayEditSoftware", "deleteSoftware", "id_hardware", $_POST['search']);
+                                    $postData, "displayEditSoftware", "deleteSoftware", "id_hardware", $_POST['search'], null);
                             break;
         }
 
