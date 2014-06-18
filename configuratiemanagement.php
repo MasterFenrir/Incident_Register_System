@@ -24,6 +24,7 @@ function displayContentConfig($postData) {
         case "displayUsers" : displayUsers($postData); break;
         case "displayEditUser" : displayEditUser(); break;
         case "displayAddUser" : displayAddUser(); break;
+        case "displaySearch" : displaySearchConfig($postData); break;
         default : displayLandingConfig();
     }
 }
