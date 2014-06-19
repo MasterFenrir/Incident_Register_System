@@ -49,7 +49,7 @@ class HelpdeskTable
 
             //Executes the query and stores result in $result
             global $con;
-            $this->result = mysqli_query($con, $this->query) or die($query);
+            $this->result = mysqli_query($con, $this->query) or die(mysqli_error($con));
 
             //Displays table to screen
             $this->makeTable();

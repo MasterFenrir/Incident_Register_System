@@ -60,11 +60,11 @@ function processEventConfig($eventID)
  */
 function displaySearchConfig($postData)
 {
-    new HelpdeskTable("Software", makeSearchSoftware($_POST['search']), null,
-                      "displayEditSoftware", "deleteSoftware", "id_software", $_POST['search'], null);
-
     new HelpdeskTable("Hardware", makeSearchHardware($_POST['search']), null,
-                      "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search'], null);
+                      "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search'], "displayHardwareAndSoftware");
+
+    new HelpdeskTable("Software", makeSearchSoftware($_POST['search']), null,
+        "displayEditSoftware", "deleteSoftware", "id_software", $_POST['search'], null);
 }
 
 
@@ -74,66 +74,33 @@ function displaySearchConfig($postData)
  */
 function makeSearchHardware($searchString)
 {
-    //Haalt de zoekopdracht op spaties uit elkaar
-    $search = explode(" ", $searchString);
+    $sel = array( 'hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.os',
+                  'hardware.merk', 'hardware.leverancier', 'hardware.aanschaf_jaar');
+    $from = array('hardware'=>'id_hardware', 'hardware_software'=>'id_software', 'software'=>'id_software');
+    $cols = array('hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.os', 'hardware.merk',
+                  'hardware.leverancier', 'hardware.aanschaf_jaar', 'hardware.status', 'software.naam');
+    $type = 'AND';
+    $grp = 'id_hardware';
+    $search = $searchString;
 
-    /**
-     * Geeft de gewilde velden aan en combineert de tabellen mbv een outer join, dit zorgt ervoor dat geen
-     * rijen verloren gaan als je vergelijkt met een WHERE statement reeks.
-     */
-    $hardwareSearch = "SELECT hardware.id_hardware, hardware.soort, hardware.locatie, hardware.os,
-                              hardware.merk, hardware.leverancier, hardware.aanschaf_jaar
-                       FROM hardware
-                       LEFT OUTER JOIN hardware_software ON hardware.id_hardware = hardware_software.id_hardware
-                       LEFT OUTER JOIN software ON software.id_software = hardware_software.id_software";
-
-    /*
-     * Controleerd of elk van de opgegeven woorden in minimaal een van de aangegeven velden zitten, dit gebruikt
-     * AND dus alle woorden moeten minimaal 1x gevonden zijn. Kan in OR veranderd worden voor alle resultaten met
-     * minstens 1 woord gevonden.
-     */
-    for($x=0; $x<count($search); $x++) {
-        if($x==0){$hardwareSearch=$hardwareSearch." WHERE";} else {$hardwareSearch=$hardwareSearch." AND";}
-        $hardwareSearch = $hardwareSearch."(hardware.id_hardware LIKE '%".$search[$x]."%' OR hardware.soort LIKE '%".$search[$x]."%' OR hardware.locatie LIKE '%".$search[$x]."%'
-        OR hardware.os LIKE '%".$search[$x]."%' OR hardware.merk LIKE '%".$search[$x]."%' OR hardware.leverancier LIKE '%".$search[$x]."%'
-        OR hardware.aanschaf_jaar LIKE '%".$search[$x]."%' OR hardware.status LIKE '%".$search[$x]."%' OR software.naam LIKE '%".$search[$x]."%')";
-    }
-
-    //Groepeerd het zodat maar 1 item per vonst word getoont
-    $hardwareSearch = $hardwareSearch." GROUP BY hardware.id_hardware";
-    return $hardwareSearch;
+    return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
 
 
 function makeSearchSoftware($searchString)
 {
-    //Haalt de zoekopdracht op spaties uit elkaar
-    $search = explode(" ", $searchString);
+    $sel = array( 'id_software AS ID', 'naam', 'soort', 'producent', 'leverancier',
+                  'aantal_licenties AS Licenties', 'soort_licentie AS Licentiesoort',
+                  'aantal_gebruikers AS Gebruikers', 'status');
+    $from = array('software'=>'id_software');
+    $cols = array('id_software', 'naam', 'soort', 'producent', 'leverancier', 'aantal_licenties', 'soort_licentie',
+                  'aantal_gebruikers', 'status');
+    $type = 'OR';
+    $grp = 'id_software';
+    $search = $searchString;
 
-    /**
-     * Geeft de gewilde velden aan en combineert de tabellen mbv een outer join, dit zorgt ervoor dat geen
-     * rijen verloren gaan als je vergelijkt met een WHERE statement reeks.
-     */
-    $softwareSearch = "SELECT *
-                       FROM software";
-    /**
-    * Controleerd of elk van de opgegeven woorden in minimaal een van de aangegeven velden zitten, dit gebruikt
-    * AND dus alle woorden moeten minimaal 1x gevonden zijn. Kan in OR veranderd worden voor alle resultaten met
-    * minstens 1 woord gevonden.
-    */
-
-    for($x=0; $x<count($search); $x++) {
-        if($x==0){$softwareSearch=$softwareSearch." WHERE";} else {$softwareSearch=$softwareSearch." OR";}
-        $softwareSearch = $softwareSearch."(id_software LIKE '%".$search[$x]."%' OR naam LIKE '%".$search[$x]."%' OR soort LIKE '%".$search[$x]."%'
-        OR producent LIKE '%".$search[$x]."%' OR leverancier LIKE '%".$search[$x]."%' OR aantal_licenties LIKE '%".$search[$x]."%'
-        OR soort_licentie LIKE '%".$search[$x]."%' OR aantal_gebruikers LIKE '%".$search[$x]."%' OR status LIKE '%".$search[$x]."%')";
-    }
-
-
-    //Groepeerd het zodat maar 1 item per vonst word getoont
-    $softwareSearch = $softwareSearch." GROUP BY software.id_software";
-    return $softwareSearch;
+    return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
     function displaySoftware($postData)
