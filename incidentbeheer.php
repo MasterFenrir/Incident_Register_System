@@ -145,6 +145,8 @@ function editIncident()
         $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
         $result = mysqli_fetch_array(mysqli_query($con, $query));
         $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+        echo("editIncident <br/>");
+        var_dump($eind);
         $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
         $eindtijd = $eind['hour'].":".$eind['minutes'];
 

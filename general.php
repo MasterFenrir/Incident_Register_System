@@ -221,10 +221,16 @@
  * @param $time2 The time to add to the previous one
  */
 function addTimes($day, $month, $year, $time1, $time2){
+    echo($time1. " ". $time2."<br/>");
     $time1 = explode(":", $time1);
     $time2 = explode(":", $time2);
+
+    var_dump($time1);
+    echo("<br/>");
+    var_dump($time2);
     $time[0] = $time1[0] + $time2[0];
-    $time[1] = $time2[1] + $time2[1];
+    $time[1] = $time1[1] + $time2[1];
+    echo("addTimes1 <br/>");
 var_dump($time);
     $time[0] %= 24;
     $time[1] %= 60;
@@ -244,7 +250,7 @@ var_dump($time);
     $finalTime['minutes'] = $time[1];
 
 
-    echo "<br/>";
+    echo("addTimes2 <br/>");
     var_dump($finalTime);
 
     return $finalTime;
