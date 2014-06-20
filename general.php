@@ -214,4 +214,82 @@
         }
         return $query;
     }
+
+/**
+ * A function to add two timestrings together.
+ * @param $time1 The time
+ * @param $time2 The time to add to the previous one
+ */
+function addTimes($day, $month, $year, $time1, $time2){
+    echo($time1. " ". $time2."<br/>");
+    $time1 = explode(":", $time1);
+    $time2 = explode(":", $time2);
+
+    var_dump($time1);
+    echo("<br/>");
+    var_dump($time2);
+    $time[0] = $time1[0] + $time2[0];
+    $time[1] = $time1[1] + $time2[1];
+    echo("addTimes1 <br/>");
+var_dump($time);
+    $time[0] %= 24;
+    $time[1] %= 60;
+
+    $time = $time[0].":".$time[1];
+    if($time[0] < $time1[0]){
+        $date = incrementDate($day, $month, $year);
+        $finalTime['day'] = $date['day'];
+        $finalTime['month'] = $date['month'];
+        $finalTime['year'] = $date['year'];
+    } else {
+        $finalTime['day'] = $day;
+        $finalTime['month'] = $month;
+        $finalTime['year'] = $year;
+    }
+    $finalTime['hour'] = $time[0];
+    $finalTime['minutes'] = $time[1];
+
+
+    echo("addTimes2 <br/>");
+    var_dump($finalTime);
+
+    return $finalTime;
+}
+
+function incrementDate($day, $month, $year){
+    $day++;
+    echo $day;
+    echo "<br/>";
+    echo $month;
+    echo "<br/>";
+    echo $year;
+    echo "<br/>";
+    if($day > 31 && ($month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12)){
+        $day = 1;
+        $month++;
+    } else if($day > 30 && ($month == 4 || $month == 6 || $month == 8 || $month == 9 || $month == 11)){
+        $day = 1;
+        $month++;
+    } else if($month == 2){
+        if((($year % 4 == 0) && ($year % 100 > 0) || ($year % 400 == 0)) && $day > 29){
+            $day = 1;
+            $month++;
+        } else if($day > 28){
+            $day = 1;
+            $month++;
+        }
+    }
+
+    if($month > 12){
+        $month = 1;
+        $year++;
+    }
+
+    $date['day'] = $day;
+    $date['month'] = $month;
+    $date['year'] = $year;
+
+    return $date;
+}
+
 ?>

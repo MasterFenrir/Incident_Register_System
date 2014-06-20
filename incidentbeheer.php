@@ -95,7 +95,7 @@ function displayEditIncident() {
     $year = $date[2];
 
     formHeader();
-
+    displayField("Datum", $values['datum']);
     displayField("Aanvangtijd", $values['aanvang']);
     textField("Eindtijd", $values['eindtijd']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
@@ -135,16 +135,23 @@ function editIncident()
         $day = removeMaliciousInput($_POST['day']);
         $month = removeMaliciousInput($_POST['month']);
         $year = removeMaliciousInput($_POST['year']);
-        $datum = $day."-".$month."-".$year;
+
 
         $wa = removeMaliciousInput($_POST['Workaround']);
         $cont = removeMaliciousInput($_POST['Contact']);
         $prio = removeMaliciousInput($_POST['Prioriteit']);
         $status = removeMaliciousInput($_POST['Status']);
-        $eind = removeMaliciousInput($_POST['Eindtijd']);
+
+        $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+        $result = mysqli_fetch_array(mysqli_query($con, $query));
+        $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+        echo("editIncident <br/>");
+        var_dump($eind);
+        $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+        $eindtijd = $eind['hour'].":".$eind['minutes'];
 
         if(!empty($prio)) {
-            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eind."',
+            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
                                 id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
                                 contact='".$cont."', status='".$status."', prioriteit='".$prio."'
                                 WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
