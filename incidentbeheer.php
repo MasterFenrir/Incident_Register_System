@@ -219,9 +219,21 @@ function addIncident()
         }
     }
 
+    function displayHardware($postData)
+    {
+        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
+            null, null, "id_hardware", null, "displayHardwareAndSoftware");
+    }
 
-
-
+ function displaySoftware($postData)
+    {
+        new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
+                                              producent, leverancier, aantal_licenties AS Licenties,
+                                              soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
+                                              status
+                                              FROM software", $postData,
+                          null, null, "id_software", null, null);
+    }
 
 
 
