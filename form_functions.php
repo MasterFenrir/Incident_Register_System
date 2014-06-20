@@ -15,21 +15,21 @@ function dateField($d, $m, $y){
             <td>Dag </td>
             <td><input type='number' name='day' size='2' value='";
                 if($d != null){echo $d;} else{echo $day;}
-                echo "'>".$d."</input>
+                echo "'></input>
             </td>
          </tr>
          <tr>
             <td>Maand </td>
             <td><input type='number' name='month' size='2' value='";
                 if($m != null){echo $m;} else{echo $month;}
-                echo"'>".$m."</input>
+                echo"'></input>
             </td>
         </tr>
         <tr>
             <td>Jaar </td>
             <td><input type='number' name='year' size='4' value='";
                 if($y != null){echo $y;} else{echo $year;}
-                echo"'>".$y."</input>
+                echo"'></input>
             </td>
         </tr>";
 }

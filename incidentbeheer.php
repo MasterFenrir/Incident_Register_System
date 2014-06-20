@@ -88,14 +88,21 @@ function displayAddIncident(){
 
 function displayEditIncident() {
     global $con;
+    global $message;
+
+    if(!empty($message)) {
+        echo $message;
+        $message = '';
+    }
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
+
     $date = explode("-", $values['datum']);
     $day = $date[0];
     $month = $date[1];
     $year = $date[2];
 
     formHeader();
-    displayField("Datum", $values['datum']);
+    dateField($day, $month, $year);
     displayField("Aanvangtijd", $values['aanvang']);
     textField("Eindtijd", $values['eindtijd']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
@@ -126,16 +133,24 @@ function deleteIncident()
 function editIncident()
 {
     global $con;
+    global $message;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if($valid) $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
-    if($valid) $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br>";}
+
+    if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
+    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn<br>";}
+
+    if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn<br>";}
+
+    if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum<br>";}
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
         $month = removeMaliciousInput($_POST['month']);
         $year = removeMaliciousInput($_POST['year']);
-
 
         $wa = removeMaliciousInput($_POST['Workaround']);
         $cont = removeMaliciousInput($_POST['Contact']);
@@ -161,6 +176,8 @@ function editIncident()
                                 contact='".$cont."', status='".$status."'
                                 WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         }
+    } else {
+        $_POST['display'] = "displayEditIncident";
     }
 }
 
