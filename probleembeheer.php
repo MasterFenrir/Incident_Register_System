@@ -35,7 +35,7 @@ function displayLandingProbleem()
                   'hardware.leverancier', 'hardware.aanschaf_jaar', 'hardware.status', 'software.naam');
     $type = 'OR';
     $grp = 'id_hardware';
-    $search = "werks xp grol 20";
+    $search = "werks xp grol 08 off";
 
-    monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
+    echo monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }

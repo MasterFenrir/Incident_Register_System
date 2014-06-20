@@ -57,6 +57,8 @@ function displaySearchIncidenten($postData)
                                      $postData, "displayEditIncident", "deleteIncident", "nummer", $search, null);
 }
 
+
+
 /**
  * This function manages the display of all the incidents known
  */
@@ -87,9 +89,13 @@ function displayAddIncident(){
 function displayEditIncident() {
     global $con;
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
+    $date = explode("-", $values['datum']);
+    $day = $date[0];
+    $month = $date[1];
+    $year = $date[2];
 
     formHeader();
-    displayField("Datum", $values['datum']);
+
     displayField("Aanvangtijd", $values['aanvang']);
     textField("Eindtijd", $values['eindtijd']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
@@ -108,7 +114,7 @@ function displayEditIncident() {
  */
 function displayMeldingen($postData)
 {
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit = NULL OR prioriteit = ''", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit IS NULL", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 function deleteIncident()
@@ -122,8 +128,8 @@ function editIncident()
     global $con;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
-    $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if($valid) $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
+    if($valid) $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
@@ -137,10 +143,17 @@ function editIncident()
         $status = removeMaliciousInput($_POST['Status']);
         $eind = removeMaliciousInput($_POST['Eindtijd']);
 
-        mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eind."',
-                            id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
-                            contact='".$cont."', prioriteit='".$prio."', status='".$status."'
-                            WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
+        if(!empty($prio)) {
+            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eind."',
+                                id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
+                                contact='".$cont."', status='".$status."', prioriteit='".$prio."'
+                                WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
+        } else {
+            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eind."',
+                                id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
+                                contact='".$cont."', status='".$status."'
+                                WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
+        }
     }
 }
 
@@ -149,9 +162,9 @@ function addIncident()
     global $con;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
-    $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
-    $valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);
+    if($valid) $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
+    if($valid) $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if($valid) $valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
@@ -165,10 +178,17 @@ function addIncident()
         $status = removeMaliciousInput($_POST['Status']);
         $eind = removeMaliciousInput($_POST['Eindtijd']);
 
+        if(!empty($prio)) {
         mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd, id_hardware, omschrijving, workaround, contact, prioriteit, status)
                                 VALUES('".$datum."', '".$aanvang."', '".$eind."',
                                        '".$hw."', '".$omschrijving."', '".$wa."',
                                        '".$cont."', '".$prio."', '".$status."')") or die(mysqli_error($con));
+        } else {
+            mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd, id_hardware, omschrijving, workaround, contact, status)
+                                VALUES('".$datum."', '".$aanvang."', '".$eind."',
+                                       '".$hw."', '".$omschrijving."', '".$wa."',
+                                       '".$cont."', '".$status."')") or die(mysqli_error($con));
+        }
     }
 }
 
