@@ -158,16 +158,16 @@ function makeSearchSoftware($searchString)
          global $con;
 
         $valid = emptyCheck($_POST['ID_Software']);
-        $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
-        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
-        $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
-        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
+        if($valid) $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
+        if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if($valid) $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
+        if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        if($valid) $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
         $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
         $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
         $status = removeMaliciousInput($_POST['Status']);
-        $valid = numberCheck($_POST['Aantal_Licenties']);
-        $valid = numberCheck($_POST['Aantal_Gebruikers']);
+        if($valid) $valid = numberCheck($_POST['Aantal_Licenties']);
+        if($valid) $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
             mysqli_query($con, "UPDATE software SET naam='".$naam."', soort='".$soort."', producent='".$pro."', leverancier='".$lev."', aantal_licenties='".$a_lic."', soort_licentie='".$s_lic."', aantal_gebruikers='".$a_geb."', status='".$status."'
@@ -264,10 +264,10 @@ function displayAddHardware()
         global $con;
 
         $valid = emptyCheck($_POST['Hardware_ID']);
-        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
-        $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
-        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
+        if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if($valid) $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
+        if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        if($valid) $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
         $os = removeMaliciousInput($_POST['OS']);
         $status = removeMaliciousInput($_POST['Status']);
 
@@ -416,10 +416,10 @@ function addHardware()
         global $con;
 
         $valid = emptyCheck($_POST['Hardware_ID']); $id = removeMaliciousInput($_POST['Hardware_ID']);
-        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
-        $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
-        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
+        if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if($valid) $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
+        if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        if($valid) $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
         $os = removeMaliciousInput($_POST['OS']);
         $status = removeMaliciousInput($_POST['Status']);
 
@@ -444,16 +444,16 @@ function addSoftware()
         global $con;
 
         $valid = emptyCheck($_POST['ID_Software']); $id = removeMaliciousInput($_POST['ID_Software']);
-        $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
-        $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
-        $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
-        $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
+        if($valid) $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
+        if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if($valid) $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
+        if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        if($valid) $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
         $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
         $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
         $status = removeMaliciousInput($_POST['Status']);
-        $valid = numberCheck($_POST['Aantal_Licenties']);
-        $valid = numberCheck($_POST['Aantal_Gebruikers']);
+        if($valid) $valid = numberCheck($_POST['Aantal_Licenties']);
+        if($valid) $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
             mysqli_query($con, "INSERT INTO software (id_software, naam, soort, producent, leverancier, aantal_licenties, soort_licentie, aantal_gebruikers, status)
