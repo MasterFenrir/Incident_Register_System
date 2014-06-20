@@ -42,8 +42,6 @@ class HelpdeskTable
             $this->search = $search;
             $this->details = $details;
 
-            $_SESSION['lastTable'] = $this->name;
-
             //If order and sort GET information are set it appends the SQL query to include them
             if(isset($_POST['order']) && isset($_POST['sort'])) {
                 $this->query = $query . " ORDER BY ".$_POST['order']. " " . $_POST['sort'];
@@ -51,7 +49,7 @@ class HelpdeskTable
 
             //Executes the query and stores result in $result
             global $con;
-            $this->result = mysqli_query($con, $this->query) or die($query);
+            $this->result = mysqli_query($con, $this->query) or die(mysqli_error($con));
 
             //Displays table to screen
             $this->makeTable();

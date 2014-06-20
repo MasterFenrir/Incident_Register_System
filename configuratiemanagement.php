@@ -58,95 +58,49 @@ function processEventConfig($eventID)
 /*
  * Functie die de zoek opdracht uitvoert en aan de hard ervan resultaten in tabel laat zien.
  */
+function displaySearchConfig($postData)
+{
+    new HelpdeskTable("Hardware", makeSearchHardware($_POST['search']), null,
+                      "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search'], "displayHardwareAndSoftware");
 
-    function displaySearchConfig($postData)
-    {
-            switch($_SESSION['lastTable']) {
-                case "Hardware" :
-                            new HelpdeskTable("Hardware", makeSearchHardware($_POST['search']),
-                                    $postData, "displayEditHardware", "deleteHardware", "id_hardware", $_POST['search'], null);
-                            break;
-                case "Software" :
-                            new HelpdeskTable("Hardware", makeSearchSoftware($_POST['search']),
-                                    $postData, "displayEditSoftware", "deleteSoftware", "id_hardware", $_POST['search'], null);
-                            break;
-        }
-
-    }
+    new HelpdeskTable("Software", makeSearchSoftware($_POST['search']), null,
+        "displayEditSoftware", "deleteSoftware", "id_software", $_POST['search'], null);
+}
 
 
 /*
  * Builds the query to search for the given search String
  * @param $searchString: Value to search for
  */
-    function makeSearchHardware($searchString)
-    {
-            //Haalt de zoekopdracht op spaties uit elkaar
-            $search = explode(" ", $searchString);
-            /**
-             * Geeft de gewilde velden aan en combineert de tabellen mbv een outer join, dit zorgt ervoor dat geen
-             * rijen verloren gaan als je vergelijkt met een WHERE statement reeks.
-             */
+function makeSearchHardware($searchString)
+{
+    $sel = array( 'hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.os',
+                  'hardware.merk', 'hardware.leverancier', 'hardware.aanschaf_jaar');
+    $from = array('hardware'=>'id_hardware', 'hardware_software'=>'id_software', 'software'=>'id_software');
+    $cols = array('hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.os', 'hardware.merk',
+                  'hardware.leverancier', 'hardware.aanschaf_jaar', 'hardware.status', 'software.naam');
+    $type = 'AND';
+    $grp = 'id_hardware';
+    $search = $searchString;
 
-            $hardwareSearch = "SELECT hardware.id_hardware, hardware.soort, hardware.locatie, hardware.os,
-                           hardware.merk, hardware.leverancier, hardware.aanschaf_jaar
-                           FROM hardware
-                           LEFT OUTER JOIN hardware_software ON hardware.id_hardware = hardware_software.id_hardware
-                           LEFT OUTER JOIN software ON software.id_software = hardware_software.id_software";
-
-        /*
-         * Controleerd of elk van de opgegeven woorden in minimaal een van de aangegeven velden zitten, dit gebruikt
-         * AND dus alle woorden moeten minimaal 1x gevonden zijn. Kan in OR veranderd worden voor alle resultaten met
-         * minstens 1 woord gevonden.
-         */
-            for($x=0; $x<count($search); $x++) {
-                    if($x==0){$hardwareSearch=$hardwareSearch." WHERE";} else {$hardwareSearch=$hardwareSearch." AND";}
-            $hardwareSearch = $hardwareSearch."(hardware.id_hardware LIKE '%".$search[$x]."%' OR hardware.soort LIKE '%".$search[$x]."%' OR hardware.locatie LIKE '%".$search[$x]."%'
-            OR hardware.os LIKE '%".$search[$x]."%' OR hardware.merk LIKE '%".$search[$x]."%' OR hardware.leverancier LIKE '%".$search[$x]."%'
-            OR hardware.aanschaf_jaar LIKE '%".$search[$x]."%' OR hardware.status LIKE '%".$search[$x]."%' OR software.naam LIKE '%".$search[$x]."%')";
-
-        }
-
-       //Groepeerd het zodat maar 1 item per vonst word getoont
-        $hardwareSearch = $hardwareSearch." GROUP BY hardware.id_hardware";
-
-        return $hardwareSearch;
-
-    }
+    return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
+}
 
 
 
 function makeSearchSoftware($searchString)
 {
-        //Haalt de zoekopdracht op spaties uit elkaar
-        $search = explode(" ", $searchString);
+    $sel = array( 'id_software AS ID', 'naam', 'soort', 'producent', 'leverancier',
+                  'aantal_licenties AS Licenties', 'soort_licentie AS Licentiesoort',
+                  'aantal_gebruikers AS Gebruikers', 'status');
+    $from = array('software'=>'id_software');
+    $cols = array('id_software', 'naam', 'soort', 'producent', 'leverancier', 'aantal_licenties', 'soort_licentie',
+                  'aantal_gebruikers', 'status');
+    $type = 'OR';
+    $grp = 'id_software';
+    $search = $searchString;
 
-        /**
-         * Geeft de gewilde velden aan en combineert de tabellen mbv een outer join, dit zorgt ervoor dat geen
-         * rijen verloren gaan als je vergelijkt met een WHERE statement reeks.
-         */
-
-        $softwareSearch = "SELECT *
-                       FROM software";
-        /*
--     * Controleerd of elk van de opgegeven woorden in minimaal een van de aangegeven velden zitten, dit gebruikt
--     * AND dus alle woorden moeten minimaal 1x gevonden zijn. Kan in OR veranderd worden voor alle resultaten met
--     * minstens 1 woord gevonden.
--     */
-
-        for($x=0; $x<count($search); $x++) {
-                if($x==0){$softwareSearch=$softwareSearch." WHERE";} else {$softwareSearch=$softwareSearch." AND";}
-        $softwareSearch = $softwareSearch."(id_software LIKE '%".$search[$x]."%' OR naam LIKE '%".$search[$x]."%' OR soort LIKE '%".$search[$x]."%'
-        OR producent LIKE '%".$search[$x]."%' OR leverancier LIKE '%".$search[$x]."%' OR aantal_licenties LIKE '%".$search[$x]."%'
-        OR soort_licentie LIKE '%".$search[$x]."%' OR aantal_gebruikers LIKE '%".$search[$x]."%' OR status LIKE '%".$search[$x]."%')";
-
-    }
-
-
-   //Groepeerd het zodat maar 1 item per vonst word getoont
-   $softwareSearch = $softwareSearch." GROUP BY software.id_software";
-   return $softwareSearch;
-
+    return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
     function displaySoftware($postData)
@@ -236,15 +190,15 @@ function makeSearchSoftware($searchString)
     function displayHardware($postData)
     {
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
-            "displayEditHardware", "deleteHardware", "id_hardware", null, null);
+            "displayEditHardware", "deleteHardware", "id_hardware", null, "displayHardwareAndSoftware");
     }
 
 /**
  * Function to display one hardware item and the installed software
  */
 function displayHardwareAndSoftware($postData){
-    $hardwareID = $_POST['hardwareID'];
-    $query = "SELECT * FROM hardware WHERE hardware_id = '{$hardwareID}'";
+    $hardwareID = $_POST['key'];
+    $query = "SELECT * FROM hardware WHERE id_hardware = '{$hardwareID}'";
     echo("De volgende tabel toont de details van de hardware:");
     new HelpdeskTable("Hardware item", $query, null, null, null, "id_hardware", null, null);
 
@@ -256,7 +210,7 @@ function displayHardwareAndSoftware($postData){
                      WHERE software.id_software = hardware_software.id_software
                      AND id_hardware='{$hardwareID}'";
     echo("De volgende tabel toont de software die op dit hardware item geïnstalleerd staan:");
-    new HelpdeskTable("Software items", $query, null, null, null, "ID", null, "displayHardwareAndSoftware");
+    new HelpdeskTable("Software items", $query, null, null, null, "ID", null, null);
 }
 
 function displayAddHardware()

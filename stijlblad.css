@@ -150,6 +150,10 @@ table th {
     text-align: left;
 }
 
+.gen table {
+    margin-bottom: 10px;
+}
+
 table a:link, a:visited {
     color: inherit;
 }

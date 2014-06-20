@@ -140,4 +140,78 @@
             return false;
         }
     }
+
+    /*
+     * Function that builds a search query based on it's input
+     *
+     * @param $select: Array of colom names to select, best given as 'table.column'
+     * @param $from: Associative array of tables to search in given as 'table=>primary_key'
+     * @param $cols: Array of columns to search in, best given as 'table.column'
+     * @param $type: Either AND or OR, determines whether all or atleast one word of the searchstring must be found
+     * @param $group: Optional, determines what column to group by, null to not group
+     * @param $searchString:
+     */
+    function monsterQueryBuilder($select, $from, $cols, $type, $group, $searchString)
+    {
+        //Seperates $searchString on spaces in order to search for each word
+        $search = explode(" ", $searchString);
+
+        /*
+         * All elements from the $select array are added to the SELECT part of the statement
+         */
+        $query = "SELECT";
+        for($x=0; $x<count($select); $x++) {
+            if($x != (count($select)-1)) {
+                $query = $query. " ".$select[$x].", ";
+            } else {
+                $query = $query. " ".$select[$x];
+            }
+        }
+
+        /*
+         * All elements from the $from associative array are added to the FROM/LEFT OUTER JOIN part of statement
+         */
+        $tabs = array_keys($from);
+        for($x=0; $x<count($from); $x++) {
+            $table = $tabs[$x];
+            $lastTable = $tabs[$x-1];
+            $lastCol = $from[$lastTable];
+
+            if($x==0) {
+                $query = $query." FROM ".$table;
+            } else {
+                $query = $query." LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
+            }
+        }
+
+        /*
+         * Adds a WHERE/AND/OR column LIKE search OR column LIKE search etc. statement for each
+         * word in $searchString for each column in $cols.
+         *
+         * Outer loop iterates over the words in $searchString adding a new WHERE/AND/OR
+         */
+        for($x=0; $x<count($search); $x++) {
+            if($x==0) {
+                $query = $query." WHERE(";
+            } else {
+                $query = $query." ".$type."(";
+            }
+
+            //Inner loop iterates over each column in $cols with the current $search word
+            for($y=0; $y<count($cols); $y++) {
+                if($y != (count($cols)-1)) {
+                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
+                } else {
+                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%'";
+                }
+            }
+            $query = $query.")";
+        }
+
+        //Groups results by $group if $group isn't null
+        if($group != null) {
+            $query = $query." GROUP BY ".$group;
+        }
+        return $query;
+    }
 ?>
