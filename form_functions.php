@@ -57,7 +57,7 @@ function dropDown($name, $array, $sel){
             <td>".$name."</td>
             <td>
                 <select name='".$name."'>";
-                    echo "<option value=''></option>";
+                    echo "<option></option>";
                     foreach($array as $value) {
                         echo "<option value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
                     }

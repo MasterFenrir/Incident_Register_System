@@ -231,6 +231,7 @@ function displayAddHardware()
         dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), null);
         dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), null);
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, null);
+        textField("Merk", null);
         textField("Leverancier", null);
         textField("Aanschaf_jaar", null);
         textField("Status", null);
@@ -252,6 +253,7 @@ function displayAddHardware()
         dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $os['naam']);
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
                     queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
+        textField("Merk", $values['merk']);
         textField("Leverancier", $values['leverancier']);
         textField("Aanschaf_jaar", $values['aanschaf_jaar']);
         textField("Status", $values['status']);
@@ -270,9 +272,10 @@ function displayAddHardware()
         if($valid) $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
         $os = removeMaliciousInput($_POST['OS']);
         $status = removeMaliciousInput($_POST['Status']);
+        $merk = removeMaliciousInput($_POST['Merk']);
 
         if($valid) {
-            mysqli_query($con, "UPDATE hardware SET soort='".$soort."', locatie='".$loc."', os='".$os."', leverancier='".$lev."', aanschaf_jaar='".$jaar."', status='".$status."'
+            mysqli_query($con, "UPDATE hardware SET soort='".$soort."', locatie='".$loc."', os='".$os."', leverancier='".$lev."', aanschaf_jaar='".$jaar."', status='".$status.", merk='".$merk."'
                                 WHERE id_hardware='".$_POST['Hardware_ID']."'");
         }
 
@@ -422,12 +425,13 @@ function addHardware()
         if($valid) $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
         $os = removeMaliciousInput($_POST['OS']);
         $status = removeMaliciousInput($_POST['Status']);
+        $merk = removeMaliciousInput($_POST['Merk']);
 
         if($valid) {
-            mysqli_query($con, "INSERT INTO hardware (id_hardware, soort, locatie, os, leverancier, aanschaf_jaar, status)
+            mysqli_query($con, "INSERT INTO hardware (id_hardware, soort, locatie, os, leverancier, aanschaf_jaar, status, merk)
                                 VALUES('".$id."', '".$soort."', '".$loc."',
                                        '".$os."', '".$lev."', '".$jaar."',
-                                       '".$status."')") or die('hw error');
+                                       '".$status."', '".$merk."')") or die(mysqli_error($con));
         }
 
         if(!empty($_POST['Software'])) {
