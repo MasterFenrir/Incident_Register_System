@@ -1,3 +1,8 @@
+<script>
+    function show_confirm(){
+        return confirm("Weet je zeker dat je deze entry wil verwijderen?");
+    }
+</script>
 <?php
 /*
  * Class that makes a sortable table from a given SQL query's response.
@@ -159,7 +164,7 @@ class HelpdeskTable
 
             if($this->primeKey != null && $this->delete != null && ($row[$this->primeKey] != $_SESSION['user'])) {
                 if($this->edit == null) {echo "<td>";}
-                echo    "<form action='/index.php' method='post'>";
+                echo    "<form action='/index.php' method='post' onclick='return show_confirm();'>";
                 echo    "<input type='hidden' name='id' value='$this->delete'>";
                 echo    "<input type='hidden' name='display' value='".$this->nav."'>";
                 echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
