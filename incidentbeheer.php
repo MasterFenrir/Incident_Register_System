@@ -18,6 +18,8 @@ function displayContentIncident($postData)
         case "displayEditIncident" : displayEditIncident(); break;
         case "displayMeldingen" : displayMeldingen($postData); break;
         case "displaySearch" : displaySearchIncidenten($postData); break;
+        case "displayHardware" : displayHardware($postData); break;
+        case "displaySoftware" : displaySoftware($postData); break;
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
     }
 }
@@ -30,6 +32,8 @@ function displayMenuIncident()
     new Button("Incidenten","display", "displayIncidenten");
     new Button("Incident toevoegen","display", "displayAddIncident");
     new Button("Meldingen","display", "displayMeldingen");
+    new Button("Hardware","display", "displayHardware");
+    new Button("Software","display", "displaySoftware");
 }
 
 /**
@@ -110,7 +114,7 @@ function displayEditIncident() {
     textField("Workaround", $values['workaround']);
     textField("Contact", $values['contact']);
     dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
-    textField("Status", $values['status']);
+    dropdown("Status", queryToArray("SELECT status From "),$values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
     formFooter("editIncident");
@@ -214,6 +218,13 @@ function addIncident()
                                        '".$cont."', '".$status."')") or die(mysqli_error($con));
         }
     }
+
+
+
+
+
+
+
 }
 
 ?>
