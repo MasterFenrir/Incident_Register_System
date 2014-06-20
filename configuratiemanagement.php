@@ -206,10 +206,20 @@ function displayHardwareAndSoftware($postData){
                      software.producent, software.leverancier, software.aantal_licenties AS Licenties,
                      software.soort_licentie AS Licentiesoort, software.aantal_gebruikers AS Gebruikers,
                      software.status
+                     FROM hardware, software
+                     WHERE hardware.os = software.id_software
+                     AND hardware.id_hardware = '{$hardwareID}'";
+
+    echo("De volgende tabel toont de informatie over het besturingssysteem:");
+    new HelpdeskTable("Besturingsysteem", $query, null, null, null, "id_software", null, null);
+    $query = "SELECT software.id_software AS ID, software.naam, software.soort,
+                     software.producent, software.leverancier, software.aantal_licenties AS Licenties,
+                     software.soort_licentie AS Licentiesoort, software.aantal_gebruikers AS Gebruikers,
+                     software.status
                      FROM hardware_software, software
                      WHERE software.id_software = hardware_software.id_software
                      AND id_hardware='{$hardwareID}'";
-    echo("De volgende tabel toont de software die op dit hardware item geïnstalleerd staan:");
+    echo("De volgende tabel toont de software die op dit hardware item staan:");
     new HelpdeskTable("Software items", $query, null, null, null, "ID", null, null);
 }
 
