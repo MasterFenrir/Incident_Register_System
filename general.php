@@ -228,6 +228,8 @@ function addTimes($day, $month, $year, $time1, $time2){
 
     $time[0] %= 24;
     $time[1] %= 60;
+    $time[0] = str_pad($time[0], 2, '0', STR_PAD_LEFT);
+    $time[1] = str_pad($time[1], 2, '0', STR_PAD_LEFT);
 
     if(intval($time[0]) < intval($time1[0])){
         $date = incrementDate($day, $month, $year);
@@ -247,12 +249,6 @@ function addTimes($day, $month, $year, $time1, $time2){
 
 function incrementDate($day, $month, $year){
     $day++;
-    echo $day;
-    echo "<br/>";
-    echo $month;
-    echo "<br/>";
-    echo $year;
-    echo "<br/>";
     if($day > 31 && ($month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12)){
         $day = 1;
         $month++;
