@@ -115,27 +115,33 @@ function makeSearchSoftware($searchString)
 
     function displayAddSoftware()
     {
+        global $message;
+
         formHeader();
-        textField("ID_Software", null);
-        textField("Naam", null);
-        textField("Soort", null);
-        textField("Producent", null);
-        textField("Leverancier", null);
-        textField("Aantal_Licenties", null);
-        textField("Soort_Licentie", null);
-        textField("Aantal_Gebruikers", null);
-        textField("Status", null);
+        textField("ID_Software", $_POST['ID_Hardware']);
+        textField("Naam", $_POST['Naam']);
+        textField("Soort", $_POST['Soort']);
+        textField("Producent", $_POST['Producent']);
+        textField("Leverancier", $_POST['Leverancier']);
+        textField("Aantal_Licenties", $_POST['Aantal_licenties']);
+        textField("Soort_Licentie", $_POST['Soort_Licentie']);
+        textField("Aantal_Gebruikers", $_POST['Aantal_Gebruikers']);
+        textField("Status", $_POST['Status']);
         hiddenValue("display", "displaySoftware");
         formFooter("addSoftware");
+
+        if(!empty($message)) {
+            echo "<p class=error>".$message."</p>";
+            $message = '';
+        }
     }
 
     function displayEditSoftware()
     {
-
-    global $con;
+        global $con;
+        global $message;
 
         $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$_POST['key']."'"));
-
 
         formHeader();
         displayField("ID_Software", $values['id_software'] );
@@ -150,28 +156,44 @@ function makeSearchSoftware($searchString)
         hiddenValue("display", "displaySoftware");
         formFooter("editSoftware");
 
-
+        if(!empty($message)) {
+            echo "<p class=error>".$message."</p>";
+            $message = '';
+        }
     }
 
     function editSoftware()
     {
          global $con;
+         global $message;
 
         $valid = emptyCheck($_POST['ID_Software']);
+        if(!emptyCheck($_POST['ID_Software'])){$message = $message."ID mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Naam']); $naam = removeMaliciousInput($_POST['Naam']);
+        if(!emptyCheck($_POST['Naam'])){$message = $message."Naam mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if(!emptyCheck($_POST['Soort'])){$message = $message."Soort mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Producent']); $pro = removeMaliciousInput($_POST['Producent']);
+        if(!emptyCheck($_POST['Producent'])){$message = $message."Producent mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
-        if($valid) $valid = emptyCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
+        if(!emptyCheck($_POST['Leverancier'])){$message = $message."Leverancier mag niet leeg zijn<br/>";}
+
+        if($valid) $valid = numberCheck($_POST['Aantal_Licenties']); $a_lic = removeMaliciousInput($_POST['Aantal_Licenties']);
+        if(!numberCheck($_POST['Aantal_Licenties'])){$message = $message."Ongeldig aantal licenties<br/>";}
+
         $s_lic = removeMaliciousInput($_POST['Soort_Licentie']);
         $a_geb = removeMaliciousInput($_POST['Aantal_Gebruikers']);
         $status = removeMaliciousInput($_POST['Status']);
-        if($valid) $valid = numberCheck($_POST['Aantal_Licenties']);
-        if($valid) $valid = numberCheck($_POST['Aantal_Gebruikers']);
 
         if($valid) {
             mysqli_query($con, "UPDATE software SET naam='".$naam."', soort='".$soort."', producent='".$pro."', leverancier='".$lev."', aantal_licenties='".$a_lic."', soort_licentie='".$s_lic."', aantal_gebruikers='".$a_geb."', status='".$status."'
                                 WHERE id_software='".$_POST['ID_Software']."'")or die(mysqli_error($con));
+        } else {
+            $_POST['display'] = 'displayEditSoftware';
         }
     }
     /**
@@ -225,23 +247,31 @@ function displayHardwareAndSoftware($postData){
 
 function displayAddHardware()
     {
+        global $message;
+
         formHeader();
-        textField("Hardware_ID", null);
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), null);
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), null);
-        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), null);
-        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, null);
-        textField("Merk", null);
-        textField("Leverancier", null);
-        textField("Aanschaf_jaar", null);
-        textField("Status", null);
+        textField("Hardware_ID", $_POST['Hardware_ID']);
+        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $_POST['Soort']);
+        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $_POST['Locatie']);
+        dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $_POST['OS']);
+        CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, $_POST['Software']);
+        textField("Merk", $_POST['Merk']);
+        textField("Leverancier", $_POST['Leverancier']);
+        textField("Aanschaf_jaar", $_POST['Aanschaf_jaar']);
+        textField("Status", $_POST['Status']);
         hiddenValue("display", "displayHardware");
         formFooter("addHardware");
+
+        if(!empty($message)) {
+            echo "<p class=error>".$message."</p>";
+            $message = '';
+        }
     }
 
     function displayEditHardware()
     {
         global $con;
+        global $message;
 
         $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM hardware WHERE id_hardware='".$_POST['key']."'"));
         $os = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM software WHERE id_software='".$values['os']."'"));
@@ -259,17 +289,31 @@ function displayAddHardware()
         textField("Status", $values['status']);
         hiddenValue("display", "displayHardware");
         formFooter("editHardware");
+
+        if(!empty($message)) {
+            echo "<p class=error>".$message."</p>";
+            $message = '';
+        }
     }
 
     function editHardware()
     {
         global $con;
+        global $message;
 
         $valid = emptyCheck($_POST['Hardware_ID']);
         if($valid) $valid = emptyCheck($_POST['Soort']); $soort = removeMaliciousInput($_POST['Soort']);
+        if(!emptyCheck($_POST['Soort'])){$message = $message."Soort mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Locatie']); $loc = removeMaliciousInput($_POST['Locatie']);
+        if(!emptyCheck($_POST['Locatie'])){$message = $message."Locatie mag niet leeg zijn<br/>";}
+
         if($valid) $valid = emptyCheck($_POST['Leverancier']); $lev = removeMaliciousInput($_POST['Leverancier']);
+        if(!emptyCheck($_POST['Leverancier'])){$message = $message."Leverancier mag niet leeg zijn<br/>";}
+
         if($valid) $valid = yearCheck($_POST['Aanschaf_jaar']); $jaar = removeMaliciousInput($_POST['Aanschaf_jaar']);
+        if(!yearCheck($_POST['Aanschaf_jaar'])){$message = $message."Ongeldige aanschaf jaar<br/>";}
+
         $os = removeMaliciousInput($_POST['OS']);
         $status = removeMaliciousInput($_POST['Status']);
         $merk = removeMaliciousInput($_POST['Merk']);
@@ -287,6 +331,8 @@ function displayAddHardware()
                 mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
                                     VALUES ('".$_POST['Hardware_ID']."','".$key['id_software']."')") or die(mysqli_error($con));
             }
+        } else {
+            $_POST['display'] = 'displayEditHardware';
         }
     }
 

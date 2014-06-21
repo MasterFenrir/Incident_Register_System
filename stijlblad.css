@@ -181,3 +181,7 @@ table a:link, a:visited {
     width: 100px;
     border-radius: 15px;
 }
+
+.error {
+    color: #A52A2A;
+}

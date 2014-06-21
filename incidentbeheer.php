@@ -18,8 +18,9 @@ function displayContentIncident($postData)
         case "displayEditIncident" : displayEditIncident(); break;
         case "displayMeldingen" : displayMeldingen($postData); break;
         case "displaySearch" : displaySearchIncidenten($postData); break;
-        case "displayHardware" : displayHardware($postData); break;
-        case "displaySoftware" : displaySoftware($postData); break;
+        case "displayHardware" : displayHardwareIncident($postData); break;
+        case "displaySoftware" : displaySoftwareIncident($postData); break;
+        case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
     }
 }
@@ -73,31 +74,33 @@ function displayIncidenten($postData){
 /*
  * This functions displays the form to add an incident
  */
-function displayAddIncident(){
+function displayAddIncident() {
+    global $message;
     date_default_timezone_set("Europe/Amsterdam");
 
     formHeader();
-    dateField(null,null,null);
+    dateField($_POST['day'],$_POST['month'],$_POST['year']);
     textField("Aanvangtijd",date('H:i'));
-    textField("Eindtijd", null);
-    dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), null);
-    textField("Omschrijving", null);
-    textField("Workaround", null);
-    textField("Contact", null);
-    dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), null);
-    textField("Status", null);
+    textField("Eindtijd", $_POST['Eindtijd']);
+    dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $_POST['Hardware']);
+    textField("Omschrijving", $_POST['Omschrijving']);
+    textField("Workaround", $_POST['Workaround']);
+    textField("Contact", $_POST['Contact']);
+    dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $_POST['Prioriteit']);
+    textField("Status", $_POST['Status']);
     hiddenValue("display", "displayIncidenten");
     formFooter("addIncident");
+
+    if(!empty($message)) {
+        echo "<p class=error>".$message."</p>";
+        $message = '';
+    }
 }
 
 function displayEditIncident() {
     global $con;
     global $message;
 
-    if(!empty($message)) {
-        echo $message;
-        $message = '';
-    }
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
 
     $date = explode("-", $values['datum']);
@@ -114,10 +117,15 @@ function displayEditIncident() {
     textField("Workaround", $values['workaround']);
     textField("Contact", $values['contact']);
     dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
-    dropdown("Status", queryToArray("SELECT status From "),$values['status']);
+    dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
     formFooter("editIncident");
+
+    if(!empty($message)) {
+        echo "<p class=error>".$message."</p>";
+        $message = '';
+    }
 }
 
 /**
@@ -140,16 +148,16 @@ function editIncident()
     global $message;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br>";}
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br/>";}
 
     if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
-    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn<br>";}
+    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn</br>";}
 
     if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
-    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn<br>";}
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn</br>";}
 
     if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
-    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum<br>";}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum</br>";}
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
@@ -188,11 +196,19 @@ function editIncident()
 function addIncident()
 {
     global $con;
+    global $message;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if($valid) $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
-    if($valid) $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
-    if($valid) $valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br/>";}
+
+    if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
+    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn</br>";}
+
+    if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn</br>";}
+
+    if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum</br>";}
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
@@ -217,26 +233,25 @@ function addIncident()
                                        '".$hw."', '".$omschrijving."', '".$wa."',
                                        '".$cont."', '".$status."')") or die(mysqli_error($con));
         }
+    } else {
+        $_POST['display'] = "displayAddIncident";
     }
+}
 
-    function displayHardware($postData)
-    {
-        new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
-            null, null, "id_hardware", null, "displayHardwareAndSoftware");
-    }
+function displayHardwareIncident($postData)
+{
+    new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
+        null, null, "id_hardware", null, "displayHardwareAndSoftware");
+}
 
- function displaySoftware($postData)
-    {
-        new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
-                                              producent, leverancier, aantal_licenties AS Licenties,
-                                              soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
-                                              status
-                                              FROM software", $postData,
-                          null, null, "id_software", null, null);
-    }
-
-
-
+function displaySoftwareIncident($postData)
+{
+    new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
+                                          producent, leverancier, aantal_licenties AS Licenties,
+                                          soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
+                                          status
+                                          FROM software", $postData,
+                      null, null, "id_software", null, null);
 }
 
 ?>
