@@ -63,6 +63,7 @@ function dropDown($name, $array, $sel){
                     }
     echo        "</select>
             </td>
+            <td id='errorField'></td>
          </tr>";
 }
 
@@ -124,7 +125,7 @@ function textField($name, $sel){
 }
 
 function displayField($name, $sel){
-    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel."' readonly></text></td></tr>";
+    echo "<tr><td>".$name."</td><td>$sel</td></tr>";
 }
 
 /**

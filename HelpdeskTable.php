@@ -76,6 +76,8 @@ class HelpdeskTable
             //Makes the title row of the table
             if(count($row) > 0) {
                 echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
+            } else {
+                echo "Geen resultate gevonden in ".$this->name." voor ".$this->search;
             }
 
             $this->makeColumns();
@@ -156,7 +158,7 @@ class HelpdeskTable
                 echo "<td>";
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='display' value='$this->edit'>";
-                echo    "<input type='hidden' name='key' value=".$row[$this->primeKey].">";
+                echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Edit'>";
                 echo    "</form>";
                 if($this->delete == null) {echo "</td>";}
@@ -177,7 +179,7 @@ class HelpdeskTable
                 if($this->edit == null && $this->delete == null) {echo "<td>";}
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='display' value='$this->details'>";
-                echo    "<input type='hidden' name='key' value=".$row[$this->primeKey].">";
+                echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Details'>";
                 echo    "</form>";
                 echo "</td>";

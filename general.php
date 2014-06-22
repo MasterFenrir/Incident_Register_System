@@ -277,4 +277,14 @@ function incrementDate($day, $month, $year){
     return $date;
 }
 
+function displayErrors()
+{
+    global $message;
+
+    if(!empty($message)) {
+        echo "<p class=error>".$message."</p>";
+        $message = '';
+    }
+}
+
 ?>

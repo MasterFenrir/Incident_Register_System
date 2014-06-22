@@ -54,14 +54,25 @@ function processEventIncident($eventID)
 
 function displaySearchIncidenten($postData)
 {
-    $search = $_POST['search'];
-    new HelpdeskTable("Incidenten", "SELECT nummer, datum, aanvang, eindtijd, incidenten.id_hardware, incidenten.omschrijving, workaround, probleem, contact, prioriteit, incidenten.status
-                                     FROM incidenten, hardware WHERE incidenten.id_hardware = hardware.id_hardware AND nummer LIKE '%".$search."%'
-                                     OR datum LIKE '%".$search."%' OR aanvang LIKE '%".$search."%' OR eindtijd LIKE '%".$search."%' OR incidenten.id_hardware LIKE '%".$search."%'
-                                     OR incidenten.omschrijving LIKE '%".$search."%' OR workaround LIKE '%".$search."%' OR probleem LIKE '%".$search."%'
-                                     OR contact LIKE '%".$search."%' OR prioriteit LIKE '%".$search."%' OR incidenten.status LIKE '%".$search."%' OR hardware.soort LIKE '%".$search."%'
-                                     GROUP BY incidenten.nummer",
-                                     $postData, "displayEditIncident", "deleteIncident", "nummer", $search, null);
+    new HelpdeskTable("Incidenten", makeSearchIncidenten($_POST['search']), null,
+                      "displayEditIncident", "deleteIncident", "nummer", $_POST['search'], null);
+
+    echo "<br/>";
+
+    displaySearchConfig($postData);
+}
+
+function makeSearchIncidenten($search)
+{
+    $select = array('incidenten.nummer', 'incidenten.datum', 'incidenten.aanvang', 'incidenten.id_hardware', 'incidenten.omschrijving',
+                    'incidenten.workaround', 'incidenten.probleem', 'incidenten.contact, incidenten.prioriteit, incidenten.status');
+    $from = array('hardware'=>'id_hardware', 'incidenten'=>'nummer');
+    $cols = array('incidenten.nummer', 'incidenten.datum', 'incidenten.aanvang', 'incidenten.eindtijd', 'incidenten.id_hardware',
+                  'incidenten.omschrijving', 'incidenten.workaround', 'incidenten.probleem', 'incidenten.prioriteit', 'incidenten.status',
+                  'hardware.soort', 'incidenten.contact');
+    $grp = 'incidenten.nummer';
+
+    return monsterQueryBuilder($select, $from, $cols, 'AND', $grp, $search);
 }
 
 
@@ -77,7 +88,7 @@ function displayIncidenten($postData){
  * This functions displays the form to add an incident
  */
 function displayAddIncident() {
-    global $message;
+    displayErrors();
     date_default_timezone_set("Europe/Amsterdam");
 
     formHeader();
@@ -91,16 +102,11 @@ function displayAddIncident() {
     textField("Status", $_POST['Status']);
     hiddenValue("display", "displayIncidenten");
     formFooter("addIncident");
-
-    if(!empty($message)) {
-        echo "<p class=error>".$message."</p>";
-        $message = '';
-    }
 }
 
 function displayEditIncident() {
     global $con;
-    global $message;
+    displayErrors();
 
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
 
@@ -121,11 +127,6 @@ function displayEditIncident() {
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
     formFooter("editIncident");
-
-    if(!empty($message)) {
-        echo "<p class=error>".$message."</p>";
-        $message = '';
-    }
 }
 
 /**
