@@ -18,8 +18,8 @@ function displayContentIncident($postData)
         case "displayEditIncident" : displayEditIncident(); break;
         case "displayMeldingen" : displayMeldingen($postData); break;
         case "displaySearch" : displaySearchIncidenten($postData); break;
-        case "displayHardware" : displayHardwareIncident($postData); break;
-        case "displaySoftware" : displaySoftwareIncident($postData); break;
+        case "displayHardwareIncident" : displayHardwareIncident($postData); break;
+        case "displaySoftwareIncident" : displaySoftwareIncident($postData); break;
         case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
         case "displaySolvedProblems"    : displaySolvedProblems($postData); break;
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
@@ -34,8 +34,8 @@ function displayMenuIncident()
     new Button("Incidenten","display", "displayIncidenten");
     new Button("Incident toevoegen","display", "displayAddIncident");
     new Button("Meldingen","display", "displayMeldingen");
-    new Button("Hardware","display", "displayHardware");
-    new Button("Software","display", "displaySoftware");
+    new Button("Hardware","display", "displayHardwareIncident");
+    new Button("Software","display", "displaySoftwareIncident");
     new Button("Opgeloste problemen", "display", "displaySolvedProblems");
 }
 

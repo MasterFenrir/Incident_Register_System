@@ -9,9 +9,13 @@
 function displayContentProbleem($postData)
 {
     switch($postData) {
-        case "displayProblemen" : new HelpdeskTable("Problemen", "SELECT * FROM problemen", "displayProblemen", null, null, null, null, null); break;
+        case "displayProblemen" : displayProblems($postData); break;
         case "displayEditIncidentStatus"    : displayEditIncidentStatus(); break;
-        case "displayIncidentenProblems"    : displayIncidentProblems($postData); break;
+        case "displayIncidentProblems"    : displayIncidentProblems($postData); break;
+        case "displayProblemDetails"    : displayProblemDetails($postData); break;
+        case "displayHardwareProblem" : displayHardwareProblem($postData); break;
+        case "displaySoftwareProblem" : displaySoftwareProblem($postData); break;
+        case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
         default : displayLandingProbleem();
     }
 }
@@ -19,7 +23,9 @@ function displayContentProbleem($postData)
 function displayMenuProbleem()
 {
     new Button("Problemen", "display", "displayProblemen");
-    new Button("Incidenten", "display", "displayIncidentenProblems");
+    new Button("Incidenten", "display", "displayIncidentProblems");
+    new Button("Hardware","display", "displayHardwareProblem");
+    new Button("Software","display", "displaySoftwareProblem");
 }
 
 function processEventProbleem($eventID)
@@ -29,8 +35,24 @@ function processEventProbleem($eventID)
     }
 }
 
+
+function displayProblems($postData){
+    new HelpdeskTable("Problemen", "SELECT * FROM problemen", $postData, null, null, "nummer", null, "displayProblemDetails");
+}
+
 function displayIncidentProblems($postData){
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
+}
+
+function displayProblemDetails($postData){
+    $query = "SELECT * FROM problemen
+              WHERE nummer = '{$_POST['key']}'";
+    echo("Hieronder staan de details van het probleem:");
+    new HelpdeskTable("Probleem", $query, $postData, null, null, "nummer", null, null);
+    $query = "SELECT * FROM incidenten
+              WHERE probleem = '{$_POST['key']}'";
+    echo("Hieronder staan de gerelateerde incidenten:");
+    new HelpdeskTable("Incidenten", $query, $postData, null, null, "nummer", null, null);
 }
 
 function displayEditIncidentStatus(){
@@ -51,20 +73,37 @@ function displayEditIncidentStatus(){
     displayValue("Hardware",$values['id_hardware']);
     displayValue("Omschrijving", $values['omschrijving']);
     displayValue("Workaround", $values['workaround']);
+    dropdown("Probleem", queryToArray("SELECT nummer FROM problemen"), null);
     displayValue("Contact", $values['contact']);
     displayValue("Prioriteit", $values['prioriteit']);
     dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
-    formFooter("changeStateIncident");
+    formFooter("editIncidentStatus");
 }
 
 function editIncidentStatus(){
     global $con;
-    mysqli_query($con, "UPDATE incidenten SET status='".$_POST['Status']."'
+    mysqli_query($con, "UPDATE incidenten SET status='{$_POST['Status']}', probleem='{$_POST['Probleem']}'
                         WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
 
-    $_POST['display'] = "displaytIncidentProblems";
+    $_POST['display'] = "displayIncidentProblems";
+}
+
+function displayHardwareProblem($postData)
+{
+    new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
+        null, null, "id_hardware", null, "displayHardwareAndSoftware");
+}
+
+function displaySoftwareProblem($postData)
+{
+    new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
+                                          producent, leverancier, aantal_licenties AS Licenties,
+                                          soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
+                                          status
+                                          FROM software", $postData,
+        null, null, "id_software", null, null);
 }
 
 function displayLandingProbleem()
