@@ -63,7 +63,6 @@ function dropDown($name, $array, $sel){
                     }
     echo        "</select>
             </td>
-            <td id='errorField'></td>
          </tr>";
 }
 

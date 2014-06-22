@@ -149,16 +149,16 @@ function editIncident()
     global $message;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br/>";}
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."<li>Aanvangtijd mag niet leeg zijn</li>";}
 
     if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
-    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn</br>";}
+    if(!emptyCheck($_POST['Hardware'])){$message = $message."<li>Hardware mag niet leeg zijn</li>";}
 
     if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
-    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn</br>";}
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."<li>Omschrijving mag niet leeg zijn</li>";}
 
     if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
-    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum</br>";}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."<li>Ongeldige datum</li>";}
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);
@@ -198,16 +198,16 @@ function addIncident()
     global $message;
 
     $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."Aanvangtijd mag niet leeg zijn<br/>";}
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."<li>Aanvangtijd mag niet leeg zijn</li>";}
 
     if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
-    if(!emptyCheck($_POST['Hardware'])){$message = $message."Hardware mag niet leeg zijn</br>";}
+    if(!emptyCheck($_POST['Hardware'])){$message = $message."<li>Hardware mag niet leeg zijn</li>";}
 
     if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
-    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."Omschrijving mag niet leeg zijn</br>";}
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."<li>Omschrijving mag niet leeg zijn</li>";}
 
     if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
-    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."Ongeldige datum</br>";}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."<li>Ongeldige datum</li>";}
 
     if($valid) {
         $day = removeMaliciousInput($_POST['day']);

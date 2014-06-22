@@ -182,6 +182,7 @@ table a:link, a:visited {
     border-radius: 15px;
 }
 
-.error {
-    color: #A52A2A;
+li {
+    list-style-type: disc;
+    color: red;
 }
