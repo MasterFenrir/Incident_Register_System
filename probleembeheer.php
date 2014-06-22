@@ -9,6 +9,7 @@
 function displayContentProbleem($postData)
 {
     switch($postData) {
+        case "displayProblemMeldingen"  : displayProblemMeldingen($postData); break;
         case "displayProblemen" : displayProblems($postData); break;
         case "displayEditIncidentStatus"    : displayEditIncidentStatus(); break;
         case "displayIncidentProblems"    : displayIncidentProblems($postData); break;
@@ -22,6 +23,7 @@ function displayContentProbleem($postData)
 
 function displayMenuProbleem()
 {
+    new Button("Meldingen", "display", "displayProblemMeldingen");
     new Button("Problemen", "display", "displayProblemen");
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");
@@ -35,6 +37,9 @@ function processEventProbleem($eventID)
     }
 }
 
+function displayProblemMeldingen($postData){
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status = 'Probleem' AND probleem IS NULL", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
+}
 
 function displayProblems($postData){
     new HelpdeskTable("Problemen", "SELECT * FROM problemen", $postData, null, null, "nummer", null, "displayProblemDetails");
