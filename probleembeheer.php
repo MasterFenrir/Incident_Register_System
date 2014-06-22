@@ -70,17 +70,17 @@ function displayEditIncidentStatus(){
     $year = $date[2];
 
     formHeader();
-    displayValue("Dag", $day);
-    displayValue("Maand", $month);
-    displayValue("Jaar", $year);
-    displayValue("Aanvangtijd", $values['aanvang']);
-    displayValue("Eindtijd", $values['eindtijd']);
-    displayValue("Hardware",$values['id_hardware']);
-    displayValue("Omschrijving", $values['omschrijving']);
-    displayValue("Workaround", $values['workaround']);
+    displayField("Dag", $day);
+    displayField("Maand", $month);
+    displayField("Jaar", $year);
+    displayField("Aanvangtijd", $values['aanvang']);
+    displayField("Eindtijd", $values['eindtijd']);
+    displayField("Hardware",$values['id_hardware']);
+    displayField("Omschrijving", $values['omschrijving']);
+    displayField("Workaround", $values['workaround']);
     dropdown("Probleem", queryToArray("SELECT nummer FROM problemen"), null);
-    displayValue("Contact", $values['contact']);
-    displayValue("Prioriteit", $values['prioriteit']);
+    displayField("Contact", $values['contact']);
+    displayField("Prioriteit", $values['prioriteit']);
     dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);

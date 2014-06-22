@@ -124,11 +124,7 @@ function textField($name, $sel){
 }
 
 function displayField($name, $sel){
-    echo "<tr><td>".$name."</td><td>$sel</td></tr>";
-}
-
-function displayValue($name, $value){
-    echo "<tr><td>".$name."</td><td>{$value}</td></tr>";
+    echo "<tr><td>".$name."</td><td>{$sel}</td></tr>";
 }
 
 /**
