@@ -31,6 +31,7 @@ function displayContentIncident($postData)
  */
 function displayMenuIncident()
 {
+    echo "woot";
     new Button("Incidenten","display", "displayIncidenten");
     new Button("Incident toevoegen","display", "displayAddIncident");
     new Button("Meldingen","display", "displayMeldingen");
