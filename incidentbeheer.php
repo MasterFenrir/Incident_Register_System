@@ -21,6 +21,7 @@ function displayContentIncident($postData)
         case "displayHardware" : displayHardwareIncident($postData); break;
         case "displaySoftware" : displaySoftwareIncident($postData); break;
         case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
+        case "displaySolvedProblems"    : displaySolvedProblems($postData); break;
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
     }
 }
@@ -35,6 +36,7 @@ function displayMenuIncident()
     new Button("Meldingen","display", "displayMeldingen");
     new Button("Hardware","display", "displayHardware");
     new Button("Software","display", "displaySoftware");
+    new Button("Opgeloste problemen", "display", "displaySolvedProblems");
 }
 
 /**
@@ -81,7 +83,6 @@ function displayAddIncident() {
     formHeader();
     dateField($_POST['day'],$_POST['month'],$_POST['year']);
     textField("Aanvangtijd",date('H:i'));
-    textField("Eindtijd", $_POST['Eindtijd']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $_POST['Hardware']);
     textField("Omschrijving", $_POST['Omschrijving']);
     textField("Workaround", $_POST['Workaround']);
@@ -111,7 +112,6 @@ function displayEditIncident() {
     formHeader();
     dateField($day, $month, $year);
     displayField("Aanvangtijd", $values['aanvang']);
-    textField("Eindtijd", $values['eindtijd']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
     textField("Omschrijving", $values['omschrijving']);
     textField("Workaround", $values['workaround']);
@@ -250,6 +250,22 @@ function displaySoftwareIncident($postData)
                                           status
                                           FROM software", $postData,
                       null, null, "id_software", null, null);
+}
+
+/**
+ * Function to show the problems with the status 'solved', with their related incidents.
+ * @param $postData
+ */
+function displaySolvedProblems($postData){
+    $query = "SELECT incidenten.nummer, incidenten.datum, incidenten.aanvang,
+                    incidenten.eindtijd, incidenten.id_hardware, incidenten.omschrijving,
+                    incidenten.workaround, incidenten.probleem, incidenten.contact,
+                    incidenten.prioriteit, incidenten.status
+            FROM incidenten, problemen
+            WHERE incidenten.probleem = problemen.nummer
+            AND problemen.status = 'opgelost'
+            AND incidenten.status = 'onopgelost'";
+    new HelpdeskTable("Incidenten gerelateerd aan opgeloste problemen", $query, $postData, "displayEditIncident", null, "nummer", null, null);
 }
 
 ?>
