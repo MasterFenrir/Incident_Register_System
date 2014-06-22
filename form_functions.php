@@ -128,6 +128,10 @@ function displayField($name, $sel){
     echo "<tr><td>".$name."</td><td>$sel</td></tr>";
 }
 
+function displayValue($name, $value){
+    echo "<tr><td>".$name."</td><td>{$value}</td></tr>";
+}
+
 /**
  * Function to add a hidden value to a form
  * @param $name The name of the value

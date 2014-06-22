@@ -188,8 +188,8 @@ function editIncident()
                                 WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         }
     } else {
-        $_POST['display'] = "displayEditIncident";
-    }
+    $_POST['display'] = "displayEditIncident";
+}
 }
 
 function addIncident()
@@ -265,7 +265,7 @@ function displaySolvedProblems($postData){
             FROM incidenten, problemen
             WHERE incidenten.probleem = problemen.nummer
             AND problemen.status = 'opgelost'
-            AND incidenten.status = 'onopgelost'";
+            AND incidenten.status = 'probleem'";
     new HelpdeskTable("Incidenten gerelateerd aan opgeloste problemen", $query, $postData, "displayEditIncident", null, "nummer", null, null);
 }
 
