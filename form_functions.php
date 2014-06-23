@@ -123,6 +123,11 @@ function textField($name, $sel){
     echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel."'></text></td></tr>";
 }
 
+/**
+ * This function simply displays a tablerow with a name and a value.
+ * @param $name The name
+ * @param $sel The value
+ */
 function displayField($name, $sel){
     echo "<tr><td>".$name."</td><td>{$sel}</td></tr>";
 }
