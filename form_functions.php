@@ -150,7 +150,7 @@ function formHeader() {
 }
 
 /**
- * Function to create
+ * Function to create a footer for a form.
  * @param $id
  */
 function formFooter($id, $name="Submit"){

@@ -307,3 +307,5 @@ function displayLandingProbleem()
 
     echo monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
+
+?>
