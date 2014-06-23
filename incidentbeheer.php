@@ -52,6 +52,10 @@ function processEventIncident($eventID)
     }
 }
 
+/**
+ * This displays the table with the incidents from the search.
+ * @param $postData
+ */
 function displaySearchIncidenten($postData)
 {
     new HelpdeskTable("Incidenten", makeSearchIncidenten($_POST['search']), null,
@@ -62,6 +66,11 @@ function displaySearchIncidenten($postData)
     displaySearchConfig($postData);
 }
 
+/**
+ * This function searches for incidents in the incidenttable.
+ * @param $search
+ * @return string
+ */
 function makeSearchIncidenten($search)
 {
     $select = array('incidenten.nummer', 'incidenten.datum', 'incidenten.aanvang', 'incidenten.id_hardware', 'incidenten.omschrijving',
@@ -78,14 +87,14 @@ function makeSearchIncidenten($search)
 
 
 /**
- * This function manages the display of all the incidents known
+ * This function manages the display of all the incidents known.
  */
 function displayIncidenten($postData){
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 /*
- * This functions displays the form to add an incident
+ * This functions displays the form to add an incident.
  */
 function displayAddIncident() {
     displayErrors();
@@ -104,6 +113,9 @@ function displayAddIncident() {
     formFooter("addIncident");
 }
 
+/**
+ * This function displays the form to edit an incident.
+ */
 function displayEditIncident() {
     global $con;
     displayErrors();
@@ -131,19 +143,25 @@ function displayEditIncident() {
 }
 
 /**
- * This functions displays all the incidents that have no priority yet.
+ * This function displays all the incidents that have no priority yet.
  */
 function displayMeldingen($postData)
 {
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit IS NULL", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
+/**
+ * This function removes an incident.
+ */
 function deleteIncident()
 {
     global $con;
     mysqli_query($con, "DELETE FROM incidenten WHERE nummer ='".$_POST['key']."'");
 }
 
+/**
+ * This function uses the form from displayEditIncident to change an incident.
+ */
 function editIncident()
 {
     global $con;
@@ -191,6 +209,9 @@ function editIncident()
     }
 }
 
+/**
+ * This function adds the incident from the form displayAddIncident into the incidenttable.
+ */
 function addIncident()
 {
     global $con;
@@ -240,12 +261,20 @@ function addIncident()
     }
 }
 
+/**
+ * This function displays all hardware incidents.
+ * @param $postData
+ */
 function displayHardwareIncident($postData)
 {
     new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
         null, null, "id_hardware", null, "displayHardwareAndSoftware");
 }
 
+/**
+ * This function displays all software incidents.
+ * @param $postData
+ */
 function displaySoftwareIncident($postData)
 {
     new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
