@@ -1,225 +1,236 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: David
- * Date: 11-6-14
- * Time: 16:04
+* Created by PhpStorm.
+* User: David
+* Date: 11-6-14
+* Time: 16:04
+*/
+
+$con = mysqli_connect("localhost","helpdesk","Sku53_u3","helpdesk") or die('Unable to connect');
+
+/**
+ * Function to display a logout button
  */
+function logoutKnop(){
+    echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
+    echo "<input type=\"hidden\" name=\"logout\" value=\"1\">";
+    echo "<input class=\"nav\" type=\"submit\" value=\"Logout\">";
+    echo "</form>";
+}
 
-    $con = mysqli_connect("localhost","helpdesk","Sku53_u3","helpdesk") or die('Unable to connect');
+/**
+ * Function to display a searchfield
+ */
+function searchField(){
+    echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
+    echo "<input type='search' name='search'>";
+    echo "<input type='hidden' name='display' value='displaySearch'>";
+    echo "<input class='nav' type='submit' value='Search'>";
+    echo "</form>";
+}
 
-    function logoutKnop(){
-        echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
-        echo "<input type=\"hidden\" name=\"logout\" value=\"1\">";
-        echo "<input class=\"nav\" type=\"submit\" value=\"Logout\">";
-        echo "</form>";
-    }
-
-    function searchField(){
-        echo "<form action='".htmlspecialchars($_SERVER['PHP_SELF'])."' method=\"post\">";
-        echo "<input type='search' name='search'>";
-        echo "<input type='hidden' name='display' value='displaySearch'>";
-        echo "<input class='nav' type='submit' value='Search'>";
-        echo "</form>";
-    }
-
-    /*
-     *  Deze functie controleerd of iemand op uitloggen heeft geklikt, zo ja worden sessie variabelen verwijderd en de sessie beeindigd
-     */
-    function checkLogin(){
-        session_start();
-        if(isset($_POST['logout']))
-        {
-            logOut();
-        }
-    }
-
-    /*
-     *Deze functie eindigd de sessie en vernietigd de sessie variabelen
-     */
-    function logOut(){
-        session_unset();
-        session_destroy();
-    }
-
-    /*
-     * This function removes possible malicious input
-     */
-    function removeMaliciousInput($input){
-        global $con;
-        $input = strip_tags($input);
-        $input = mysqli_real_escape_string($con, $input);
-        return $input;
-    }
-
-    /*
-     * Function to validate the entered date
-     */
-    function validateDate($day, $month, $year){
-        if(($day < 1) || $day > 31 || $month < 1 || $month > 12 || $year < 2000 || $year > 2100){
-            return false;
-        }
-        //Check february
-        if($month == 2){
-            if((($year % 4 == 0) && ($year % 100 > 0) || ($year % 400 == 0)) && $day < 30){
-                return true;
-            } else if( $day < 29 ){
-                return true;
-            } else {
-                return false;
-            }
-        }
-        // Check the months with 30 days
-        if($month == 4 || $month == 6 || $month == 9 || $month == 11){
-            if($day > 30){
-                return false;
-            }
-        }
-        // Since we've gotten here, it must be true.
-        return true;
-    }
-
-    function queryToArray($query)
+/*
+ *  A function to check if someone pressed 'logout'. If yes, end his session.
+ */
+function checkLogin(){
+    session_start();
+    if(isset($_POST['logout']))
     {
-        global $con;
-        $sql = mysqli_query($con, $query);
-        while($row = mysqli_fetch_array($sql)) {$array[] = $row[0];}
-
-        return $array;
+        logOut();
     }
+}
 
-    /**
-     * This function encrypts a password and returns the result
-     * @param $password
-     * @return string
-     */
-    function password_encrypt($password) {
-        $hash_format = "$2y$10$";   // Tells PHP to use Blowfish with a "cost" of 10
-        $salt_length = 22; 					// Blowfish salts should be 22-characters or more
-        $salt = generate_salt($salt_length);
-        $format_and_salt = $hash_format . $salt;
-        $hash = crypt($password, $format_and_salt);
-        return $hash;
+/*
+ * End the session.
+ */
+function logOut(){
+    session_unset();
+    session_destroy();
+}
+
+/*
+ * This function removes possible malicious input
+ */
+function removeMaliciousInput($input){
+    global $con;
+    $input = strip_tags($input);
+    $input = mysqli_real_escape_string($con, $input);
+    return $input;
+}
+
+/*
+ * Function to validate the entered date
+ */
+function validateDate($day, $month, $year){
+    if(($day < 1) || $day > 31 || $month < 1 || $month > 12 || $year < 2000 || $year > 2100){
+        return false;
     }
-
-    /**
-     * This function generates a random salt, in order to use this with passwords, making them safer
-     * @param $length
-     * @return string
-     */
-    function generate_salt($length) {
-        // Not 100% unique, not 100% random, but good enough for a salt
-        // MD5 returns 32 characters
-        $unique_random_string = md5(uniqid(mt_rand(), true));
-
-        // Valid characters for a salt are [a-zA-Z0-9./]
-        $base64_string = base64_encode($unique_random_string);
-
-        // But not '+' which is valid in base64 encoding
-        $modified_base64_string = str_replace('+', '.', $base64_string);
-
-        // Truncate string to the correct length
-        $salt = substr($modified_base64_string, 0, $length);
-
-        return $salt;
-    }
-
-    /**
-     * This function compares the entered password with the password from the database.
-     * @param $password
-     * @param $existing_hash
-     * @return bool
-     */
-    function password_check($password, $existing_hash) {
-        // existing hash contains format and salt at start
-        $hash = crypt($password, $existing_hash);
-        echo $existing_hash."<br/>".$hash;
-        if ($hash === $existing_hash) {
+    //Check february
+    if($month == 2){
+        if((($year % 4 == 0) && ($year % 100 > 0) || ($year % 400 == 0)) && $day < 30){
+            return true;
+        } else if( $day < 29 ){
             return true;
         } else {
             return false;
         }
     }
-
-    /*
-     * Function that builds a search query based on it's input
-     *
-     * @param $select: Array of colom names to select, best given as 'table.column'
-     * @param $from: Associative array of tables to search in given as 'table=>primary_key'
-     * @param $cols: Array of columns to search in, best given as 'table.column'
-     * @param $type: Either AND or OR, determines whether all or atleast one word of the searchstring must be found
-     * @param $group: Optional, determines what column to group by, null to not group
-     * @param $searchString:
-     */
-    function monsterQueryBuilder($select, $from, $cols, $type, $group, $searchString)
-    {
-        //Seperates $searchString on spaces in order to search for each word
-        $search = explode(" ", $searchString);
-
-        /*
-         * All elements from the $select array are added to the SELECT part of the statement
-         */
-        $query = "SELECT";
-        for($x=0; $x<count($select); $x++) {
-            if($x != (count($select)-1)) {
-                $query = $query. " ".$select[$x].", ";
-            } else {
-                $query = $query. " ".$select[$x];
-            }
+    // Check the months with 30 days
+    if($month == 4 || $month == 6 || $month == 9 || $month == 11){
+        if($day > 30){
+            return false;
         }
-
-        /*
-         * All elements from the $from associative array are added to the FROM/LEFT OUTER JOIN part of statement
-         */
-        $tabs = array_keys($from);
-        for($x=0; $x<count($from); $x++) {
-            $table = $tabs[$x];
-            $lastTable = $tabs[$x-1];
-            $lastCol = $from[$lastTable];
-
-            if($x==0) {
-                $query = $query." FROM ".$table;
-            } else {
-                $query = $query." LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
-            }
-        }
-
-        /*
-         * Adds a WHERE/AND/OR column LIKE search OR column LIKE search etc. statement for each
-         * word in $searchString for each column in $cols.
-         *
-         * Outer loop iterates over the words in $searchString adding a new WHERE/AND/OR
-         */
-        for($x=0; $x<count($search); $x++) {
-            if($x==0) {
-                $query = $query." WHERE(";
-            } else {
-                $query = $query." ".$type."(";
-            }
-
-            //Inner loop iterates over each column in $cols with the current $search word
-            for($y=0; $y<count($cols); $y++) {
-                if($y != (count($cols)-1)) {
-                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
-                } else {
-                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%'";
-                }
-            }
-            $query = $query.")";
-        }
-
-        //Groups results by $group if $group isn't null
-        if($group != null) {
-            $query = $query." GROUP BY ".$group;
-        }
-        return $query;
     }
+    // Since we've gotten here, it must be true.
+    return true;
+}
 
 /**
- * A function to add two timestrings together.
- * @param $time1 The time
- * @param $time2 The time to add to the previous one
+ * Function to turn query results into an array
+ * @param $query The query you want the array from
+ * @return array The array with the results
  */
+function queryToArray($query)
+{
+    global $con;
+    $sql = mysqli_query($con, $query);
+    while($row = mysqli_fetch_array($sql)) {$array[] = $row[0];}
+
+    return $array;
+}
+
+/**
+ * This function encrypts a password and returns the result
+ * @param $password
+ * @return string
+ */
+function password_encrypt($password) {
+    $hash_format = "$2y$10$";   // Tells PHP to use Blowfish with a "cost" of 10
+    $salt_length = 22; 					// Blowfish salts should be 22-characters or more
+    $salt = generate_salt($salt_length);
+    $format_and_salt = $hash_format . $salt;
+    $hash = crypt($password, $format_and_salt);
+    return $hash;
+}
+
+/**
+ * This function generates a random salt, in order to use this with passwords, making them safer
+ * @param $length
+ * @return string
+ */
+function generate_salt($length) {
+    // Not 100% unique, not 100% random, but good enough for a salt
+    // MD5 returns 32 characters
+    $unique_random_string = md5(uniqid(mt_rand(), true));
+
+    // Valid characters for a salt are [a-zA-Z0-9./]
+    $base64_string = base64_encode($unique_random_string);
+
+    // But not '+' which is valid in base64 encoding
+    $modified_base64_string = str_replace('+', '.', $base64_string);
+
+    // Truncate string to the correct length
+    $salt = substr($modified_base64_string, 0, $length);
+
+    return $salt;
+}
+
+/**
+ * This function compares the entered password with the password from the database.
+ * @param $password
+ * @param $existing_hash
+ * @return bool
+ */
+function password_check($password, $existing_hash) {
+    // existing hash contains format and salt at start
+    $hash = crypt($password, $existing_hash);
+    echo $existing_hash."<br/>".$hash;
+    if ($hash === $existing_hash) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*
+ * Function that builds a search query based on it's input
+ *
+ * @param $select: Array of colom names to select, best given as 'table.column'
+ * @param $from: Associative array of tables to search in given as 'table=>primary_key'
+ * @param $cols: Array of columns to search in, best given as 'table.column'
+ * @param $type: Either AND or OR, determines whether all or atleast one word of the searchstring must be found
+ * @param $group: Optional, determines what column to group by, null to not group
+ * @param $searchString:
+ */
+function monsterQueryBuilder($select, $from, $cols, $type, $group, $searchString)
+{
+    //Seperates $searchString on spaces in order to search for each word
+    $search = explode(" ", $searchString);
+
+    /*
+     * All elements from the $select array are added to the SELECT part of the statement
+     */
+    $query = "SELECT";
+    for($x=0; $x<count($select); $x++) {
+        if($x != (count($select)-1)) {
+            $query = $query. " ".$select[$x].", ";
+        } else {
+            $query = $query. " ".$select[$x];
+        }
+    }
+
+    /*
+     * All elements from the $from associative array are added to the FROM/LEFT OUTER JOIN part of statement
+     */
+    $tabs = array_keys($from);
+    for($x=0; $x<count($from); $x++) {
+        $table = $tabs[$x];
+        $lastTable = $tabs[$x-1];
+        $lastCol = $from[$lastTable];
+
+        if($x==0) {
+            $query = $query." FROM ".$table;
+        } else {
+            $query = $query." LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
+        }
+    }
+
+    /*
+     * Adds a WHERE/AND/OR column LIKE search OR column LIKE search etc. statement for each
+     * word in $searchString for each column in $cols.
+     *
+     * Outer loop iterates over the words in $searchString adding a new WHERE/AND/OR
+     */
+    for($x=0; $x<count($search); $x++) {
+        if($x==0) {
+            $query = $query." WHERE(";
+        } else {
+            $query = $query." ".$type."(";
+        }
+
+        //Inner loop iterates over each column in $cols with the current $search word
+        for($y=0; $y<count($cols); $y++) {
+            if($y != (count($cols)-1)) {
+                $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
+            } else {
+                $query = $query.$cols[$y]." LIKE '%".$search[$x]."%'";
+            }
+        }
+        $query = $query.")";
+    }
+
+    //Groups results by $group if $group isn't null
+    if($group != null) {
+        $query = $query." GROUP BY ".$group;
+    }
+    return $query;
+}
+
+/**
+* A function to add two timestrings together.
+* @param $time1 The time
+* @param $time2 The time to add to the previous one
+*/
 function addTimes($day, $month, $year, $time1, $time2){
     $time1 = explode(":", $time1);
     $time2 = explode(":", $time2);
@@ -247,6 +258,13 @@ function addTimes($day, $month, $year, $time1, $time2){
     return $finalTime;
 }
 
+/**
+ * This function increments a date by one day
+ * @param $day The day
+ * @param $month The month
+ * @param $year The year
+ * @return mixed An associative array with the results
+ */
 function incrementDate($day, $month, $year){
     $day++;
     if($day > 31 && ($month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12)){
@@ -277,6 +295,9 @@ function incrementDate($day, $month, $year){
     return $date;
 }
 
+/**
+ * Function to display error messages
+ */
 function displayErrors()
 {
     global $message;
@@ -286,5 +307,4 @@ function displayErrors()
         $message = '';
     }
 }
-
 ?>
