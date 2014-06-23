@@ -6,11 +6,16 @@
  * Time: 11:49
  */
 
+
+/**
+ * Function that handles what to display onscreen
+ * @param $postData
+ */
 function displayContentProbleem($postData)
 {
     switch($postData) {
         case "displayProblemMeldingen"  : displayProblemMeldingen($postData); break;
-        case "displayProblemen" : displayProblems($postData); break;
+        case "displayProblems" : displayProblems($postData); break;
         case "displayEditIncidentStatus"    : displayEditIncidentStatus(); break;
         case "displayIncidentProblems"    : displayIncidentProblems($postData); break;
         case "displayProblemDetails"    : displayProblemDetails($postData); break;
@@ -26,7 +31,7 @@ function displayContentProbleem($postData)
 function displayMenuProbleem()
 {
     new Button("Meldingen", "display", "displayProblemMeldingen");
-    new Button("Problemen", "display", "displayProblemen");
+    new Button("Problemen", "display", "displayProblems");
     new Button("Probleem toevoegen", "display", "displayAddProblem");
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");

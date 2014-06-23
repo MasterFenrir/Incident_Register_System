@@ -76,7 +76,7 @@ class HelpdeskTable
             //Makes the title row of the table
             if(count($row) > 0) {
                 echo "<tr><th colspan=$count class='tableTitle'>".$this->name."</th></tr>";
-            } else {
+            } else if($this->search != NULL) {
                 echo "Geen resultate gevonden in ".$this->name." voor ".$this->search;
             }
 
