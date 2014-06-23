@@ -8,9 +8,11 @@
 
 $message= "";
 
-//dummycode for configuratiemagement
-// to do change name and remove some code
 
+/**
+ * Function that calls the other functions to display all data from the database.
+ * @param $postData
+ */
 function displayContentConfig($postData) {
     switch($postData) {
         case "displayHardware" : displayHardware($postData); break;
@@ -31,6 +33,9 @@ function displayContentConfig($postData) {
     }
 }
 
+/**Function that makes all the buttons in the menu to change and to display data.
+ *
+ */
 function displayMenuConfig() {
     new Button("Hardware", "display", "displayHardware");
     new Button("Software", "display", "displaySoftware");
@@ -40,6 +45,9 @@ function displayMenuConfig() {
     new Button("Gebruiker toevoegen", "display", "displayAddUser");
 }
 
+/**Function that calls all functions that delete, add, edit the hardware, software and user.
+ * @param $eventID
+ */
 function processEventConfig($eventID)
 {
     switch($eventID) {
@@ -54,8 +62,9 @@ function processEventConfig($eventID)
         case "editUser" : editUser(); break;
     }
 }
-/*
- * Functie die de zoek opdracht uitvoert en aan de hard ervan resultaten in tabel laat zien.
+
+/**Function that preforms the search request and displays those results in a table.
+ * @param $postData
  */
 function displaySearchConfig($postData)
 {
@@ -87,8 +96,10 @@ function makeSearchHardware($searchString)
     return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
-
-
+/*
+ * Builds the query to search for the given search String
+ * @param $searchString: Value to search for
+ */
 function makeSearchSoftware($searchString)
 {
     $sel = array( 'id_software AS ID', 'naam', 'soort', 'producent', 'leverancier',
@@ -104,7 +115,10 @@ function makeSearchSoftware($searchString)
     return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
-    function displaySoftware($postData)
+/**Function that displays the softwaretable.
+ * @param $postData
+ */
+function displaySoftware($postData)
     {
         new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
                                               producent, leverancier, aantal_licenties AS Licenties,
@@ -114,7 +128,10 @@ function makeSearchSoftware($searchString)
                           "displayEditSoftware", "deleteSoftware", "ID", null, null);
     }
 
-    function displayAddSoftware()
+/**
+ * Form where the user of the site can add software to the database.
+ */
+function displayAddSoftware()
     {
         displayErrors();
 
@@ -132,7 +149,10 @@ function makeSearchSoftware($searchString)
         formFooter("addSoftware");
     }
 
-    function displayEditSoftware()
+/**
+ * Function that creates a form where the values have been filled in. The user can change those values to change them in the softwaretable.
+ */
+function displayEditSoftware()
     {
         global $con;
         displayErrors();
@@ -153,7 +173,10 @@ function makeSearchSoftware($searchString)
         formFooter("editSoftware");
     }
 
-    function editSoftware()
+/**
+ * Function that changes the softwaretable with the values from displayEditSoftware.
+ */
+function editSoftware()
     {
          global $con;
          global $message;
@@ -200,7 +223,10 @@ function makeSearchSoftware($searchString)
             "displayEditUser", "deleteUser", "username", null, null);
     }
 
-    function displayHardware($postData)
+/** Function that displays the hardwaretable.
+ * @param $postData
+ */
+function displayHardware($postData)
     {
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
             "displayEditHardware", "deleteHardware", "id_hardware", null, "displayHardwareAndSoftware");
@@ -236,6 +262,9 @@ function displayHardwareAndSoftware($postData){
     new HelpdeskTable("Software items", $query, null, null, null, "ID", null, null);
 }
 
+/**
+ * Form where the user of the site can add hardware to the database.
+ */
 function displayAddHardware()
     {
         displayErrors();
@@ -254,6 +283,9 @@ function displayAddHardware()
         formFooter("addHardware");
     }
 
+/**
+* Function that creates a form where the values have been filled in. The user can change those values to change them in the hardwaretable.
+ */
     function displayEditHardware()
     {
         global $con;
@@ -277,6 +309,9 @@ function displayAddHardware()
         formFooter("editHardware");
     }
 
+/**
+ * Function that changes the hardwaretable with the values from displayEditHardware.
+ */
     function editHardware()
     {
         global $con;
@@ -396,6 +431,9 @@ function displayAddHardware()
         formFooter("editUser");
     }
 
+/**
+ * Function that changes the usertable with the values from displayEditUser.
+ */
     function editUser(){
         global $con;
         global $message;
@@ -442,6 +480,9 @@ function displayAddHardware()
         }
     }
 
+/**
+ * Function to add the hardware from the form to the hardwaretable.
+ */
 function addHardware()
     {
         global $con;
@@ -485,6 +526,9 @@ function addHardware()
         }
     }
 
+/**
+ * Function to add the software from the form to the softwaretable.
+ */
 function addSoftware()
     {
         global $con;
@@ -524,9 +568,10 @@ function addSoftware()
     }
 
 
-
-
-    function deleteHardware()
+/**
+ * Fucntion that deletes the selected hardware from the hardwaretable.
+ */
+function deleteHardware()
     {
         global $con;
 
@@ -536,17 +581,26 @@ function addSoftware()
         mysqli_query($con, "DELETE FROM hardware WHERE id_hardware='".$primeKey."'") or die('hwdel error');
     }
 
+/**
+ * Fucntion that deletes the selected user from the usertable.
+ */
     function deleteUser(){
         global $con;
         $primeKey = $_POST['key'];
         mysqli_query($con, "DELETE FROM users WHERE username='".$primeKey."'") or die('hwdel error');
     }
 
-    function displayLandingConfig()
+/** displays hello function user on the first page of the webpage.
+ *
+ */
+function displayLandingConfig()
     {
         echo "Hello ".ucfirst($_SESSION['user']);
     }
 
+/**
+ * Fucntion that deletes the selected software from the softwaretable.
+ */
     function deleteSoftware()
     {
         global $con;
