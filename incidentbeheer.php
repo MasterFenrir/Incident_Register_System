@@ -99,7 +99,7 @@ function displayAddIncident() {
     textField("Workaround", $_POST['Workaround']);
     textField("Contact", $_POST['Contact']);
     dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $_POST['Prioriteit']);
-    textField("Status", $_POST['Status']);
+    dropdown("Status", queryToArray("SELECT status From statussen"), "onopgelost");
     hiddenValue("display", "displayIncidenten");
     formFooter("addIncident");
 }
@@ -118,6 +118,7 @@ function displayEditIncident() {
     formHeader();
     dateField($day, $month, $year);
     displayField("Aanvangtijd", $values['aanvang']);
+    hiddenValue("Aanvangtijd", $values['aanvang']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
     textField("Omschrijving", $values['omschrijving']);
     textField("Workaround", $values['workaround']);
@@ -148,10 +149,7 @@ function editIncident()
     global $con;
     global $message;
 
-    $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
-    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."<li>Aanvangtijd mag niet leeg zijn</li>";}
-
-    if($valid){$valid = emptyCheck($_POST['Hardware']);} $hw = removeMaliciousInput($_POST['Hardware']);
+    $valid = emptyCheck($_POST['Hardware']); $hw = removeMaliciousInput($_POST['Hardware']);
     if(!emptyCheck($_POST['Hardware'])){$message = $message."<li>Hardware mag niet leeg zijn</li>";}
 
     if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
@@ -169,27 +167,28 @@ function editIncident()
         $cont = removeMaliciousInput($_POST['Contact']);
         $prio = removeMaliciousInput($_POST['Prioriteit']);
         $status = removeMaliciousInput($_POST['Status']);
-
-        $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
-        $result = mysqli_fetch_array(mysqli_query($con, $query));
-        $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
-        $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
-        $eindtijd = $eind['hour'].":".$eind['minutes'];
+        $aanvang = $_POST['Aanvangtijd'];
 
         if(!empty($prio)) {
+            $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+            $result = mysqli_fetch_array(mysqli_query($con, $query));
+            $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $eindtijd = $eind['hour'].":".$eind['minutes'];
             mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
                                 id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
                                 contact='".$cont."', status='".$status."', prioriteit='".$prio."'
                                 WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
         } else {
-            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eind."',
+            $datum = $day."-".$month."-".$year;
+            mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."',
                                 id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
-                                contact='".$cont."', status='".$status."'
+                                contact='".$cont."', prioriteit=NULL, status='".$status."'
                                 WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         }
     } else {
-    $_POST['display'] = "displayEditIncident";
-}
+        $_POST['display'] = "displayEditIncident";
+    }
 }
 
 function addIncident()
@@ -213,22 +212,26 @@ function addIncident()
         $day = removeMaliciousInput($_POST['day']);
         $month = removeMaliciousInput($_POST['month']);
         $year = removeMaliciousInput($_POST['year']);
-        $datum = $day."-".$month."-".$year;
 
         $wa = removeMaliciousInput($_POST['Workaround']);
         $cont = removeMaliciousInput($_POST['Contact']);
         $prio = removeMaliciousInput($_POST['Prioriteit']);
         $status = removeMaliciousInput($_POST['Status']);
-        $eind = removeMaliciousInput($_POST['Eindtijd']);
 
         if(!empty($prio)) {
-        mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd, id_hardware, omschrijving, workaround, contact, prioriteit, status)
-                                VALUES('".$datum."', '".$aanvang."', '".$eind."',
+            $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+            $result = mysqli_fetch_array(mysqli_query($con, $query));
+            $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $eindtijd = $eind['hour'].":".$eind['minutes'];
+            mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd, id_hardware, omschrijving, workaround, contact, prioriteit, status)
+                                VALUES('".$datum."', '".$aanvang."', '".$eindtijd."',
                                        '".$hw."', '".$omschrijving."', '".$wa."',
                                        '".$cont."', '".$prio."', '".$status."')") or die(mysqli_error($con));
         } else {
+            $datum = $day."-".$month."-".$year;
             mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd, id_hardware, omschrijving, workaround, contact, status)
-                                VALUES('".$datum."', '".$aanvang."', '".$eind."',
+                                VALUES('".$datum."', '".$aanvang."', '',
                                        '".$hw."', '".$omschrijving."', '".$wa."',
                                        '".$cont."', '".$status."')") or die(mysqli_error($con));
         }

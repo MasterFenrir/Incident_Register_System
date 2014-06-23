@@ -17,6 +17,8 @@ function displayContentProbleem($postData)
         case "displayHardwareProblem" : displayHardwareProblem($postData); break;
         case "displaySoftwareProblem" : displaySoftwareProblem($postData); break;
         case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
+        case "displayAddProblem"    : displayAddProblem(); break;
+        case "displayEditProblem"   : displayEditProblem(); break;
         default : displayLandingProbleem();
     }
 }
@@ -25,6 +27,7 @@ function displayMenuProbleem()
 {
     new Button("Meldingen", "display", "displayProblemMeldingen");
     new Button("Problemen", "display", "displayProblemen");
+    new Button("Probleem toevoegen", "display", "displayAddProblem");
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");
     new Button("Software","display", "displaySoftwareProblem");
@@ -34,6 +37,8 @@ function processEventProbleem($eventID)
 {
     switch($eventID){
         case "editIncidentStatus"   : editIncidentStatus(); break;
+        case "addProblem"   : addProblem(); break;
+        case "editProblem"  : editProblem(); break;
     }
 }
 
@@ -42,7 +47,7 @@ function displayProblemMeldingen($postData){
 }
 
 function displayProblems($postData){
-    new HelpdeskTable("Problemen", "SELECT * FROM problemen", $postData, null, null, "nummer", null, "displayProblemDetails");
+    new HelpdeskTable("Problemen", "SELECT * FROM problemen", $postData, "displayEditProblem", null, "nummer", null, "displayProblemDetails");
 }
 
 function displayIncidentProblems($postData){
@@ -109,6 +114,129 @@ function displaySoftwareProblem($postData)
                                           status
                                           FROM software", $postData,
         null, null, "id_software", null, null);
+}
+
+/**
+ * Function to display the form to add problems to the database.
+ */
+function displayAddProblem(){
+    displayErrors();
+    date_default_timezone_set("Europe/Amsterdam");
+
+    formHeader();
+    dateField($_POST['day'],$_POST['month'],$_POST['year']);
+    textField("Aanvangtijd",date('H:i'));
+    textField("Omschrijving", $_POST['Omschrijving']);
+    dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $_POST['Prioriteit']);
+    dropdown("Status", queryToArray("SELECT status From statussen"), "onopgelost");
+    hiddenValue("display", "displayProblems");
+    formFooter("addProblem");
+}
+
+function addProblem(){
+    global $con;
+    global $message;
+
+    $valid = emptyCheck($_POST['Aanvangtijd']); $aanvang = removeMaliciousInput($_POST['Aanvangtijd']);
+    if(!emptyCheck($_POST['Aanvangtijd'])){$message = $message."<li>Aanvangtijd mag niet leeg zijn</li>";}
+
+    if($valid){$valid = emptyCheck($_POST['Omschrijving']);} $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."<li>Omschrijving mag niet leeg zijn</li>";}
+
+    if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."<li>Ongeldige datum</li>";}
+
+    if($valid) {
+        $day = removeMaliciousInput($_POST['day']);
+        $month = removeMaliciousInput($_POST['month']);
+        $year = removeMaliciousInput($_POST['year']);
+        $prio = removeMaliciousInput($_POST['Prioriteit']);
+        $status = removeMaliciousInput($_POST['Status']);
+
+        if(!empty($prio)) {
+            $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+            $result = mysqli_fetch_array(mysqli_query($con, $query));
+            $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $eindtijd = $eind['hour'].":".$eind['minutes'];
+            mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, omschrijving, prioriteit, status)
+                                VALUES('".$datum."', '".$aanvang."', '".$eindtijd."',
+                                       '".$omschrijving."', '".$prio."', '".$status."')") or die(mysqli_error($con));
+        } else {
+            $datum = $day."-".$month."-".$year;
+            mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, omschrijving, status)
+                                VALUES('".$datum."', '".$aanvang."', '',
+                                       '".$omschrijving."', '".$status."')") or die(mysqli_error($con));
+        }
+        $_POST['display'] = "displayProblems";
+    } else {
+        $_POST['display'] = "displayAddProblem";
+    }
+}
+
+function displayEditProblem() {
+    global $con;
+    displayErrors();
+
+    $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM problemen WHERE nummer='".$_POST['key']."'"));
+
+    $date = explode("-", $values['datum']);
+    $day = $date[0];
+    $month = $date[1];
+    $year = $date[2];
+
+    formHeader();
+    dateField($day, $month, $year);
+    displayField("Aanvangtijd", $values['aanvang']);
+    hiddenValue("Aanvangtijd", $values['aanvang']);
+    textField("Omschrijving", $values['omschrijving']);
+    dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
+    dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
+    hiddenValue("display", "displayProblems");
+    hiddenValue("key", $values['nummer']);
+    formFooter("editProblem");
+}
+
+function editProblem()
+{
+    global $con;
+    global $message;
+
+    $valid = emptyCheck($_POST['Omschrijving']); $omschrijving = removeMaliciousInput($_POST['Omschrijving']);
+    if(!emptyCheck($_POST['Omschrijving'])){$message = $message."<li>Omschrijving mag niet leeg zijn</li>";}
+
+    if($valid){$valid = validateDate($_POST['day'], $_POST['month'], $_POST['year']);}
+    if(!validateDate($_POST['day'], $_POST['month'], $_POST['year'])){$message = $message."<li>Ongeldige datum</li>";}
+
+    if($valid) {
+        $day = removeMaliciousInput($_POST['day']);
+        $month = removeMaliciousInput($_POST['month']);
+        $year = removeMaliciousInput($_POST['year']);
+
+        $wa = removeMaliciousInput($_POST['Workaround']);
+        $cont = removeMaliciousInput($_POST['Contact']);
+        $prio = removeMaliciousInput($_POST['Prioriteit']);
+        $status = removeMaliciousInput($_POST['Status']);
+        $aanvang = $_POST['Aanvangtijd'];
+
+        if(!empty($prio)) {
+            $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+            $result = mysqli_fetch_array(mysqli_query($con, $query));
+            $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
+            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $eindtijd = $eind['hour'].":".$eind['minutes'];
+            mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
+                                       omschrijving='".$omschrijving."', prioriteit='".$prio."', status='".$status."'
+                                       WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
+        } else {
+            $datum = $day."-".$month."-".$year;
+            mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='',
+                                       omschrijving='".$omschrijving."', prioriteit=NULL, status='".$status."'
+                                       WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
+        }
+    } else {
+        $_POST['display'] = "displayEditIncident";
+    }
 }
 
 function displayLandingProbleem()
