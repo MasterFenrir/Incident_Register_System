@@ -33,8 +33,8 @@ function displayContentConfig($postData) {
     }
 }
 
-/**Function that makes all the buttons in the menu to change and to display data.
- *
+/**
+ * Function that makes all the buttons in the menu to change and to display data.
  */
 function displayMenuConfig() {
     new Button("Hardware", "display", "displayHardware");
@@ -45,7 +45,8 @@ function displayMenuConfig() {
     new Button("Gebruiker toevoegen", "display", "displayAddUser");
 }
 
-/**Function that calls all functions that delete, add, edit the hardware, software and user.
+/**
+ * Function that calls all functions that delete, add, edit the hardware, software and user.
  * @param $eventID
  */
 function processEventConfig($eventID)
@@ -63,7 +64,8 @@ function processEventConfig($eventID)
     }
 }
 
-/**Function that preforms the search request and displays those results in a table.
+/**
+ * Function that preforms the search request and displays those results in a table.
  * @param $postData
  */
 function displaySearchConfig($postData)
@@ -115,7 +117,8 @@ function makeSearchSoftware($searchString)
     return monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
-/**Function that displays the softwaretable.
+/**
+ * Function that displays the softwaretable.
  * @param $postData
  */
 function displaySoftware($postData)
@@ -223,7 +226,8 @@ function editSoftware()
             "displayEditUser", "deleteUser", "username", null, null);
     }
 
-/** Function that displays the hardwaretable.
+/**
+ * Function that displays the hardwaretable.
  * @param $postData
  */
 function displayHardware($postData)
@@ -590,8 +594,8 @@ function deleteHardware()
         mysqli_query($con, "DELETE FROM users WHERE username='".$primeKey."'") or die('hwdel error');
     }
 
-/** displays hello function user on the first page of the webpage.
- *
+/**
+ * Displays hello and the function of the user on the first page of the webpage.
  */
 function displayLandingConfig()
     {
