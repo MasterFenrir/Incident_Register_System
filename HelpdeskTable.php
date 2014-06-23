@@ -161,7 +161,7 @@ class HelpdeskTable
                 echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
                 echo    "<input class='option' type='submit' value='Edit'>";
                 echo    "</form>";
-                if($this->delete == null) {echo "</td>";}
+                if($this->delete == null && $this->details == null) {echo "</td>";}
             }
 
             if($this->primeKey != null && $this->delete != null && ($row[$this->primeKey] != $_SESSION['user'])) {

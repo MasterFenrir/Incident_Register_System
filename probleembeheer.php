@@ -234,6 +234,7 @@ function editProblem()
                                        omschrijving='".$omschrijving."', prioriteit=NULL, status='".$status."'
                                        WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         }
+        $_POST['display'] = "displayProblems";
     } else {
         $_POST['display'] = "displayEditIncident";
     }
