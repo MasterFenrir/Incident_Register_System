@@ -55,7 +55,7 @@ function displayLogin()
 
             else
             {
-                $error = "Verkeerde inlog gegevens. Naam";
+                $error = "Verkeerde inlog gegevens.";
             }
         }
     }

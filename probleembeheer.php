@@ -237,7 +237,6 @@ function displayEditProblem() {
     formHeader();
     dateField($day, $month, $year);
     displayField("Aanvangtijd", $values['aanvang']);
-    hiddenValue("Aanvangtijd", $values['aanvang']);
     textField("Omschrijving", $values['omschrijving']);
     dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
     dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
@@ -265,8 +264,6 @@ function editProblem()
         $month = removeMaliciousInput($_POST['month']);
         $year = removeMaliciousInput($_POST['year']);
 
-        $wa = removeMaliciousInput($_POST['Workaround']);
-        $cont = removeMaliciousInput($_POST['Contact']);
         $prio = removeMaliciousInput($_POST['Prioriteit']);
         $status = removeMaliciousInput($_POST['Status']);
         $aanvang = $_POST['Aanvangtijd'];

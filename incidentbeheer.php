@@ -130,7 +130,6 @@ function displayEditIncident() {
     formHeader();
     dateField($day, $month, $year);
     displayField("Aanvangtijd", $values['aanvang']);
-    hiddenValue("Aanvangtijd", $values['aanvang']);
     dropDown("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $values['id_hardware']);
     textField("Omschrijving", $values['omschrijving']);
     textField("Workaround", $values['workaround']);
@@ -193,8 +192,17 @@ function editIncident()
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
             $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
+            if($status === "opgelost"){
+                if(checkOnTime($day, $month, $year, $aanvang, $prio)){
+                    $optijd = "ja";
+                } else {
+                    $optijd = "nee";
+                }
+            } else {
+                $optijd = null;
+            }
             mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
-                                id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
+                                op_tijd_opgelost = '{$optijd}', id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
                                 contact='".$cont."', status='".$status."', prioriteit='".$prio."'
                                 WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
         } else {
