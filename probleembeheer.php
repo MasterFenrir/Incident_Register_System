@@ -323,7 +323,7 @@ function displayTrends(){
     CheckBoxes("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"),3, $_POST['OS']);
     CheckBoxes("Software", queryToArray("SELECT naam FROM software GROUP BY naam"), 3, $_POST['Software']);
 
-    hiddenValue("display", "displayTrends");
+    hiddenValue("display", "Trends");
     formFooter("Trends");
 
 
@@ -343,8 +343,14 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, null, null, "nummer", null, null);
+     NEW HelpdeskTable("Incidenten", "SELECT * FROM incidenten, hardware, software
+     WHERE incident.id_hardware=hardware.id_hardware
+     AND hardware.id_hardware=hardware_software.id_hardware
+     AND software.id_software=hardware_software.id_software", $postData, null, null, "nummer", null, null);
     }
-
-
+/*
+AND (OR (foreach $soort.hardware))
+     AND (OR (foreach $locatie.hardware))
+     AND (OR (foreach $merk.hardware))"
+*/
 ?>
