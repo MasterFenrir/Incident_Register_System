@@ -318,6 +318,10 @@ function displayTrends(){
     CheckBoxes("Merk", queryToArray("SELECT merk FROM hardware GROUP BY merk"),3, $_POST['Merk']);
     CheckBoxes("Leverancier",queryToArray("SELECT leverancier FROM hardware GROUP BY leverancier"),3, $_POST['Leverancier']);
     CheckBoxes("Aanschaf_jaar",queryToArray("SELECT aanschaf_jaar FROM hardware GROUP BY aanschaf_jaar"),3, $_POST['Aanschaf_jaar']);
+
+    CheckBoxes("OS", queryToArray("SELECT os FROM hardware GROUP BY os"),3, $_POST['OS']);
+    CheckBoxes("Software", queryToArray("SELECT naam FROM software GROUP BY naam"), 3, $_POST['Software']);
+
     hiddenValue("display", "displayTrends");
     formFooter("Trends");
 
