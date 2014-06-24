@@ -20,7 +20,7 @@ function dateField($d, $m, $y, $dayName="day", $monthName="month", $yearName="ye
          </tr>
          <tr>
             <td>Maand </td>
-            <td><input type='number' name={$monthName} size='2' value='";
+                  <td><input type='number' name={$monthName} size='2' value='";
                 if($m != null){echo $m;} else{echo $month;}
                 echo"'></input>
             </td>
