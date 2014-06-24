@@ -329,6 +329,14 @@ function displayTrends(){
 
 }
 
+function stringbuilder($building){
+    $ret="";
+    foreach($building as $temple){
+        $ret= $ret." ".$temple;
+
+    }
+    return ret;
+}
 
 function Trends($postData){
     global $con;
@@ -343,16 +351,65 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-     NEW HelpdeskTable("Incidenten", "SELECT nummer, datum, incidenten.id_hardware, omschrijving, probleem FROM incidenten, hardware, software, hardware_software
+
+
+
+    $query= "SELECT * /*nummer, datum, incidenten.id_hardware, omschrijving, probleem*/ FROM incidenten, hardware, software, hardware_software
      WHERE incidenten.id_hardware=hardware.id_hardware
      AND hardware.id_hardware=hardware_software.id_hardware
      AND software.id_software=hardware_software.id_software
-     group by nummer
-     ", $postData, null, null, "nummer", null, null);
+     group by nummer";
+
+
+    $select = array('*');
+    $from = array('incidenten'=>'id_hardware', 'hardware'=>'id_hardware','hardware_software'=>'id_software', 'software'=>'id_software');
+    $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschafjaar','hardware.os','hardware.software');
+    $grp = 'incidenten.nummer';
+
+    $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Soort']));
+   $nogmeerwerk1= mysqli_query($con, $teveelwerk);
+
+    $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Locatie']));
+    $nogmeerwerk2= mysqli_query($con, $teveelwerk);
+
+    $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Merk']));
+    $nogmeerwerk3= mysqli_query($con, $teveelwerk);
+
+     $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Leverancier']));
+   $nogmeerwerk4= mysqli_query($con, $teveelwerk);
+
+     $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Aanschafjaar']));
+   $nogmeerwerk5= mysqli_query($con, $teveelwerk);
+
+    $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['OS']));
+    $nogmeerwerk6= mysqli_query($con, $teveelwerk);
+
+    $teveelwerk= monsterQueryBuilder($select, $from, $cols, 'OR', $grp, StringBuilder($_POST['Software']));
+    $nogmeerwerk7= mysqli_query($con, $teveelwerk);
+
     }
 /*
 AND (OR (foreach $soort.hardware))
      AND (OR (foreach $locatie.hardware))
      AND (OR (foreach $merk.hardware))"
+
+
+if($valid) {
+            mysqli_query($con, "UPDATE hardware SET soort='".$soort."', locatie='".$loc."', os='".$os."', leverancier='".$lev."', aanschaf_jaar='".$jaar."', status='".$status.", merk='".$merk."'
+                                WHERE id_hardware='".$_POST['Hardware_ID']."'");
+        }
+
+        if(!empty($_POST['Software'])) {
+            mysqli_query($con, "DELETE FROM hardware_software WHERE id_hardware='".$_POST['Hardware_ID']."'");
+
+            foreach($_POST['Software'] as $box) {
+                $key = mysqli_fetch_assoc(mysqli_query($con, "SELECT id_software FROM software WHERE naam='".$box."'"));
+                mysqli_query($con, "Insert INTO hardware_software (id_hardware, id_software)
+                                    VALUES ('".$_POST['Hardware_ID']."','".$key['id_software']."')") or die(mysqli_error($con));
+            }
+        }
+
+
+
 */
 ?>
