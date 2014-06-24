@@ -129,6 +129,7 @@ function textField($name, $sel){
  * @param $sel The value
  */
 function displayField($name, $sel){
+    echo "<input type=\"hidden\" name=".$name." value=".$sel.">";
     echo "<tr><td>".$name."</td><td>{$sel}</td></tr>";
 }
 

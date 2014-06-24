@@ -134,7 +134,7 @@ class HelpdeskTable
         {
             //Iterates over every row in the results
             while($row = mysqli_fetch_assoc($this->result)) {
-                echo "<tr>";
+                echo "<tr display:table-row>";
                 //echo's a table value for each value in the row
                 foreach($row as $value) {
                     echo "<td>".$value."</td>";
@@ -176,7 +176,7 @@ class HelpdeskTable
             }
 
             if($this->primeKey != null && $this->details != null) {
-                if($this->edit == null && $this->delete == null) {echo "<td>";}
+                if($this->edit == null && $this->delete == null) {echo "<td >";}
                 echo    "<form action='/index.php' method='post'>";
                 echo    "<input type='hidden' name='display' value='$this->details'>";
                 echo    "<input type='hidden' name='key' value='".$row[$this->primeKey]."'>";
