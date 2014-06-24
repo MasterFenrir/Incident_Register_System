@@ -369,4 +369,32 @@ function displayErrors()
     }
 }
 
+/**
+* Function to determine whether the end time has been reached in time
+* @param $day The original day
+* @param $month The original month
+* @param $year The original year
+* @param $start The original time
+* @param $prio The priority
+*/
+function checkOnTime($day, $month, $year, $time, $prio){
+    date_default_timezone_set("Europe/Amsterdam");
+    global $con;
+    $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
+    $result = mysqli_query($con, $query);
+    $result = mysqli_fetch_array($result);
+
+    $date1 = $year."-".$month."-".$day." ".$time.":00";
+    $date2 = date('Y-m-d H:i:s');
+    $hourdiff = round((strtotime($date2) - strtotime($date1))/3600, 1);
+    $prio = explode(":", $result[0]);
+    $prio = $prio[0];
+
+    if($prio < $hourdiff) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 ?>
