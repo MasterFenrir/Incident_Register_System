@@ -332,8 +332,11 @@ function displayTrends(){
 }
 
 
-function Trends(){
+function Trends($postData){
     global $con;
     global $message;
-}
+        new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, null, null, "nummer", null, null);
+    }
+
+
 ?>
