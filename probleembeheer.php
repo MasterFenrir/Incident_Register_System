@@ -25,6 +25,7 @@ function displayContentProbleem($postData)
         case "displayTrends" : displayTrends($postData); break;
         case "displayAddProblem"    : displayAddProblem(); break;
         case "displayEditProblem"   : displayEditProblem(); break;
+        case "Trends" : Trends($postData); break;
         default : displayLandingProbleem();
     }
 }
