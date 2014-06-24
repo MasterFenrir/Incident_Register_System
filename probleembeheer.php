@@ -25,6 +25,8 @@ function displayContentProbleem($postData)
         case "displayTrends" : displayTrends($postData); break;
         case "displayAddProblem"    : displayAddProblem(); break;
         case "displayEditProblem"   : displayEditProblem(); break;
+        case "displayStatisticsSettingsProblems"    : displayStatisticsSettingsProblems(); break;
+        case "displayStatisticsProblems"    :   displayStatisticsProblems();    break;
         case "Trends" : Trends($postData); break;
         default : displayLandingProbleem();
     }
@@ -41,7 +43,8 @@ function displayMenuProbleem()
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");
     new Button("Software","display", "displaySoftwareProblem");
-   new Button("Trends", "display", "displayTrends");
+    new Button("Statistieken","display", "displayStatisticsSettingsProblems");
+    new Button("Trends", "display", "displayTrends");
 }
 /**
  * This function process functions that do not output anything to the screen
@@ -103,9 +106,9 @@ function displayEditIncidentStatus(){
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
 
     $date = explode("-", $values['datum']);
-    $day = $date[0];
+    $day = $date[2];
     $month = $date[1];
-    $year = $date[2];
+    $year = $date[1];
 
     formHeader();
     displayField("Dag", $day);
@@ -204,13 +207,22 @@ function addProblem(){
             $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
             $result = mysqli_fetch_array(mysqli_query($con, $query));
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
-            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
-            mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, omschrijving, prioriteit, status)
-                                VALUES('".$datum."', '".$aanvang."', '".$eindtijd."',
+            if($status === "opgelost"){
+                if(checkOnTime($day, $month, $year, $aanvang, $prio)){
+                    $optijd = "ja";
+                } else {
+                    $optijd = "nee";
+                }
+            } else {
+                $optijd = null;
+            }
+            mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, op_tijd_opgelost, omschrijving, prioriteit, status)
+                                VALUES('".$datum."', '".$aanvang."', '".$eindtijd."', {$optijd},
                                        '".$omschrijving."', '".$prio."', '".$status."')") or die(mysqli_error($con));
         } else {
-            $datum = $day."-".$month."-".$year;
+            $datum = $year."-".$month."-".$day;
             mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, omschrijving, status)
                                 VALUES('".$datum."', '".$aanvang."', '',
                                        '".$omschrijving."', '".$status."')") or die(mysqli_error($con));
@@ -231,9 +243,9 @@ function displayEditProblem() {
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM problemen WHERE nummer='".$_POST['key']."'"));
 
     $date = explode("-", $values['datum']);
-    $day = $date[0];
+    $day = $date[2];
     $month = $date[1];
-    $year = $date[2];
+    $year = $date[0];
 
     formHeader();
     dateField($day, $month, $year);
@@ -273,13 +285,23 @@ function editProblem()
             $query = "SELECT tijd FROM prioriteiten WHERE prioriteit = {$prio}";
             $result = mysqli_fetch_array(mysqli_query($con, $query));
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
-            $datum = $eind['day']."-".$eind['month']."-".$eind['year'];
+            $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
+            if($status === "opgelost"){
+                if(checkOnTime($day, $month, $year, $aanvang, $prio)){
+                    $optijd = "ja";
+                } else {
+                    $optijd = "nee";
+                }
+            } else {
+                $optijd = null;
+            }
             mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
+                                       op_tijd_opgelost={$optijd},
                                        omschrijving='".$omschrijving."', prioriteit='".$prio."', status='".$status."'
                                        WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         } else {
-            $datum = $day."-".$month."-".$year;
+            $datum = $year."-".$month."-".$day;
             mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='',
                                        omschrijving='".$omschrijving."', prioriteit=NULL, status='".$status."'
                                        WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
@@ -289,6 +311,145 @@ function editProblem()
         $_POST['display'] = "displayEditIncident";
     }
 }
+
+/**
+ * Function to display a screen where you can select the period to show statistics about.
+ */
+function displayStatisticsSettingsProblems(){
+    echo("Hier kunt u van een bepaalde periode bekijken hoeveel problemen op tijd zijn opgelost en hoeveel niet op tijd zijn opgelost.<br/>
+        Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle inicidenten ooit.<br/><br/>");
+    formHeader();
+    echo "De eerste datum: <br/>";
+    dateField(null, null, null, "day1", "month1", "year1");
+
+    dateField(null, null, null, "day2", "month2", "year2");
+    $array[0] = "alles";
+    CheckBoxes("Alles", $array, 1, null);
+    hiddenValue("display", "displayStatistics");
+    formFooter("Submit");
+}
+
+/**
+ * Function to display statistics about the problems.
+ * @param $postData
+ */
+function displayStatisticsProblems(){
+    displayErrors();
+    global $message;
+    global $con;
+    if(!isset($_POST['Alles'])){
+        $day1 = $_POST['day1'];
+        $month1 = $_POST['month1'];
+        $year1 = $_POST['year1'];
+
+        $day2 = $_POST['day2'];
+        $month2 = $_POST['month2'];
+        $year2 = $_POST['year2'];
+
+        if(!validateDate($day1, $month1, $year1)){
+            $message .= "De eerste datum is geen correct datum.<br/>";
+        }
+
+        if(!validateDate($day2, $month2, $year2)){
+            $message .= "De tweede datum is geen correct datum.<br/>";
+        }
+
+        if(!emptyCheck($message)){
+            $datum1 = $year1."-".$month1."-".$day1;
+            $datum2 = $year2."-".$month2."-".$day2;
+
+            //Total amount of problems in this periode
+            $query = "SELECT COUNT(*) FROM problemen
+                        WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'";
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $totalproblems = $result[0];
+
+            //Amount of problems solved on time
+            $query = "SELECT COUNT(*) FROM problemen
+                      WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
+                      AND op_tijd_opgelost = 'ja'";
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $onTime = $result[0];
+
+            //Amount of problems solved.
+            $query = "SELECT COUNT(*) FROM problemen
+                      WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
+                      AND op_tijd_opgelost IS NOT NULL";
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $totalSolved = $result[0];
+
+            //Amount of problems not solved on time
+            $query = "SELECT COUNT(*) FROM problemen
+                      WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
+                      AND op_tijd_opgelost = 'nee'";
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $notOnTime = $result[0];
+
+            $notSolved = $totalproblems - $totalSolved;
+
+            //Percentages
+            $percSolved = ($totalSolved/$totalproblems)*100;
+            $percNotSolved = 100 - $percSolved;
+            $percSolvedOnTime = ($onTime/$totalSolved)*100;
+            $percNotSolvedOnTime = 100 - $percSolvedOnTime;
+            echo "Tussen {$datum1} en {$datum2} zijn {$totalproblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
+                    Dat betekent dat {$notSolved} problemen nog niet zijn opgelost of niet relevant zijn. <br/>
+                    Dit is {$percNotSolved}% van alle problemen in deze periode. {$percSolved}% van de problemen zijn wel opgelost.<br/>
+                    Van alle problemen in deze periode zijn {$totalSolved} opgelost. {$onTime} hiervan zijn op tijd opgelost.<br/>
+                    Dus {$notOnTime} zijn niet op tijd opgelost. <br/>
+                    {$percSolvedOnTime}% van de problemen zijn op tijd opgelost. <br/>
+                    {$percNotSolvedOnTime}% van de problemen zijn niet op tijd opgelost.";
+        }
+    } else {
+        //Total amount of problems in this periode
+        $query = "SELECT COUNT(*) FROM problemen";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_array($result);
+        $totalproblems = $result[0];
+
+        //Amount of problems solved on time
+        $query = "SELECT COUNT(*) FROM problemen
+                      WHERE op_tijd_opgelost = 'ja'";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_array($result);
+        $onTime = $result[0];
+
+        //Amount of problems solved.
+        $query = "SELECT COUNT(*) FROM problemen
+                      WHERE op_tijd_opgelost IS NOT NULL";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_array($result);
+        $totalSolved = $result[0];
+
+        //Amount of problems not solved on time
+        $query = "SELECT COUNT(*) FROM problemen
+                      WHERE op_tijd_opgelost = 'nee'";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_array($result);
+        $notOnTime = $result[0];
+
+        $notSolved = $totalproblems - $totalSolved;
+
+        //Percentages
+        $percSolved = ($totalSolved/$totalproblems)*100;
+        $percNotSolved = 100 - $percSolved;
+        $percSolvedOnTime = ($onTime/$totalSolved)*100;
+        $percNotSolvedOnTime = 100 - $percSolvedOnTime;
+        echo "In totaal zijn {$totalproblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
+                    Dat betekent dat {$notSolved} problemen nog niet zijn opgelost of niet relevant zijn. <br/>
+                    Dit is {$percNotSolved}% van alle problemen in deze periode. {$percSolved}% van de problemen zijn wel opgelost.<br/>
+                    Van alle problemen in deze periode zijn {$totalSolved} opgelost. {$onTime} hiervan zijn op tijd opgelost.<br/>
+                    Dus {$notOnTime} zijn niet op tijd opgelost. <br/>
+                    {$percSolvedOnTime}% van de problemen zijn op tijd opgelost. <br/>
+                    {$percNotSolvedOnTime}% van de problemen zijn niet op tijd opgelost.";
+    }
+
+}
+
 
 /**
  * This is the basic function that displays when the user logs in.
