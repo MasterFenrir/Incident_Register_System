@@ -343,7 +343,7 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-     NEW HelpdeskTable("Incidenten", "SELECT nummer, datum, id_hardware, omschrijving, probleem FROM incidenten, hardware, software, hardware_software
+     NEW HelpdeskTable("Incidenten", "SELECT nummer, datum, id_hardware.incidenten, omschrijving, probleem FROM incidenten, hardware, software, hardware_software
      WHERE incidenten.id_hardware=hardware.id_hardware
      AND hardware.id_hardware=hardware_software.id_hardware
      AND software.id_software=hardware_software.id_software", $postData, null, null, "nummer", null, null);
