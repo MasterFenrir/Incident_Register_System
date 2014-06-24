@@ -22,6 +22,9 @@ function displayContentIncident($postData)
         case "displaySoftwareIncident" : displaySoftwareIncident($postData); break;
         case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
         case "displaySolvedProblems"    : displaySolvedProblems($postData); break;
+        case "displayStatisticsSettings"    : displayStatisticsSettings(); break;
+        case "displayStatistics"    :   displayStatisticsSettings();    break;
+
         default : echo "Hello ".ucfirst($_SESSION['user']); break;
     }
 }
@@ -37,6 +40,7 @@ function displayMenuIncident()
     new Button("Hardware","display", "displayHardwareIncident");
     new Button("Software","display", "displaySoftwareIncident");
     new Button("Opgeloste problemen", "display", "displaySolvedProblems");
+    new Button("Statistieken", "display", "displayStatisticsSettings");
 }
 
 /**
@@ -307,6 +311,63 @@ function displaySolvedProblems($postData){
             AND problemen.status = 'opgelost'
             AND incidenten.status = 'probleem'";
     new HelpdeskTable("Incidenten gerelateerd aan opgeloste problemen", $query, $postData, "displayEditIncident", null, "nummer", null, null);
+}
+
+function displayStatisticsSettings(){
+    echo("Hier kunt u van een bepaalde periode bekijken hoeveel incidenten op tijd zijn opgelost en hoeveel niet op tijd zijn opgelost.<br/>
+        Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle inicidenten ooit.<br/><br/>");
+    dateField(null, null, null, "day1", "month1", "year1");
+    dateField(null, null, null, "day2", "month2", "year2");
+    formHeader();
+    CheckBoxes("Alle incidenten", $array[0] = "alles", 1, null);
+    hiddenValue("display", "displayStatistics");
+    formFooter("Submit");
+}
+
+
+function displayStatistics($postData){
+    global $message;
+    global $con;
+
+    if(!isset($_POST['Alle incidenten'])){
+        $day1 = $_POST['day1'];
+        $month1 = $_POST['month1'];
+        $year1 = $_POST['year1'];
+
+        $day2 = $_POST['day1'];
+        $month2 = $_POST['month2'];
+        $year2 = $_POST['year2'];
+
+        if(!validateDate($day1, $month1, $year1)){
+            $message .= "De eerste datum is geen correct datum.<br/>";
+        }
+
+        if(!validateDate($day2, $month2, $year2)){
+            $message .= "De tweede datum is geen correct datum.<br/>";
+        }
+
+        if(!emptyCheck($message)){
+            $datum1 = $day1."-".$month1."-".$year1;
+            $datum2 = $day2."-".$month2."-".$year2;
+            $query = "SELECT COUNT(*) FROM incidenten
+                      WHERE datum BETWEEN {$datum1} AND {$datum2}
+                      AND op_tijd_opgelost = 'ja'";
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $result = $result[0];
+
+            echo $result;
+        }
+    } else {
+        $query = "SELECT COUNT(*) FROM incidenten
+                      WHERE op_tijd_opgelost = 'ja'";
+        $result = mysqli_query($con, $query);
+        $result = mysqli_fetch_array($result);
+        $result = $result[0];
+
+        echo $result;
+    }
+
 }
 
 ?>

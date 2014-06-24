@@ -7,27 +7,27 @@
 /**
  * This functions generates three fields to fill in a date (day, month, year)
  */
-function dateField($d, $m, $y){
+function dateField($d, $m, $y, $dayName="day", $monthName="month", $yearName="year"){
     $day = date('d');
     $month = date('m');
     $year = date('Y');
     echo "<tr>
             <td>Dag </td>
-            <td><input type='number' name='day' size='2' value='";
+            <td><input type='number' name={$dayName} size='2' value='";
                 if($d != null){echo $d;} else{echo $day;}
                 echo "'></input>
             </td>
          </tr>
          <tr>
             <td>Maand </td>
-            <td><input type='number' name='month' size='2' value='";
+            <td><input type='number' name={$monthName} size='2' value='";
                 if($m != null){echo $m;} else{echo $month;}
                 echo"'></input>
             </td>
         </tr>
         <tr>
             <td>Jaar </td>
-            <td><input type='number' name='year' size='4' value='";
+            <td><input type='number' name={$yearName} size='4' value='";
                 if($y != null){echo $y;} else{echo $year;}
                 echo"'></input>
             </td>
