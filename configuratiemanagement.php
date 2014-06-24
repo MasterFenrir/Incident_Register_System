@@ -123,6 +123,7 @@ function makeSearchSoftware($searchString)
  */
 function displaySoftware($postData)
     {
+        echo("Hier ziet u de software tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop software verwijderen");
         new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
                                               producent, leverancier, aantal_licenties AS Licenties,
                                               soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
@@ -136,6 +137,7 @@ function displaySoftware($postData)
  */
 function displayAddSoftware()
     {
+        echo("Hier kunt u software toevoegen u kunt de ingevulde gegevens doorvoeren door op de submit knop te klikken");
         displayErrors();
 
         formHeader();
@@ -157,6 +159,7 @@ function displayAddSoftware()
  */
 function displayEditSoftware()
     {
+        echo("Hier kunt u de software wijzigen de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
         global $con;
         displayErrors();
 
@@ -181,6 +184,7 @@ function displayEditSoftware()
  */
 function editSoftware()
     {
+        echo("Hier kunt u de software wijzigen u kunt de gegevens bevestigen door op submit te klikken");
          global $con;
          global $message;
 
@@ -219,6 +223,7 @@ function editSoftware()
      */
     function displayUsers($postData)
     {
+        echo("Hier ziet u de gebruikers tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop gebruikers verwijderen");
         global $message;
         echo $message;
         $messagen = "";
@@ -232,6 +237,7 @@ function editSoftware()
  */
 function displayHardware($postData)
     {
+        echo("Hier ziet u de hardware tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop hardware verwijderen");
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
             "displayEditHardware", "deleteHardware", "id_hardware", null, "displayHardwareAndSoftware");
     }
@@ -271,6 +277,7 @@ function displayHardwareAndSoftware($postData){
  */
 function displayAddHardware()
     {
+        echo("Hier kunt u hardware toevoegen, u kunt de gegevens bevestigen door op submit te klikken");
         displayErrors();
 
         formHeader();
@@ -292,6 +299,7 @@ function displayAddHardware()
  */
     function displayEditHardware()
     {
+        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
         global $con;
         displayErrors();
 
@@ -318,6 +326,7 @@ function displayAddHardware()
  */
     function editHardware()
     {
+        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
         global $con;
         global $message;
 
@@ -361,6 +370,7 @@ function displayAddHardware()
      * This function will create a form to add a new user
      */
     function displayAddUser(){
+        echo("Hier kunt u gebruikers toevoegen u kunt de gegevens bevestigen door op submit te klikken");
         global $message;
         if($message != ""){
             echo($message);

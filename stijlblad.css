@@ -80,6 +80,7 @@ body {
     line-height: 145%;
     color: #607080;
     background-color: #FFFFFF;
+    overflow:auto;
 }
 
 #content h3, h4 {
@@ -107,6 +108,11 @@ body {
     border-bottom: 1px solid #EFEFEF;
     font-family: Verdana, Arial, sans-serif;
     text-decoration: none;
+}
+
+.left_sidebar, .content{
+    float: left;
+    color: #F9F9F9;
 }
 
 #footer {
