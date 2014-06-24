@@ -40,8 +40,8 @@ function displayMenuProbleem()
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");
     new Button("Software","display", "displaySoftwareProblem");
-}   new Button("Trends", "display", "displayTrends");
-
+   new Button("Trends", "display", "displayTrends");
+}
 /**
  * This function process functions that do not output anything to the screen
  * @param $eventID The function to execute
