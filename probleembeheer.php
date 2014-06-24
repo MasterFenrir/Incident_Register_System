@@ -22,6 +22,7 @@ function displayContentProbleem($postData)
         case "displayHardwareProblem" : displayHardwareProblem($postData); break;
         case "displaySoftwareProblem" : displaySoftwareProblem($postData); break;
         case "displayHardwareAndSoftware" : displayHardwareAndSoftware($postData); break;
+        case "displayTrends" : displayTrends($postData); break;
         case "displayAddProblem"    : displayAddProblem(); break;
         case "displayEditProblem"   : displayEditProblem(); break;
         default : displayLandingProbleem();
@@ -39,7 +40,7 @@ function displayMenuProbleem()
     new Button("Incidenten", "display", "displayIncidentProblems");
     new Button("Hardware","display", "displayHardwareProblem");
     new Button("Software","display", "displaySoftwareProblem");
-}
+}   new Button("Trends", "display", "displayTrends");
 
 /**
  * This function process functions that do not output anything to the screen
@@ -308,4 +309,24 @@ function displayLandingProbleem()
     echo monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
 }
 
+function displayTrends(){
+
+    formHeader();
+    CheckBoxes("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"),3, $_POST['Soort']);
+    CheckBoxes("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"),3, $_POST['Locatie']);
+
+    CheckBoxes("Merk", queryToArray("SELECT merk FROM hardware GROUP BY merk"),3, $_POST['Merk']);
+    CheckBoxes("Leverancier",queryToArray("SELECT leverancier FROM hardware GROUP BY leverancier"),3, $_POST['Leverancier']);
+    CheckBoxes("Aanschaf_jaar",queryToArray("SELECT aanschaf_jaar FROM hardware GROUP BY aanschaf_jaar"),3, $_POST['Aanschaf_jaar']);
+    hiddenValue("display", "displayTrends");
+    formFooter("Trends");
+
+
+}
+
+
+function Trends(){
+    global $con;
+    global $message;
+}
 ?>
