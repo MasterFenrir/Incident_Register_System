@@ -335,7 +335,17 @@ function displayTrends(){
 function Trends($postData){
     global $con;
     global $message;
-        new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, null, null, "nummer", null, null);
+
+    $soort = ($_POST['Soort']);
+    $locatie = ($_POST['Locatie']);
+    $merk = ($_POST['Merk']);
+
+    $leverancier = ($_POST['Leverancier']);
+    $aanschafjaar = ($_POST['Aanschaf_jaar']);
+    $os = ($_POST['OS']);
+    $software = ($_POST['Software']);
+
+     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, null, null, "nummer", null, null);
     }
 
 
