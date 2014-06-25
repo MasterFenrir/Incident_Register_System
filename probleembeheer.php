@@ -122,7 +122,7 @@ function displayEditIncidentStatus(){
     dropdown("Probleem", queryToArray("SELECT nummer FROM problemen"), null);
     displayField("Contact", $values['contact']);
     displayField("Prioriteit", $values['prioriteit']);
-    dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
+    dropDownNoEmptyValue("Status", queryToArray("SELECT status From statussen"),$values['status']);
     hiddenValue("display", "displayIncidenten");
     hiddenValue("key", $values['nummer']);
     formFooter("editIncidentStatus");
@@ -133,8 +133,14 @@ function displayEditIncidentStatus(){
  */
 function editIncidentStatus(){
     global $con;
-    mysqli_query($con, "UPDATE incidenten SET status='{$_POST['Status']}', probleem='{$_POST['Probleem']}'
+    if(!isset($_POST['Probleem'])){
+        mysqli_query($con, "UPDATE incidenten SET status='{$_POST['Status']}'
                         WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
+    } else {
+        mysqli_query($con, "UPDATE incidenten SET status='{$_POST['Status']}', probleem='{$_POST['Probleem']}'
+                        WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
+    }
+
 
     $_POST['display'] = "displayIncidentProblems";
 }
@@ -175,7 +181,7 @@ function displayAddProblem(){
     textField("Aanvangtijd",date('H:i'));
     textField("Omschrijving", $_POST['Omschrijving']);
     dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $_POST['Prioriteit']);
-    dropdown("Status", queryToArray("SELECT status From statussen"), "onopgelost");
+    dropDownNoEmptyValue("Status", queryToArray("SELECT status From statussen"), "onopgelost");
     hiddenValue("display", "displayProblems");
     formFooter("addProblem");
 }
@@ -252,7 +258,7 @@ function displayEditProblem() {
     displayField("Aanvangtijd", $values['aanvang']);
     textField("Omschrijving", $values['omschrijving']);
     dropdown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $values['prioriteit']);
-    dropdown("Status", queryToArray("SELECT status From statussen"),$values['status']);
+    dropDownNoEmptyValue("Status", queryToArray("SELECT status From statussen"),$values['status']);
     hiddenValue("display", "displayProblems");
     hiddenValue("key", $values['nummer']);
     formFooter("editProblem");
@@ -289,15 +295,17 @@ function editProblem()
             $eindtijd = $eind['hour'].":".$eind['minutes'];
             if($status === "opgelost"){
                 if(checkOnTime($day, $month, $year, $aanvang, $prio)){
+                    $message .= "Yes";
                     $optijd = "ja";
                 } else {
+                    $message .= "No";
                     $optijd = "nee";
                 }
             } else {
                 $optijd = null;
             }
             mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
-                                       op_tijd_opgelost={$optijd},
+                                       op_tijd_opgelost='{$optijd}',
                                        omschrijving='".$omschrijving."', prioriteit='".$prio."', status='".$status."'
                                        WHERE nummer ='".$_POST['key']."'") or die(mysqli_error($con));
         } else {
@@ -317,21 +325,20 @@ function editProblem()
  */
 function displayStatisticsSettingsProblems(){
     echo("Hier kunt u van een bepaalde periode bekijken hoeveel problemen op tijd zijn opgelost en hoeveel niet op tijd zijn opgelost.<br/>
-        Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle inicidenten ooit.<br/><br/>");
+        Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle problemen ooit.<br/><br/>");
     formHeader();
-    echo "De eerste datum: <br/>";
+    displayField("", "De datum waarna de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day1", "month1", "year1");
-
+    displayField("", "De datum waarvoor de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day2", "month2", "year2");
     $array[0] = "alles";
     CheckBoxes("Alles", $array, 1, null);
-    hiddenValue("display", "displayStatistics");
+    hiddenValue("display", "displayStatisticsProblems");
     formFooter("Submit");
 }
 
 /**
  * Function to display statistics about the problems.
- * @param $postData
  */
 function displayStatisticsProblems(){
     displayErrors();
@@ -363,91 +370,105 @@ function displayStatisticsProblems(){
                         WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'";
             $result = mysqli_query($con, $query);
             $result = mysqli_fetch_array($result);
-            $totalproblems = $result[0];
-
-            //Amount of problems solved on time
-            $query = "SELECT COUNT(*) FROM problemen
+            $totalProblems = $result[0];
+            if($totalProblems != 0){
+                //Amount of problems solved on time
+                $query = "SELECT COUNT(*) FROM problemen
                       WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
                       AND op_tijd_opgelost = 'ja'";
-            $result = mysqli_query($con, $query);
-            $result = mysqli_fetch_array($result);
-            $onTime = $result[0];
+                $result = mysqli_query($con, $query);
+                $result = mysqli_fetch_array($result);
+                $onTime = $result[0];
 
-            //Amount of problems solved.
-            $query = "SELECT COUNT(*) FROM problemen
+                //Amount of problems solved.
+                $query = "SELECT COUNT(*) FROM problemen
                       WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
                       AND op_tijd_opgelost IS NOT NULL";
-            $result = mysqli_query($con, $query);
-            $result = mysqli_fetch_array($result);
-            $totalSolved = $result[0];
+                $result = mysqli_query($con, $query);
+                $result = mysqli_fetch_array($result);
+                $totalSolved = $result[0];
 
-            //Amount of problems not solved on time
-            $query = "SELECT COUNT(*) FROM problemen
+                //Amount of problems not solved on time
+                $query = "SELECT COUNT(*) FROM problemen
                       WHERE datum BETWEEN '{$datum1}' AND '{$datum2}'
                       AND op_tijd_opgelost = 'nee'";
-            $result = mysqli_query($con, $query);
-            $result = mysqli_fetch_array($result);
-            $notOnTime = $result[0];
+                $result = mysqli_query($con, $query);
+                $result = mysqli_fetch_array($result);
+                $notOnTime = $result[0];
 
-            $notSolved = $totalproblems - $totalSolved;
+                $notSolved = $totalProblems - $totalSolved;
 
-            //Percentages
-            $percSolved = ($totalSolved/$totalproblems)*100;
-            $percNotSolved = 100 - $percSolved;
-            $percSolvedOnTime = ($onTime/$totalSolved)*100;
-            $percNotSolvedOnTime = 100 - $percSolvedOnTime;
-            echo "Tussen {$datum1} en {$datum2} zijn {$totalproblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
+                //Percentages
+                $percSolved = ($totalSolved/$totalProblems)*100;
+                $percNotSolved = 100 - $percSolved;
+                if($totalSolved == 0){
+                    $percSolvedOnTime = 0;
+                } else {
+                    $percSolvedOnTime = ($onTime/$totalSolved)*100;
+                }
+                $percNotSolvedOnTime = 100 - $percSolvedOnTime;
+                echo "Tussen {$datum1} en {$datum2} zijn {$totalProblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
                     Dat betekent dat {$notSolved} problemen nog niet zijn opgelost of niet relevant zijn. <br/>
                     Dit is {$percNotSolved}% van alle problemen in deze periode. {$percSolved}% van de problemen zijn wel opgelost.<br/>
                     Van alle problemen in deze periode zijn {$totalSolved} opgelost. {$onTime} hiervan zijn op tijd opgelost.<br/>
                     Dus {$notOnTime} zijn niet op tijd opgelost. <br/>
                     {$percSolvedOnTime}% van de problemen zijn op tijd opgelost. <br/>
                     {$percNotSolvedOnTime}% van de problemen zijn niet op tijd opgelost.";
+            } else {
+                echo "Er zijn geen problemen in deze periode. Weet je zeker dat je de data goed hebt ingevoerd?";
+            }
+
         }
     } else {
         //Total amount of problems in this periode
         $query = "SELECT COUNT(*) FROM problemen";
         $result = mysqli_query($con, $query);
         $result = mysqli_fetch_array($result);
-        $totalproblems = $result[0];
-
-        //Amount of problems solved on time
-        $query = "SELECT COUNT(*) FROM problemen
+        $totalProblems = $result[0];
+        if($totalProblems != 0){
+            //Amount of problems solved on time
+            $query = "SELECT COUNT(*) FROM problemen
                       WHERE op_tijd_opgelost = 'ja'";
-        $result = mysqli_query($con, $query);
-        $result = mysqli_fetch_array($result);
-        $onTime = $result[0];
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $onTime = $result[0];
 
-        //Amount of problems solved.
-        $query = "SELECT COUNT(*) FROM problemen
+            //Amount of problems solved.
+            $query = "SELECT COUNT(*) FROM problemen
                       WHERE op_tijd_opgelost IS NOT NULL";
-        $result = mysqli_query($con, $query);
-        $result = mysqli_fetch_array($result);
-        $totalSolved = $result[0];
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $totalSolved = $result[0];
 
-        //Amount of problems not solved on time
-        $query = "SELECT COUNT(*) FROM problemen
+            //Amount of problems not solved on time
+            $query = "SELECT COUNT(*) FROM problemen
                       WHERE op_tijd_opgelost = 'nee'";
-        $result = mysqli_query($con, $query);
-        $result = mysqli_fetch_array($result);
-        $notOnTime = $result[0];
+            $result = mysqli_query($con, $query);
+            $result = mysqli_fetch_array($result);
+            $notOnTime = $result[0];
 
-        $notSolved = $totalproblems - $totalSolved;
+            $notSolved = $totalProblems - $totalSolved;
 
-        //Percentages
-        $percSolved = ($totalSolved/$totalproblems)*100;
-        $percNotSolved = 100 - $percSolved;
-        $percSolvedOnTime = ($onTime/$totalSolved)*100;
-        $percNotSolvedOnTime = 100 - $percSolvedOnTime;
-        echo "In totaal zijn {$totalproblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
+            //Percentages
+            $percSolved = ($totalSolved/$totalProblems)*100;
+            $percNotSolved = 100 - $percSolved;
+            if($totalSolved == 0){
+                $percSolvedOnTime = 0;
+            } else {
+                $percSolvedOnTime = ($onTime/$totalSolved)*100;
+            }
+            $percNotSolvedOnTime = 100 - $percSolvedOnTime;
+            echo "In totaal zijn {$totalProblems} problemen gemeld. Hiervan zijn {$totalSolved} opgelost.<br/>
                     Dat betekent dat {$notSolved} problemen nog niet zijn opgelost of niet relevant zijn. <br/>
                     Dit is {$percNotSolved}% van alle problemen in deze periode. {$percSolved}% van de problemen zijn wel opgelost.<br/>
                     Van alle problemen in deze periode zijn {$totalSolved} opgelost. {$onTime} hiervan zijn op tijd opgelost.<br/>
                     Dus {$notOnTime} zijn niet op tijd opgelost. <br/>
                     {$percSolvedOnTime}% van de problemen zijn op tijd opgelost. <br/>
                     {$percNotSolvedOnTime}% van de problemen zijn niet op tijd opgelost.";
+        } else {
+            echo "Er zijn geen problemen gevonden.";
+        }
     }
-
 }
 
 
