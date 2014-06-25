@@ -268,7 +268,7 @@ function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchS
      *
      * Outer loop iterates over the words in $searchString adding a new WHERE/AND/OR
      */
-    $query = $query."WHERE(".true.")";
+    $query = $query." WHERE(".true.")";
 
     for($z=0; $z<count($searchStringArray); $z++) {
         $search = explode(" ", $searchStringArray[$z]);
@@ -278,10 +278,10 @@ function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchS
         for($x=0; $x<count($search); $x++) {
             //Inner loop iterates over each column in $cols with the current $search word
             for($y=0; $y<count($cols); $y++) {
-                if($y != (count($cols)-1) && $x != (count($search)-1)) {
-                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
-                } else {
+                if($y == (count($cols)-1) && $x == (count($search)-1)) {
                     $query = $query.$cols[$y]." LIKE '%".$search[$x]."%'";
+                } else {
+                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
                 }
             }
         }
@@ -293,7 +293,6 @@ function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchS
         $query = $query." GROUP BY ".$group;
     }
 
-    echo query;
     return $query;
 }
 
