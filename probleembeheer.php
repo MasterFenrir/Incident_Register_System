@@ -516,7 +516,7 @@ function displayTrends(){
     displayField("", "De datum waarvoor de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day2", "month2", "year2");
     $array[0] = "alles";
-    CheckBoxes("Alles", $array, 1, null);
+    CheckBoxes($array, $array, 1, $array);
 
 
     hiddenValue("display", "Trends");
