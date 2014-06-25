@@ -543,7 +543,7 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-    $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving','hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
+    $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving', 'incidenten.datum' ,'hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
     $from = array('incidenten'=>'id_hardware','hardware'=>'id_hardware','hardware_software'=>'id_software','software'=>'id_software');
     $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschaf_jaar','hardware.os','software.naam');
     $grp = 'incidenten.nummer';
