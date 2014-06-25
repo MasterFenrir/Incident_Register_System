@@ -320,7 +320,7 @@ function editProblem()
         }
         $_POST['display'] = "displayProblems";
     } else {
-        $_POST['display'] = "displayEditIncident";
+        $_POST['display'] = "displayEditProblem";
     }
 }
 
