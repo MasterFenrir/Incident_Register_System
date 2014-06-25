@@ -490,7 +490,7 @@ function displayLandingProbleem()
     $grp = 'id_hardware';
     $search = "werks xp grol 08 off";
 
-    echo monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
+
 }
 
 /**
