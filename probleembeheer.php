@@ -520,7 +520,7 @@ function Trends($postData){
 
     $select = array('*');
     $from = array('incidenten'=>'id_hardware', 'hardware'=>'id_hardware','hardware_software'=>'id_software', 'software'=>'id_software');
-    $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschafjaar','hardware.os','hardware.software');
+    $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschaf_jaar','hardware.os','hardware.software');
     $grp = 'incidenten.nummer';
 
    $search=array(stringbuilder($_POST['Soort']),stringbuilder($_POST['Locatie']),stringbuilder($_POST['Merk']),stringbuilder($_POST['Leverancier']),
