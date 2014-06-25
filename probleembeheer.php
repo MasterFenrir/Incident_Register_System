@@ -490,7 +490,7 @@ function displayLandingProbleem()
     $grp = 'id_hardware';
     $search = "werks xp grol 08 off";
 
-    echo monsterQueryBuilder($sel, $from, $cols, $type, $grp, $search);
+
 }
 
 /**
@@ -515,6 +515,11 @@ function displayTrends(){
 
 }
 
+/**
+ * Function that makes 1 long string from a given array.
+ * @param $building
+ * @return string
+ */
 function stringbuilder($building){
     $ret="";
     for ($x=0;$x<count($building);$x++){
@@ -530,6 +535,11 @@ function stringbuilder($building){
 
 }
 
+/**
+ * Function that uses the from displayTrends to search in the database for different objects.
+ * From these object a table will be build.
+ * @param $postData
+ */
 function Trends($postData){
     global $con;
     global $message;
@@ -543,7 +553,7 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-    $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving','hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
+    $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving', 'incidenten.datum' ,'hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
     $from = array('incidenten'=>'id_hardware','hardware'=>'id_hardware','hardware_software'=>'id_software','software'=>'id_software');
     $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschaf_jaar','hardware.os','software.naam');
     $grp = 'incidenten.nummer';
