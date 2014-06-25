@@ -571,7 +571,7 @@ function Trends($postData){
    $search=array(stringbuilder($_POST['Soort']),stringbuilder($_POST['Locatie']),stringbuilder($_POST['Merk']),stringbuilder($_POST['Leverancier']),
        stringbuilder($_POST['Aanschaf_jaar']), stringbuilder($_POST['OS']), stringbuilder($_POST['Software']));
 
-   $bla= superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search);
+   $bla= superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search,null,null,null);
     new HelpdeskTable("Trends", $bla, $postData,
         null, null, "incidenten.nummer", null, null);
 
