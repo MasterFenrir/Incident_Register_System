@@ -94,6 +94,8 @@ function makeSearchIncidenten($search)
  * This function manages the display of all the incidents known.
  */
 function displayIncidenten($postData){
+    echo("Hier ziet u de incidenten tabel, U kunt gegevens wijzigen door op edit te klikken.");
+    echo(" Gegevens kunnen verwijdert worden door op delete te klikken.");
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
@@ -101,6 +103,7 @@ function displayIncidenten($postData){
  * This functions displays the form to add an incident.
  */
 function displayAddIncident() {
+    echo("Hier kunt u incidenten toevoegen de gegevens kunnen worden bevestigd door op submit te klikken");
     displayErrors();
     date_default_timezone_set("Europe/Amsterdam");
 
@@ -121,6 +124,7 @@ function displayAddIncident() {
  * This function displays the form to edit an incident.
  */
 function displayEditIncident() {
+    echo("Hier kunt u de gegevens van het incident wijzigen, de gegevens kunnen bevestigd worden door op submit te klikken");
     global $con;
     displayErrors();
 
@@ -150,6 +154,7 @@ function displayEditIncident() {
  */
 function displayMeldingen($postData)
 {
+    echo("Hier ziet u de meldingen die zijn doorgegeven");
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit IS NULL", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
@@ -167,6 +172,7 @@ function deleteIncident()
  */
 function editIncident()
 {
+    echo("Hier kunt u de gegevens van het incident wijzigen, de gegevens kunnen bevestigd worden door op submit te klikken");
     global $con;
     global $message;
 
@@ -226,6 +232,7 @@ function editIncident()
  */
 function addIncident()
 {
+    echo("Hier kunt u een incident toevoegen, de gegevens worden bevestigd door op submit te klikken");
     global $con;
     global $message;
 
@@ -288,6 +295,7 @@ function addIncident()
  */
 function displayHardwareIncident($postData)
 {
+    echo("Hier ziet u alle hardware die aanwezig is");
     new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
         null, null, "id_hardware", null, "displayHardwareAndSoftware");
 }
@@ -298,6 +306,7 @@ function displayHardwareIncident($postData)
  */
 function displaySoftwareIncident($postData)
 {
+    echo("Hier ziet u alle software die aanwezig is");
     new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
                                           producent, leverancier, aantal_licenties AS Licenties,
                                           soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
@@ -311,6 +320,7 @@ function displaySoftwareIncident($postData)
  * @param $postData
  */
 function displaySolvedProblems($postData){
+    echo("Hier ziet u alle opgeloste problemen");
     $query = "SELECT incidenten.nummer, incidenten.datum, incidenten.aanvang,
                     incidenten.eindtijd, incidenten.id_hardware, incidenten.omschrijving,
                     incidenten.workaround, incidenten.probleem, incidenten.contact,
