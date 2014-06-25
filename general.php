@@ -236,7 +236,7 @@ function monsterQueryBuilder($select, $from, $cols, $type, $group, $searchString
  * @param $group: Optional, determines what column to group by, null to not group
  * @param $searchString:
  */
-function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchStringArray)
+function superMonsterQueryBuilder($select, $from, $cols, $group, $searchStringArray, $searchField, $between1, $between2)
 {
     //Seperates $searchString on spaces in order to search for each word
 
@@ -262,9 +262,9 @@ function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchS
         $lastCol = $from[$lastTable];
 
         if($x==0) {
-            $query = $query." FROM ".$table;
+            $query .= " FROM ".$table;
         } else {
-            $query = $query." LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
+            $query .= " LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
         }
     }
 
@@ -274,29 +274,46 @@ function superMonsterQueryBuilder($select, $from, $cols, $type, $group, $searchS
      *
      * Outer loop iterates over the words in $searchString adding a new WHERE/AND/OR
      */
-    $query = $query." WHERE(".true.")";
+    $query .= " WHERE(".true.")";
 
     for($z=0; $z<count($searchStringArray); $z++) {
         $search = explode(" ", $searchStringArray[$z]);
 
-            $query = $query." AND(";
+            $query .= " AND(";
 
         for($x=0; $x<count($search); $x++) {
             //Inner loop iterates over each column in $cols with the current $search word
             for($y=0; $y<count($cols); $y++) {
                 if($y == (count($cols)-1) && $x == (count($search)-1)) {
-                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%'";
+                    $query .= $cols[$y]." LIKE '%".$search[$x]."%'";
                 } else {
-                    $query = $query.$cols[$y]." LIKE '%".$search[$x]."%' OR ";
+                    $query .= $cols[$y]." LIKE '%".$search[$x]."%' OR ";
                 }
             }
         }
         $query = $query.")";
     }
 
+    if($searchField !== null) {
+        $query .= " AND(";
+        $search = explode(" ", $searchField);
+        for($x=0; $x<count($search); $x++) {
+            if($x !== 0) {
+                $query .= "incidenten.omschrijving LIKE ".$search[$x]." AND ";
+            } else {
+                $query .= "incidenten.omschrijving LIKE ".$search[$x];
+            }
+        }
+        $query .= ")";
+    }
+
+    if($between1 !== null && $between2 !== null) {
+        $query .= " AND(incidenten.datum BETWEEN ".$between1." AND ".$between2.")";
+    }
+
     //Groups results by $group if $group isn't null
     if($group != null) {
-        $query = $query." GROUP BY ".$group;
+        $query .= " GROUP BY ".$group;
     }
 
     return $query;
