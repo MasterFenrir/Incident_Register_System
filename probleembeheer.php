@@ -515,6 +515,11 @@ function displayTrends(){
 
 }
 
+/**
+ * Function that makes 1 long string from a given array.
+ * @param $building
+ * @return string
+ */
 function stringbuilder($building){
     $ret="";
     for ($x=0;$x<count($building);$x++){
@@ -530,6 +535,11 @@ function stringbuilder($building){
 
 }
 
+/**
+ * Function that uses the from displayTrends to search in the database for different objects.
+ * From these object a table will be build.
+ * @param $postData
+ */
 function Trends($postData){
     global $con;
     global $message;
