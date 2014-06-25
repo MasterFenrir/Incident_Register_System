@@ -509,7 +509,7 @@ function displayTrends(){
     CheckBoxes("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"),3, $_POST['OS']);
     CheckBoxes("Software", queryToArray("SELECT naam FROM software GROUP BY naam"), 3, $_POST['Software']);
 
-    textField("Zoekterm", null );
+    textField("Zoekterm", $_POST['Zoekterm'] );
 
     displayField("", "De datum waarna de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day1", "month1", "year1");
