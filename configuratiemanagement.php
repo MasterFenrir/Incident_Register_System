@@ -282,13 +282,13 @@ function displayAddHardware()
 
         formHeader();
         textField("Hardware_ID", $_POST['Hardware_ID']);
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $_POST['Soort']);
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $_POST['Locatie']);
+        dropDownNoEmptyValue("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $_POST['Soort']);
+        dropDownNoEmptyValue("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $_POST['Locatie']);
         dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $_POST['OS']);
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3, $_POST['Software']);
         textField("Merk", $_POST['Merk']);
         textField("Leverancier", $_POST['Leverancier']);
-        textField("Aanschaf_jaar", $_POST['Aanschaf_jaar']);
+        numberField("Aanschaf_jaar", $_POST['Aanschaf_jaar']);
         textField("Status", $_POST['Status']);
         hiddenValue("display", "displayHardware");
         formFooter("addHardware");
@@ -308,14 +308,14 @@ function displayAddHardware()
 
         formHeader();
         displayField("Hardware_ID", $values['id_hardware']);
-        dropDown("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $values['soort']);
-        dropDown("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $values['locatie']);
+        dropDownNoEmptyValue("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"), $values['soort']);
+        dropDownNoEmptyValue("Locatie", queryToArray("SELECT locatie FROM hardware GROUP BY locatie"), $values['locatie']);
         dropDown("OS", queryToArray("SELECT naam FROM software WHERE soort LIKE '%besturingssysteem%'"), $os['naam']);
         CheckBoxes("Software", queryToArray("SELECT naam FROM software WHERE soort NOT LIKE '%besturingssysteem%'"), 3,
                     queryToArray("SELECT software.naam FROM hardware_software, software WHERE software.id_software = hardware_software.id_software AND id_hardware='".$_POST['key']."'"));
         textField("Merk", $values['merk']);
         textField("Leverancier", $values['leverancier']);
-        textField("Aanschaf_jaar", $values['aanschaf_jaar']);
+        numberField("Aanschaf_jaar", $values['aanschaf_jaar']);
         textField("Status", $values['status']);
         hiddenValue("display", "displayHardware");
         formFooter("editHardware");
@@ -370,7 +370,7 @@ function displayAddHardware()
      * This function will create a form to add a new user
      */
     function displayAddUser(){
-        echo("Hier kunt u gebruikers toevoegen u kunt de gegevens bevestigen door op submit te klikken");
+        echo("Hier kunt u gebruikers toevoegen u kunt de gegevens bevestigen door op submit te klikken.<br/>");
         global $message;
         if($message != ""){
             echo($message);
@@ -380,7 +380,7 @@ function displayAddHardware()
         textField("Gebruikersnaam", null);
         passwordField("password1");
         passwordField("password2");
-        dropDown("Rechten", queryToArray("SELECT * FROM rechten"), null);
+        dropDownNoEmptyValue("Rechten", queryToArray("SELECT * FROM rechten"), null);
         hiddenValue("display", "displayAddUser");
         formFooter("addUser");
     }
@@ -440,7 +440,7 @@ function displayAddHardware()
         textField("Gebruikersnaam", $result['username']);
         passwordField("password1");
         passwordField("password2");
-        dropDown("Rechten", queryToArray("SELECT * FROM rechten"), $result['rechten']);
+        dropDownNoEmptyValue("Rechten", queryToArray("SELECT * FROM rechten"), $result['rechten']);
         hiddenValue("display", "displayUsers");
         formFooter("editUser");
     }
@@ -477,7 +477,7 @@ function displayAddHardware()
                 {
                     $message .= "Gebruiker wijzigen mislukt. Probeer het opnieuw.";
                 } else {
-                    $message .= "Gebruiker succesvol gewijzigd.";
+                    $message = "Gebruiker succesvol gewijzigd.";
                 }
             } else {
                 mysqli_query($con, "UPDATE users
@@ -488,7 +488,7 @@ function displayAddHardware()
                 {
                     $message .= "Gebruiker wijzigen mislukt. Probeer het opnieuw.";
                 } else {
-                    $message .= "Gebruiker succesvol gewijzigd.";
+                    $message = "Gebruiker succesvol gewijzigd.";
                 }
             }
         }

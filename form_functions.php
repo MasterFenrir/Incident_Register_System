@@ -46,6 +46,17 @@ function passwordField($name){
 }
 
 /**
+ * This field creates a field to fill in a number.
+ * @param $name The name the numberfield
+ */
+function numberField($name, $sel){
+    echo "<tr>
+            <td>{$name}: </td>
+            <td><input type='number' name='{$name}' size='4' value='{$sel}'></td>
+          </tr>";
+}
+
+/**
  * Function to create a dropdown out of an array
  *
  * @param $name  name of the dropdown
@@ -62,6 +73,26 @@ function dropDown($name, $array, $sel){
                         echo "<option value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
                     }
     echo        "</select>
+            </td>
+         </tr>";
+}
+
+/**
+ * Function to create a dropdown out of an array
+ * The dropdown will not have an empty value available.
+ * @param $name  name of the dropdown
+ * @param $array the array with options
+ * @param $sel selected value
+ */
+function dropDownNoEmptyValue($name, $array, $sel){
+    echo "<tr>
+            <td>".$name."</td>
+            <td>
+                <select name='".$name."'>";
+                foreach($array as $value) {
+                    echo "<option value='".$value."' "; if($value==$sel){echo "selected='selected'";} echo ">".ucfirst($value)."</option>";
+                }
+                echo        "</select>
             </td>
          </tr>";
 }
