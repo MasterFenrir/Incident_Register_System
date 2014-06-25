@@ -96,7 +96,7 @@ function makeSearchIncidenten($search)
 function displayIncidenten($postData){
     echo("Hier ziet u de incidenten tabel, U kunt gegevens wijzigen door op edit te klikken.");
     echo(" Gegevens kunnen verwijdert worden door op delete te klikken.");
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status != 'melding'", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 /*
@@ -172,7 +172,6 @@ function deleteIncident()
  */
 function editIncident()
 {
-    echo("Hier kunt u de gegevens van het incident wijzigen, de gegevens kunnen bevestigd worden door op submit te klikken");
     global $con;
     global $message;
 
@@ -202,14 +201,17 @@ function editIncident()
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
             $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
-            if($status === "opgelost"){
+            $query = "SELECT op_tijd_opgelost FROM incidenten WHERE nummer = '{$_POST['key']}'";
+            $optijd = mysqli_query($con, $query);
+            $optijd = mysqli_fetch_array($optijd);
+            if($status === "opgelost" && !emptyCheck($optijd[0])){
                 if(checkOnTime($day, $month, $year, $aanvang, $prio)){
                     $optijd = "ja";
                 } else {
                     $optijd = "nee";
                 }
             } else {
-                $optijd = null;
+                $optijd = $optijd[0];
             }
             mysqli_query($con, "UPDATE incidenten SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
                                 op_tijd_opgelost = '{$optijd}', id_hardware='".$hw."', omschrijving='".$omschrijving."', workaround='".$wa."',
@@ -264,14 +266,17 @@ function addIncident()
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
             $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
-            if($status === "opgelost"){
+            $query = "SELECT op_tijd_opgelost FROM incidenten WHERE nummer = '{$_POST['key']}'";
+            $optijd = mysqli_query($con, $query);
+            $optijd = mysqli_fetch_array($optijd);
+            if($status === "opgelost" && !emptyCheck($optijd[0])){
                 if(checkOnTime($day, $month, $year, $aanvang, $prio)){
                     $optijd = "ja";
                 } else {
                     $optijd = "nee";
                 }
             } else {
-                $optijd = null;
+                $optijd = $optijd[0];
             }
             mysqli_query($con, "INSERT INTO incidenten (datum, aanvang, eindtijd,op_tijd_opgelost, id_hardware, omschrijving, workaround, contact, prioriteit, status)
                                 VALUES('".$datum."', '".$aanvang."', '".$eindtijd."','{$optijd}',

@@ -401,10 +401,12 @@ function displayAddHardware()
         $result = mysqli_fetch_row($result);
 
         if($result[0] > 0){
-            $message .= "ERROR: Deze gebruikersnaam bestaat al!";
+            $message .= "ERROR: Deze gebruikersnaam bestaat al!<br/>";
         }
         if($password1 != $password2){
-            $message .= "ERORR: De wachtwoorden komen niet overeen!";
+            $message .= "ERORR: De wachtwoorden komen niet overeen!<br/>";
+        } else if(!emptyCheck($password1) || !emptyCheck($password2)){
+            $message .= "ERROR: Je moet een wachtwoord opgeven!<br/>";
         }
         if($message === ""){
             $hash = password_encrypt($password1);
@@ -441,6 +443,7 @@ function displayAddHardware()
         passwordField("password1");
         passwordField("password2");
         dropDownNoEmptyValue("Rechten", queryToArray("SELECT * FROM rechten"), $result['rechten']);
+        hiddenValue("originalName", $primeKey);
         hiddenValue("display", "displayUsers");
         formFooter("editUser");
     }
@@ -453,6 +456,7 @@ function displayAddHardware()
         global $message;
         $message = "";
         $username = removeMaliciousInput($_POST['Gebruikersnaam']);
+        $originalName = $_POST['originalName'];
         $password1 = removeMaliciousInput($_POST['password1']);
         $password2 = removeMaliciousInput($_POST['password2']);
         $rechten = $_POST['Rechten'];
@@ -460,9 +464,14 @@ function displayAddHardware()
         $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = '{$username}'") or die("Stuff");
         $result = mysqli_fetch_row($result);
 
-        if($result[0] > 1){
-            $message .= "ERROR: Deze gebruikersnaam bestaat al!";
+        if($originalName != $username){
+            $result = mysqli_query($con, "SELECT COUNT(*) FROM users WHERE username = '{$username}'") or die("Stuff");
+            $result = mysqli_fetch_row($result);
+            if($result[0] > 0){
+                $message .= "ERROR: Deze gebruikersnaam bestaat al!";
+            }
         }
+
         if($password1 != $password2){
             $message .= "ERORR: De wachtwoorden komen niet overeen!";
         }
@@ -471,7 +480,7 @@ function displayAddHardware()
                 $hash = password_encrypt($password1);
                 mysqli_query($con, "UPDATE users
                                     SET username='{$username}', password='{$hash}', rechten='{$rechten}'
-                                    WHERE username = '{$username}'") or die(mysqli_error($con));
+                                    WHERE username = '{$originalName}'") or die(mysqli_error($con));
 
                 if (mysqli_connect_errno())
                 {
@@ -482,7 +491,7 @@ function displayAddHardware()
             } else {
                 mysqli_query($con, "UPDATE users
                                         SET username='{$username}', rechten='{$rechten}'
-                                        WHERE username = '{$username}") or die(mysqli_error($con));
+                                        WHERE username = '{$originalName}'") or die(mysqli_error($con));
 
                 if (mysqli_connect_errno())
                 {

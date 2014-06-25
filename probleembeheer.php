@@ -80,7 +80,7 @@ function displayProblems($postData){
  * @param $postData This is used for creating the sorting functionality in the displayed table
  */
 function displayIncidentProblems($postData){
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status != 'melding'", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
 }
 
 /**
@@ -133,7 +133,7 @@ function displayEditIncidentStatus(){
  */
 function editIncidentStatus(){
     global $con;
-    if(!isset($_POST['Probleem'])){
+    if(!emptyCheck($_POST['Probleem'])){
         mysqli_query($con, "UPDATE incidenten SET status='{$_POST['Status']}'
                         WHERE nummer ='".$_POST['key']."' ") or die(mysqli_error($con));
     } else {
@@ -215,14 +215,17 @@ function addProblem(){
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
             $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
-            if($status === "opgelost"){
+            $query = "SELECT op_tijd_opgelost FROM problemen WHERE nummer = '{$_POST['key']}'";
+            $optijd = mysqli_query($con, $query);
+            $optijd = mysqli_fetch_array($optijd);
+            if($status === "opgelost" && !emptyCheck($optijd[0])){
                 if(checkOnTime($day, $month, $year, $aanvang, $prio)){
                     $optijd = "ja";
                 } else {
                     $optijd = "nee";
                 }
             } else {
-                $optijd = null;
+                $optijd = $optijd[0];
             }
             mysqli_query($con, "INSERT INTO problemen (datum, aanvang, eindtijd, op_tijd_opgelost, omschrijving, prioriteit, status)
                                 VALUES('".$datum."', '".$aanvang."', '".$eindtijd."', {$optijd},
@@ -293,16 +296,17 @@ function editProblem()
             $eind = addTimes($day, $month, $year, $aanvang, $result[0]);
             $datum = $eind['year']."-".$eind['month']."-".$eind['day'];
             $eindtijd = $eind['hour'].":".$eind['minutes'];
-            if($status === "opgelost"){
+            $query = "SELECT op_tijd_opgelost FROM problemen WHERE nummer = '{$_POST['key']}'";
+            $optijd = mysqli_query($con, $query);
+            $optijd = mysqli_fetch_array($optijd);
+            if($status === "opgelost" && !emptyCheck($optijd[0])){
                 if(checkOnTime($day, $month, $year, $aanvang, $prio)){
-                    $message .= "Yes";
                     $optijd = "ja";
                 } else {
-                    $message .= "No";
                     $optijd = "nee";
                 }
             } else {
-                $optijd = null;
+                $optijd = $optijd[0];
             }
             mysqli_query($con, "UPDATE problemen SET datum='".$datum."', aanvang='".$aanvang."', eindtijd='".$eindtijd."',
                                        op_tijd_opgelost='{$optijd}',
