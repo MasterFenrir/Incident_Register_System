@@ -539,7 +539,7 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
-    $select = array('*');
+    $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving','hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
     $from = array('incidenten'=>'id_hardware','hardware'=>'id_hardware','hardware_software'=>'id_software','software'=>'id_software');
     $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschaf_jaar','hardware.os','software.naam');
     $grp = 'incidenten.nummer';
@@ -548,7 +548,9 @@ function Trends($postData){
        stringbuilder($_POST['Aanschaf_jaar']), stringbuilder($_POST['OS']), stringbuilder($_POST['Software']));
 
    $bla= superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search);
-    mysqli_query($con,$bla);
+    new HelpdeskTable("Trends", $bla, $postData,
+        null, null, "incidenten.nummer", null, null);
+
     }
 
 ?>
