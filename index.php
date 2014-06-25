@@ -23,6 +23,17 @@
  * Check ifsomeone is logged in, and if they have taken any action
  */
     if(isset($_SESSION['user'])){
+        // Time out functionality
+        if(isset($_SESSION['timeout'])){
+            if ($_SESSION['timeout'] + 10 * 60 < time()) {
+                logOut();
+            } else {
+                $_SESSION['timeout'] = time();
+            }
+        } else {
+            $_SESSION['timeout'] = time();
+        }
+
         if(isset($_POST['id'])){
             switch($_SESSION['rechten']){
                 case 'incident' : processEventIncident($_POST['id']); break;
