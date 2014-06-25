@@ -155,7 +155,7 @@ function displayEditIncident() {
 function displayMeldingen($postData)
 {
     echo("Hier ziet u de meldingen die zijn doorgegeven");
-    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE prioriteit IS NULL", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
+    new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status ='melding'", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
 /**
