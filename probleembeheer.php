@@ -501,7 +501,7 @@ function stringbuilder($building){
 
     }
     }
-    return ret;
+    return $ret;
 
 }
 
@@ -526,8 +526,8 @@ function Trends($postData){
    $search=array(stringbuilder($_POST['Soort']),stringbuilder($_POST['Locatie']),stringbuilder($_POST['Merk']),stringbuilder($_POST['Leverancier']),
        stringbuilder($_POST['Aanschafjaar']), stringbuilder($_POST['OS']), stringbuilder($_POST['Software']));
 
-    superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search);
-
+   $bla= superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search);
+echo $bla;
     }
 
 ?>
