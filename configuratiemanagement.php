@@ -123,7 +123,7 @@ function makeSearchSoftware($searchString)
  */
 function displaySoftware($postData)
     {
-        echo("Hier ziet u de software tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop software verwijderen");
+        echo("Hier ziet u de software tabel, u kunt via de edit knop gewenste gegevens wijzigen </br>Via de delete knop kunt u software verwijderen</br>");
         new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
                                               producent, leverancier, aantal_licenties AS Licenties,
                                               soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
@@ -137,7 +137,7 @@ function displaySoftware($postData)
  */
 function displayAddSoftware()
     {
-        echo("Hier kunt u software toevoegen u kunt de ingevulde gegevens doorvoeren door op de submit knop te klikken");
+        echo("Hier kunt u software toevoegen u kunt de ingevulde gegevens doorvoeren door op de submit knop te klikken.</br>");
         displayErrors();
 
         formHeader();
@@ -159,7 +159,7 @@ function displayAddSoftware()
  */
 function displayEditSoftware()
     {
-        echo("Hier kunt u de software wijzigen de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
+        echo("Hier kunt u de software wijzigen de gewijzigde gegevens kunt u bevestigen door op submit te klikken.</br>");
         global $con;
         displayErrors();
 
@@ -184,7 +184,7 @@ function displayEditSoftware()
  */
 function editSoftware()
     {
-        echo("Hier kunt u de software wijzigen u kunt de gegevens bevestigen door op submit te klikken");
+        echo("Hier kunt u de software wijzigen u kunt de gegevens bevestigen door op submit te klikken.</br>");
          global $con;
          global $message;
 
@@ -223,7 +223,7 @@ function editSoftware()
      */
     function displayUsers($postData)
     {
-        echo("Hier ziet u de gebruikers tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop gebruikers verwijderen");
+        echo("Hier ziet u de gebruikers tabel, u kunt via de edit knop gewenste gegevens wijzigen. </br>Via de delete knop kunt u gebruikers verwijderen.</br>");
         global $message;
         echo $message;
         $messagen = "";
@@ -237,7 +237,7 @@ function editSoftware()
  */
 function displayHardware($postData)
     {
-        echo("Hier ziet u de hardware tabel hier kunt u via de knop edit de gewenste gegevens wijzigen en via de delete knop hardware verwijderen");
+        echo("Hier ziet u de hardware tabel, u kunt via de edit knop gewenste gegevens wijzigen </br>Via de delete knop kunt u hardware verwijderen.</br>");
         new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
             "displayEditHardware", "deleteHardware", "id_hardware", null, "displayHardwareAndSoftware");
     }
@@ -277,7 +277,7 @@ function displayHardwareAndSoftware($postData){
  */
 function displayAddHardware()
     {
-        echo("Hier kunt u hardware toevoegen, u kunt de gegevens bevestigen door op submit te klikken");
+        echo("Hier kunt u hardware toevoegen, u kunt de gegevens bevestigen door op submit te klikken.</br>");
         displayErrors();
 
         formHeader();
@@ -299,7 +299,7 @@ function displayAddHardware()
  */
     function displayEditHardware()
     {
-        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
+        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken.</br>");
         global $con;
         displayErrors();
 
@@ -326,7 +326,7 @@ function displayAddHardware()
  */
     function editHardware()
     {
-        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken");
+        echo("Hier kunt u hardware gegevens wijzigen, de gewijzigde gegevens kunt u bevestigen door op submit te klikken.</br>");
         global $con;
         global $message;
 
@@ -436,7 +436,7 @@ function displayAddHardware()
         $query = "SELECT * FROM users WHERE username = '{$primeKey}'";
         $result = mysqli_query($con, $query);
         $result = mysqli_fetch_assoc($result);
-        echo("Je kunt nu deze gebruiker wijzigen. Om het wachtwoord te veranderen, voer een nieuw wachtwoord in. Anders zal het wachtwoord niet veranderen.");
+        echo("Je kunt nu deze gebruiker wijzigen. Om het wachtwoord te veranderen, voer een nieuw wachtwoord in. Anders zal het wachtwoord niet veranderen.</br>");
         formHeader();
         echo $result['username'];
         textField("Gebruikersnaam", $result['username']);

@@ -56,11 +56,12 @@ body {
 
 #menu {
     text-align: center;
-    min-height: 500px;
+    min-height: 100vh;
     margin: 2px 2px 2px 2px;
     background-color: #8AC4EC;
     color: #00008B;
     font-family: Verdana, Arial, sans-serif;
+    padding-bottom: 1px;
 }
 
 #menu h3 {
@@ -113,6 +114,7 @@ body {
 .left_sidebar, .content{
     float: left;
     color: #F9F9F9;
+    height: inherit;
 }
 
 #footer {

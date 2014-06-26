@@ -64,6 +64,7 @@ function processEventProbleem($eventID)
  * @param $postData This is used for creating the sorting functionality in the displayed table
  */
 function displayProblemMeldingen($postData){
+    echo("Hier ziet u de verschillende meldingen die doorgegeven zijn");
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status = 'Probleem' AND probleem IS NULL", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
 }
 
@@ -72,6 +73,8 @@ function displayProblemMeldingen($postData){
  * @param $postData This is used for creating the sorting functionality in the displayed table
  */
 function displayProblems($postData){
+    echo("Hier ziet u alle problemen de gegevens kunnen aangepast worden door op edit te klikken.</br>");
+    echo("U kunt de details van een probleem bekijken door op details te klikken");
     new HelpdeskTable("Problemen", "SELECT * FROM problemen", $postData, "displayEditProblem", null, "nummer", null, "displayProblemDetails");
 }
 
@@ -80,6 +83,7 @@ function displayProblems($postData){
  * @param $postData This is used for creating the sorting functionality in the displayed table
  */
 function displayIncidentProblems($postData){
+    echo("Hier kunt u de gemelde incidenten zien. U kunt de gegevens aanpassen door op edit te klikken.");
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status != 'melding'", $postData, "displayEditIncidentStatus", null, "nummer", null, null);
 }
 
@@ -102,6 +106,7 @@ function displayProblemDetails($postData){
  * This function displays the form to edit the status of an incident.
  */
 function displayEditIncidentStatus(){
+    echo("Hier kunt u de gegevens van het incident wijzigen.");
     global $con;
     $values = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM incidenten WHERE nummer='".$_POST['key']."'"));
 
@@ -151,6 +156,7 @@ function editIncidentStatus(){
  */
 function displayHardwareProblem($postData)
 {
+    echo("Hier ziet u de hardware tabel.");
     new HelpdeskTable("Hardware", "SELECT * FROM hardware", $postData,
         null, null, "id_hardware", null, "displayHardwareAndSoftware");
 }
@@ -161,6 +167,7 @@ function displayHardwareProblem($postData)
  */
 function displaySoftwareProblem($postData)
 {
+    echo("Hier ziet u de sofware tabel.");
     new HelpdeskTable("Software", "SELECT id_software AS ID, naam, soort,
                                           producent, leverancier, aantal_licenties AS Licenties,
                                           soort_licentie AS Licentiesoort, aantal_gebruikers AS Gebruikers,
@@ -173,6 +180,7 @@ function displaySoftwareProblem($postData)
  * Function to display the form to add problems to the database.
  */
 function displayAddProblem(){
+    echo("Hier kunt u een probleem toevoegen de gegevens worden bevestigd door op submit te klikken.");
     displayErrors();
     date_default_timezone_set("Europe/Amsterdam");
 
@@ -246,6 +254,7 @@ function addProblem(){
  * This function displays the form to edit an existing problem.
  */
 function displayEditProblem() {
+    echo("Hier kunt u de gegevens van het probleem wijzigen.");
     global $con;
     displayErrors();
 
@@ -496,6 +505,7 @@ function displayLandingProbleem()
  * Function that creates a form where you can choose different objects to see if there is a relation.
  */
 function displayTrends(){
+    echo("Hier kunt u bepaalde incidenten opzoeken door de verschillende gegevens in te vullen.");
 
     formHeader();
     CheckBoxes("Soort", queryToArray("SELECT soort FROM hardware GROUP BY soort"),3, $_POST['Soort']);
