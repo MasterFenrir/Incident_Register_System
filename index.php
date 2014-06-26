@@ -14,6 +14,8 @@
     include "Button.php";
     include "login.php";
     include "form_checks.php";
+    include "gruiker.php";
+    include "script_form_functions.php";
 
     checkLogin();
 ?>
@@ -39,6 +41,7 @@
                 case 'incident' : processEventIncident($_POST['id']); break;
                 case 'probleem' : processEventProbleem($_POST['id']); break;
                 case 'config' : processEventConfig($_POST['id']); break;
+                case 'gebruiker' : processEventGebruiker($_POST['id']); break;
             }
         }
     }
@@ -47,6 +50,8 @@
 <!-- This includes the stylesheet -->
 <head>
     <link type="text/css" rel="stylesheet" href="stijlblad.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="ajaxfoodstore.js"></script>
 </head>
 
 <body>
@@ -98,6 +103,7 @@
                 case 'incident' : displayContentIncident($_POST['display']); break;
                 case 'probleem' : displayContentProbleem($_POST['display']); break;
                 case 'config' : displayContentConfig($_POST['display']); break;
+                case 'gebruiker' : displayContentGebruiker($_POST['display']); break;
             }
         }
     ?>

@@ -262,9 +262,9 @@ function superMonsterQueryBuilder($select, $from, $cols, $group, $searchStringAr
         $lastCol = $from[$lastTable];
 
         if($x==0) {
-            $query .= " FROM ".$table;
+            $query .= " FROM {$table}";
         } else {
-            $query .= " LEFT OUTER JOIN ".$table." ON ".$table.".".$lastCol."=".$lastTable.".".$lastCol;
+            $query .= " LEFT OUTER JOIN {$table} ON {$table}.{$lastCol}={$lastTable}.{$lastCol}";
         }
     }
 
@@ -277,38 +277,38 @@ function superMonsterQueryBuilder($select, $from, $cols, $group, $searchStringAr
     $query .= " WHERE(".true.")";
 
     for($z=0; $z<count($searchStringArray); $z++) {
-        $search = explode(" ", $searchStringArray[$z]);
-
+        $search = $searchStringArray[$z];
+        if(count($search)>0)  {
             $query .= " AND(";
-
-        for($x=0; $x<count($search); $x++) {
-            //Inner loop iterates over each column in $cols with the current $search word
-            for($y=0; $y<count($cols); $y++) {
-                if($y == (count($cols)-1) && $x == (count($search)-1)) {
-                    $query .= $cols[$y]." LIKE '%".$search[$x]."%'";
-                } else {
-                    $query .= $cols[$y]." LIKE '%".$search[$x]."%' OR ";
+            for($x=0; $x<count($search); $x++) {
+                //Inner loop iterates over each column in $cols with the current $search word
+                for($y=0; $y<count($cols); $y++) {
+                    if($y == (count($cols)-1) && $x == (count($search)-1)) {
+                        $query .= $cols[$y]." LIKE '%{$search[$x]}%'";
+                    } else {
+                        $query .= $cols[$y]." LIKE '%{$search[$x]}%' OR ";
+                    }
                 }
             }
+            $query = $query.")";
         }
-        $query = $query.")";
     }
 
-    if($searchField !== null) {
+    if($searchField !== null && !empty($searchField)) {
         $query .= " AND(";
         $search = explode(" ", $searchField);
         for($x=0; $x<count($search); $x++) {
-            if($x !== 0) {
-                $query .= "incidenten.omschrijving LIKE ".$search[$x]." AND ";
+            if($x !== count($search)-1) {
+                $query .= "incidenten.omschrijving LIKE '%{$search[$x]}%' AND ";
             } else {
-                $query .= "incidenten.omschrijving LIKE ".$search[$x];
+                $query .= "incidenten.omschrijving LIKE '%{$search[$x]}%'";
             }
         }
         $query .= ")";
     }
 
     if($between1 !== null && $between2 !== null) {
-        $query .= " AND(incidenten.datum BETWEEN ".$between1." AND ".$between2.")";
+        $query .= " AND incidenten.datum BETWEEN '{$between1}' AND '{$between2}'";
     }
 
     //Groups results by $group if $group isn't null

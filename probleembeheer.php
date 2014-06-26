@@ -331,12 +331,11 @@ function displayStatisticsSettingsProblems(){
     echo("Hier kunt u van een bepaalde periode bekijken hoeveel problemen op tijd zijn opgelost en hoeveel niet op tijd zijn opgelost.<br/>
         Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle problemen ooit.<br/><br/>");
     formHeader();
+    echo "<tr><td>Alle datums</td><td><input type='checkbox' id='clicky' name='Alles' /></td></tr>";
     displayField("", "De datum waarna de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day1", "month1", "year1");
     displayField("", "De datum waarvoor de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day2", "month2", "year2");
-    $array[0] = "alles";
-    CheckBoxes("Alles", $array, 1, null);
     hiddenValue("display", "displayStatisticsProblems");
     formFooter("Submit");
 }
@@ -511,12 +510,14 @@ function displayTrends(){
 
     textField("Zoekterm", $_POST['Zoekterm'] );
 
+    //CheckBoxes("Datums", array('alles'), 1, array('alles'));
+    echo "<tr><td>Alle datums</td><td><input type='checkbox' id='clicky' name='Datums' checked /></td></tr>";
+    echo "<div id='slide'>";
     displayField("", "De datum waarna de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day1", "month1", "year1");
     displayField("", "De datum waarvoor de problemen komen, inclusief zichzelf.");
     dateField(null, null, null, "day2", "month2", "year2");
-    $array[0] = "alles";
-    CheckBoxes($array, $array, 1, $array);
+    echo "</div>";
 
 
     hiddenValue("display", "Trends");
@@ -563,15 +564,30 @@ function Trends($postData){
     $os = ($_POST['OS']);
     $software = ($_POST['Software']);
 
+    if(!empty($_POST['Datums'])) {
+        $date1 = null;
+        $date2 = null;
+    } else {
+        $date1 = $_POST['year1']."-".$_POST['month1']."-".$_POST['day1'];
+        $date2 = $_POST['year2']."-".$_POST['month2']."-".$_POST['day2'];
+    }
+
+    if(empty($_POST['Zoekterm'])) {
+        $zoekterm = null;
+    } else {
+        $zoekterm = $_POST['Zoekterm'];
+    }
+
     $select = array('incidenten.nummer AS incidentnummer','incidenten.omschrijving', 'incidenten.datum' ,'hardware.id_hardware', 'hardware.soort', 'hardware.locatie', 'hardware.merk','hardware.leverancier', 'hardware.aanschaf_jaar');
     $from = array('incidenten'=>'id_hardware','hardware'=>'id_hardware','hardware_software'=>'id_software','software'=>'id_software');
     $cols = array('hardware.soort','hardware.locatie','hardware.merk', 'hardware.leverancier','hardware.aanschaf_jaar','hardware.os','software.naam');
     $grp = 'incidenten.nummer';
 
-   $search=array(stringbuilder($_POST['Soort']),stringbuilder($_POST['Locatie']),stringbuilder($_POST['Merk']),stringbuilder($_POST['Leverancier']),
-       stringbuilder($_POST['Aanschaf_jaar']), stringbuilder($_POST['OS']), stringbuilder($_POST['Software']));
+   $search=array($_POST['Soort'], $_POST['Locatie'], $_POST['Merk'], $_POST['Leverancier'],
+       $_POST['Aanschaf_jaar'], $_POST['OS'], $_POST['Software']);
 
-   $bla= superMonsterQueryBuilder($select, $from, $cols, "or", $grp, $search,null,null,null);
+   $bla= superMonsterQueryBuilder($select, $from, $cols, $grp, $search, $zoekterm, $date1, $date2);
+    echo $bla;
     new HelpdeskTable("Trends", $bla, $postData,
         null, null, "incidenten.nummer", null, null);
 

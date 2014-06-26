@@ -11,21 +11,21 @@ function dateField($d, $m, $y, $dayName="day", $monthName="month", $yearName="ye
     $day = date('d');
     $month = date('m');
     $year = date('Y');
-    echo "<tr>
+    echo "<tr class='hide'>
             <td>Dag </td>
             <td><input type='number' name={$dayName} size='2' value='";
                 if($d != null){echo $d;} else{echo $day;}
                 echo "'></input>
             </td>
          </tr>
-         <tr>
+         <tr class='hide'>
             <td>Maand </td>
                   <td><input type='number' name={$monthName} size='2' value='";
                 if($m != null){echo $m;} else{echo $month;}
                 echo"'></input>
             </td>
         </tr>
-        <tr>
+        <tr class = 'hide'>
             <td>Jaar </td>
             <td><input type='number' name={$yearName} size='4' value='";
                 if($y != null){echo $y;} else{echo $year;}
@@ -161,7 +161,7 @@ function textField($name, $sel){
  */
 function displayField($name, $sel){
     echo "<input type=\"hidden\" name=".$name." value=".$sel.">";
-    echo "<tr><td>".$name."</td><td>{$sel}</td></tr>";
+    echo "<tr class='hide'><td>".$name."</td><td>{$sel}</td></tr>";
 }
 
 /**
