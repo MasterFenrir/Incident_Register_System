@@ -109,7 +109,7 @@ function displayAddIncident() {
 
     formHeader();
     dateField($_POST['year'],$_POST['month'],$_POST['day']);
-    textField("Aanvangtijd",date('H:i'));
+    displayField("Aanvangtijd",date('H:i'));
     dropDownNoEmptyValue("Hardware", queryToArray("SELECT id_hardware FROM hardware"), $_POST['Hardware']);
     textField("Omschrijving", $_POST['Omschrijving']);
     textField("Workaround", $_POST['Workaround']);
@@ -235,7 +235,6 @@ function editIncident()
  */
 function addIncident()
 {
-    echo("Hier kunt u een incident toevoegen, de gegevens worden bevestigd door op submit te klikken");
     global $con;
     global $message;
 

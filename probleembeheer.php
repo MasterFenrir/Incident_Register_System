@@ -230,7 +230,7 @@ function displayAddProblem(){
 
     formHeader();
     dateField($_POST['day'],$_POST['month'],$_POST['year']);
-    textField("Aanvangtijd",date('H:i'));
+    displayField("Aanvangtijd",date('H:i'));
     textField("Omschrijving", $_POST['Omschrijving']);
     dropDown("Prioriteit", queryToArray("SELECT prioriteit FROM prioriteiten"), $_POST['Prioriteit']);
     dropDownNoEmptyValue("Status", queryToArray("SELECT status From statussen"), "onopgelost");

@@ -24,7 +24,7 @@
 
 <?php
 /*
- * Check ifsomeone is logged in, and if they have taken any action
+ * Check if someone is logged in, and if they have taken any action
  */
     if(isset($_SESSION['user'])){
         // Time out functionality
