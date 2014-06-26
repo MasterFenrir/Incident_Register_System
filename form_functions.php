@@ -13,21 +13,21 @@ function dateField($d, $m, $y, $dayName="day", $monthName="month", $yearName="ye
     $year = date('Y');
     echo "<tr class='hide'>
             <td>Dag </td>
-            <td><input type='number' name={$dayName} size='2' value='";
+            <td><input type='number' name='{$dayName}' size='2' value='";
                 if($d != null){echo $d;} else{echo $day;}
                 echo "'></input>
             </td>
          </tr>
          <tr class='hide'>
             <td>Maand </td>
-                  <td><input type='number' name={$monthName} size='2' value='";
+                  <td><input type='number' name='{$monthName}' size='2' value='";
                 if($m != null){echo $m;} else{echo $month;}
                 echo"'></input>
             </td>
         </tr>
         <tr class = 'hide'>
             <td>Jaar </td>
-            <td><input type='number' name={$yearName} size='4' value='";
+            <td><input type='number' name='{$yearName}' size='4' value='";
                 if($y != null){echo $y;} else{echo $year;}
                 echo"'></input>
             </td>
@@ -151,7 +151,7 @@ function CheckBoxes($name, $array, $width, $sel){
  * @param $value Default value
  */
 function textField($name, $sel){
-    echo "<tr><td>".$name."</td><td><input type='text' name=".$name." value='".$sel."'></text></td></tr>";
+    echo "<tr><td>".$name."</td><td><input type='text' name='".$name."' value='".$sel."'></text></td></tr>";
 }
 
 /**
@@ -160,7 +160,7 @@ function textField($name, $sel){
  * @param $sel The value
  */
 function displayField($name, $sel){
-    echo "<input type=\"hidden\" name=".$name." value=".$sel.">";
+    echo "<input type=\"hidden\" name='".$name."' value='".$sel."'>";
     echo "<tr class='hide'><td>".$name."</td><td>{$sel}</td></tr>";
 }
 
@@ -170,7 +170,7 @@ function displayField($name, $sel){
  * @param $value The actual value
  */
 function hiddenValue($name, $value){
-    echo    "<input type=\"hidden\" name=".$name." value=".$value.">";
+    echo    "<input type=\"hidden\" name='".$name."' value='".$value."'>";
 }
 
 /**
