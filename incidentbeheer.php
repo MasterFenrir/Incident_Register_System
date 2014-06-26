@@ -25,7 +25,7 @@ function displayContentIncident($postData)
         case "displayStatisticsSettings"    : displayStatisticsSettings(); break;
         case "displayStatistics"    :   displayStatistics();    break;
 
-        default : echo "Hello ".ucfirst($_SESSION['user']); break;
+        default : displayMeldingen($postData); break;
     }
 }
 
@@ -154,7 +154,8 @@ function displayEditIncident() {
  */
 function displayMeldingen($postData)
 {
-    echo("Hier ziet u de meldingen die zijn doorgegeven");
+    echo "<h3>Meldingen</h3>";
+    echo("<p>Hier ziet u de meldingen die zijn doorgegeven</p>");
     new HelpdeskTable("Incidenten", "SELECT * FROM incidenten WHERE status ='melding'", $postData, "displayEditIncident", "deleteIncident", "nummer", null, null);
 }
 
@@ -344,12 +345,11 @@ function displayStatisticsSettings(){
     echo("Hier kunt u van een bepaalde periode bekijken hoeveel incidenten op tijd zijn opgelost en hoeveel niet op tijd zijn opgelost.<br/>
         Ook kunt u de checkbox voor alles selecteren. Dan ziet u de statistieken voor alle incidenten ooit.<br/><br/>");
     formHeader();
+    echo "<tr><td>Alle datums</td><td><input type='checkbox' id='clicky' name='Alles' /></td></tr>";
     displayField(null, "De datum waarna de incidenten komen, inclusief zichzelf.");
     dateField(null, null, null, "day1", "month1", "year1");
     displayField(null, "De datum waarvoor de incidenten komen, inclusief zichzelf.");
     dateField(null, null, null, "day2", "month2", "year2");
-    $array[0] = "alles";
-    CheckBoxes("Alles", $array, 1, null);
     hiddenValue("display", "displayStatistics");
     formFooter("Submit");
 }

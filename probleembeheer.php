@@ -28,7 +28,8 @@ function displayContentProbleem($postData)
         case "displayStatisticsSettingsProblems"    : displayStatisticsSettingsProblems(); break;
         case "displayStatisticsProblems"    :   displayStatisticsProblems();    break;
         case "Trends" : Trends($postData); break;
-        default : displayLandingProbleem();
+        case "displaySearch" : displaySearchProblem($postData); break;
+        default : displayProblemMeldingen($postData);
     }
 }
 
@@ -57,6 +58,50 @@ function processEventProbleem($eventID)
         case "addProblem"   : addProblem(); break;
         case "editProblem"  : editProblem(); break;
     }
+}
+
+/**
+ * This displays the table with the incidents from the search.
+ * @param $postData
+ */
+function displaySearchProblem($postData)
+{
+    new HelpdeskTable("Problemen", makeSearchProblem($_POST['search']), null,
+        "displayEditProblem", null, "nummer", $_POST['search'], null);
+
+    echo "<br/>";
+
+    displaySearchIncidenten($postData);
+}
+
+/**
+ * This function searches for incidents in the incidenttable.
+ * @param $search
+ * @return string
+ */
+function makeSearchProblem($search)
+{
+    $query = "SELECT problemen.datum, problemen.aanvang, problemen.eindtijd, problemen.op_tijd_opgelost AS Optijd,
+              problemen.omschrijving, problemen.prioriteit, problemen.status, incidenten.probleem
+              FROM problemen, incidenten, hardware, hardware_software, software
+              WHERE problemen.nummer = incidenten.probleem
+              AND incidenten.id_hardware = hardware.id_hardware
+              AND hardware.id_hardware = hardware_software.id_hardware
+              AND software.id_software = hardware_software.id_software
+              AND problemen.datum LIKE '%".$search."%'
+              OR problemen.aanvang LIKE '%".$search."%'
+              OR problemen.eindtijd LIKE '%".$search."%'
+              OR problemen.op_tijd_opgelost LIKE '%".$search."%'
+              OR problemen.omschrijving LIKE '%".$search."%'
+              OR problemen.prioriteit LIKE '%".$search."%'
+              OR problemen.status LIKE '%".$search."%'
+              OR incidenten.probleem LIKE '%".$search."%'
+              OR hardware.soort LIKE '%".$search."%'
+              OR hardware.id_hardware LIKE '%".$search."%'
+              OR software.naam LIKE '%".$search."%'
+              GROUP BY problemen.nummer";
+
+    return $query;
 }
 
 /**
