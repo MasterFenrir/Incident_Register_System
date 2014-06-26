@@ -88,7 +88,7 @@ function makeSearchProblem($search)
               AND incidenten.id_hardware = hardware.id_hardware
               AND hardware.id_hardware = hardware_software.id_hardware
               AND software.id_software = hardware_software.id_software
-              AND problemen.datum LIKE '%".$search."%'
+              AND (problemen.datum LIKE '%".$search."%'
               OR problemen.aanvang LIKE '%".$search."%'
               OR problemen.eindtijd LIKE '%".$search."%'
               OR problemen.op_tijd_opgelost LIKE '%".$search."%'
@@ -98,9 +98,8 @@ function makeSearchProblem($search)
               OR incidenten.probleem LIKE '%".$search."%'
               OR hardware.soort LIKE '%".$search."%'
               OR hardware.id_hardware LIKE '%".$search."%'
-              OR software.naam LIKE '%".$search."%'
+              OR software.naam LIKE '%".$search."%')
               GROUP BY problemen.nummer";
-
     return $query;
 }
 
@@ -208,7 +207,7 @@ function displayHardwareProblem($postData)
 
 /**
  * This function shows a table of the existing software.
- * @param $postData This is used for creating the sorting functionality in the displayed table
+ * @param $postData this is used for creating the sorting functionality in the displayed table
  */
 function displaySoftwareProblem($postData)
 {
